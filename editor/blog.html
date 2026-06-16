@@ -1423,6 +1423,10 @@ ${contentHTML}
           document.getElementById('editingBannerPath').textContent = targetPath;
         }
 
+        // Keep the Routines page grid + shop carousel in sync with posts/beauty/.
+        status.textContent = 'Updating Routines page + carousel...';
+        try { await syncRoutineLists(token); } catch (e) { /* non-fatal: the post is already saved */ }
+
         const verb = oldPathToDelete ? 'Moved and updated' : (editingFilePath ? 'Updated' : 'Published');
         status.innerHTML = `${verb}! <a href="${result.content.html_url}" target="_blank" style="color:#0969da;">View on GitHub</a><br>Vercel will auto-deploy shortly.`;
         status.className = 'status-msg success';
@@ -1431,6 +1435,72 @@ ${contentHTML}
         status.textContent = `Network error: ${e.message}`;
         status.className = 'status-msg error';
       }
+    }
+
+    // ============================================================
+    // SYNC ROUTINES GRID + SHOP CAROUSEL
+    // Regenerate the static lists in routines.html (.blog-grid) and
+    // index.html (.blog-carousel) from posts/beauty/, so publishing or
+    // deleting a post keeps them in sync (like the product editor does for
+    // the PRODUCT_PAGES manifest). Best-effort: never blocks the post save.
+    // ============================================================
+    function _fmtPostDate(iso) {
+      const d = new Date(iso);
+      return isNaN(d.getTime()) ? '' : d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
+    }
+    function _escText(s) {
+      return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+    async function _commitSplice(path, openMarker, closeMarker, replacement, token, message) {
+      const authH = { 'Authorization': `token ${token}` };
+      const getR = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/${path}?ref=${GITHUB_BRANCH}`, { headers: authH, cache: 'no-store' });
+      if (!getR.ok) return;
+      const meta = await getR.json();
+      const html = decodeURIComponent(escape(atob((meta.content || '').replace(/\s/g, ''))));
+      const s = html.indexOf(openMarker);
+      if (s === -1) return;
+      const e = html.indexOf(closeMarker, s + openMarker.length);
+      if (e === -1) return;
+      const next = html.slice(0, s) + replacement + html.slice(e + closeMarker.length);
+      if (next === html) return;
+      await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/${path}`, {
+        method: 'PUT',
+        headers: { ...authH, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message, content: btoa(unescape(encodeURIComponent(next))), branch: GITHUB_BRANCH, sha: meta.sha })
+      });
+    }
+    async function syncRoutineLists(token) {
+      const listR = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/posts/beauty?ref=${GITHUB_BRANCH}`, { headers: { 'Authorization': `token ${token}` }, cache: 'no-store' });
+      if (!listR.ok) return;
+      const files = (await listR.json()).filter(f => f.type === 'file' && f.name.endsWith('.html'));
+      const posts = [];
+      await Promise.all(files.map(async (f) => {
+        try {
+          const raw = await fetch(`https://raw.githubusercontent.com/${GITHUB_REPO}/${GITHUB_BRANCH}/posts/beauty/${f.name}?_=${Date.now()}`, { cache: 'no-store' });
+          if (!raw.ok) return;
+          const meta = parsePostHtml(await raw.text());
+          posts.push({ slug: f.name.replace(/\.html$/, ''), title: meta.title || f.name.replace(/\.html$/, ''), iso: meta.isoDate || '', img: (meta.headerImage || '').replace(/^(?:\.\.\/)+/, '') });
+        } catch (e) {}
+      }));
+      if (!posts.length) return;
+      posts.sort((a, b) => (b.iso || '').localeCompare(a.iso || ''));
+      const grid = posts.map(p => `        <article class="blog-grid-item">
+          <a href="posts/beauty/${p.slug}.html" class="thumb-link" style="display:block;">
+            <div class="thumb" style="background-image: url('${p.img}'); background-size: cover; background-position: center;"></div>
+          </a>
+          <div class="post-info">
+            <h3><a href="posts/beauty/${p.slug}.html" style="color:inherit; text-decoration:none;">${_escText(p.title)}</a></h3>
+            <div class="meta">Isabella Rivera &middot; ${_fmtPostDate(p.iso)}</div>
+            <a href="posts/beauty/${p.slug}.html" class="read-more">Read more</a>
+          </div>
+        </article>`).join('\n');
+      const carousel = posts.map(p => `          <a href="posts/beauty/${p.slug}.html" class="carousel-item">
+            <div class="carousel-item-placeholder" style="background-image: url('${p.img}'); background-size: cover; background-position: center; color: transparent;"></div>
+            <div class="date">${_fmtPostDate(p.iso)}</div>
+            <h4>${_escText(p.title)}</h4>
+          </a>`).join('\n');
+      await _commitSplice('routines.html', '      <div class="blog-grid">', '\n      </div>', '      <div class="blog-grid">\n' + grid + '\n      </div>', token, 'Sync Routines grid with posts');
+      await _commitSplice('index.html', '        <div class="blog-carousel">', '\n        </div>', '        <div class="blog-carousel">\n' + carousel + '\n        </div>', token, 'Sync Routines carousel with posts');
     }
 
     // ============================================================
@@ -1619,6 +1689,7 @@ ${contentHTML}
         if (delResp.ok) {
           status.textContent = `Deleted "${prettyName}".`;
           status.className = 'status-msg success';
+          try { await syncRoutineLists(token); } catch (e) { /* non-fatal */ }
           // Remove from cache and re-render the list with the same active filter.
           allPostsCache = allPostsCache.filter(p => p.path !== filePath);
           const activeTab = document.querySelector('.load-post-tab.active');
