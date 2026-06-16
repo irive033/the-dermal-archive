@@ -1,0 +1,2219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product Editor — The Dermal Archive</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,400&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap');
+    body { font-family: 'EB Garamond', 'Garamond', 'Georgia', serif; margin: 0; }
+    h1, h2, h3, h4 { font-family: 'Cormorant Garamond', 'Didot', 'Georgia', serif; }
+
+    /* ===== PASSWORD GATE ===== */
+    .password-overlay {
+      position: fixed; inset: 0; background: #DAE1E4; z-index: 9999;
+      display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 20px;
+    }
+    .password-overlay.hidden { display: none; }
+    .password-overlay h2 { font-size: 2rem; text-transform: none; }
+    .password-overlay input {
+      padding: 14px 20px; font-size: 1.1rem; border: 1px solid #000; background: #fff;
+      font-family: inherit; text-align: center; width: 250px; letter-spacing: 0.3em;
+    }
+    .password-overlay button {
+      padding: 12px 30px; background: #000; color: #fff; border: none;
+      font-family: inherit; font-size: 1rem; cursor: pointer; letter-spacing: 0.1em; text-transform: uppercase;
+    }
+    .password-overlay .error { color: #c00; font-size: 0.9rem; min-height: 1.2em; }
+
+    /* ===== TOOLBAR ===== */
+    .editor-toolbar {
+      position: sticky; top: 0; z-index: 100;
+      background: #1a1a1a; color: #fff; padding: 12px 20px;
+      display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    }
+    .toolbar-title {
+      font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; letter-spacing: 0.05em;
+    }
+    .toolbar-status {
+      font-size: 0.85rem; color: #888; margin-left: 8px;
+    }
+    .toolbar-status.dirty { color: #f5a623; }
+    .toolbar-btn {
+      background: transparent; color: #fff; border: 1px solid transparent;
+      padding: 8px 14px; font-size: 0.9rem; cursor: pointer; border-radius: 6px;
+      font-family: inherit; transition: background 0.2s; white-space: nowrap;
+    }
+    .toolbar-btn:hover { background: #333; }
+    .publish-btn { background: #2ea043 !important; font-weight: 600; margin-left: auto; }
+    .publish-btn:hover { background: #238636 !important; }
+    .publish-btn:disabled { background: #555 !important; cursor: not-allowed; }
+    .reload-btn { background: #555 !important; }
+    .reload-btn:hover { background: #666 !important; }
+
+    /* ===== EDITOR PAGE LAYOUT ===== */
+    .editor-hero {
+      background: #ABA8A6; padding: 50px 4vw 30px; text-align: center;
+    }
+    .editor-hero h1 {
+      font-size: 2.4rem; text-transform: uppercase; letter-spacing: 0.05em; margin: 0 0 8px;
+    }
+    .editor-hero p {
+      font-size: 0.95rem; color: #333; margin: 0;
+    }
+
+    /* ===== PAGE HEADER EDITOR ===== */
+    .page-header-editor {
+      background: #fff; padding: 30px 4vw;
+      border-bottom: 1px solid #e6e6e6;
+    }
+    .page-header-editor-inner {
+      max-width: 1100px; margin: 0 auto;
+    }
+    .page-header-editor-title {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 18px;
+    }
+    .page-header-editor-label {
+      font-family: inherit;
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: #666;
+    }
+    .page-header-save-btn {
+      padding: 9px 22px;
+      background: #2ea043; color: #fff; border: none;
+      font-family: inherit; font-size: 0.85rem; cursor: pointer;
+      border-radius: 6px; font-weight: 600; letter-spacing: 0.03em;
+    }
+    .page-header-save-btn:hover { background: #238636; }
+    .page-header-save-btn:disabled { background: #ccc; cursor: not-allowed; }
+    .page-header-editor-fields {
+      display: flex; flex-direction: column; gap: 18px;
+    }
+    .page-header-field label {
+      display: block;
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: #666;
+      margin-bottom: 6px;
+    }
+    .page-header-hint {
+      text-transform: none;
+      letter-spacing: 0;
+      font-size: 0.75rem;
+      color: #999;
+    }
+    .page-header-field input[type="text"] {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1px solid #ccc;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.3rem;
+      outline: none;
+      border-radius: 4px;
+      box-sizing: border-box;
+      letter-spacing: 0.02em;
+    }
+    .page-header-field input[type="text"]:focus { border-color: #000; }
+    .page-header-format-bar {
+      display: flex; gap: 4px; margin-bottom: 6px;
+    }
+    .page-header-format-bar button {
+      width: 32px; height: 30px;
+      background: #f4f4f4; border: 1px solid #ddd; border-radius: 4px;
+      font-family: inherit; font-size: 0.85rem; cursor: pointer;
+      color: #333;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .page-header-format-bar button:hover { background: #e8e8e8; }
+    .page-header-size-select {
+      height: 30px; padding: 0 6px;
+      background: #f4f4f4; border: 1px solid #ddd; border-radius: 4px;
+      font-family: inherit; font-size: 0.8rem; color: #333; cursor: pointer;
+    }
+    .page-header-size-select:hover { background: #e8e8e8; }
+    .page-header-body-editable {
+      min-height: 120px;
+      padding: 14px 16px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-family: 'EB Garamond', 'Garamond', 'Georgia', serif;
+      font-size: 1rem;
+      line-height: 1.7;
+      outline: none;
+      background: #fff;
+    }
+    .page-header-body-editable:focus { border-color: #000; }
+    .page-header-body-editable:empty::before {
+      content: 'Write the body text that will appear next to the heading…';
+      color: #aaa;
+      font-style: italic;
+    }
+    .page-header-body-editable p { margin: 0 0 12px; }
+    .page-header-body-editable p:last-child { margin-bottom: 0; }
+    .page-header-body-editable a { color: inherit; text-decoration: underline; }
+    .page-header-status {
+      margin-top: 12px; font-size: 0.85rem; min-height: 1.2em;
+    }
+    .page-header-status.success { color: #2ea043; }
+    .page-header-status.error { color: #c00; }
+    .page-header-status.loading { color: #0969da; }
+
+    .editor-category-nav {
+      display: flex; justify-content: center; gap: 30px; padding: 25px 20px;
+      background: #f4f1ee; font-size: 0.95rem; flex-wrap: wrap;
+    }
+    .editor-category-nav a {
+      color: #555; text-decoration: none; cursor: pointer; padding: 6px 2px;
+      border-bottom: 2px solid transparent; transition: all 0.2s;
+      text-transform: uppercase; letter-spacing: 0.08em; font-size: 0.85rem;
+    }
+    .editor-category-nav a:hover { color: #000; }
+    .editor-category-nav a.active { color: #000; border-bottom-color: #000; }
+
+    /* ===== EDITOR PRODUCT GRID (matches shop page exactly) ===== */
+    .editor-product-area {
+      background: #fff; padding: 40px 4vw 80px;
+    }
+    .editor-product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 30px;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+    /* Mirror the exact .product-card look but add edit affordances */
+    .editor-product-card {
+      background: #fff;
+      text-align: center;
+      overflow: hidden;
+      position: relative;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: border-color 0.2s, transform 0.15s;
+    }
+    .editor-product-card:hover {
+      border-color: #0969da;
+      transform: translateY(-2px);
+    }
+    .editor-product-card .product-image {
+      width: 100%;
+      aspect-ratio: 1;
+      background: #f0eded;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #aaa;
+      font-style: italic;
+      font-size: 0.9rem;
+      overflow: hidden;
+    }
+    .editor-product-card .product-image img {
+      width: 100%; height: 100%; object-fit: cover;
+    }
+    .editor-product-card .product-info { padding: 20px 15px; }
+    .editor-product-card h4 {
+      font-size: 1rem; text-transform: none;
+      font-family: 'adobe-garamond-pro', 'Garamond', 'Georgia', serif;
+      font-weight: 400; letter-spacing: 0; margin: 0 0 8px;
+    }
+    .editor-product-card .price {
+      font-size: 0.95rem; color: #666;
+    }
+    .editor-product-card .edit-badge {
+      position: absolute; top: 8px; right: 8px;
+      background: rgba(9, 105, 218, 0.9); color: #fff;
+      font-size: 0.7rem; padding: 4px 8px; border-radius: 12px;
+      text-transform: uppercase; letter-spacing: 0.08em;
+      opacity: 0; transition: opacity 0.2s;
+    }
+    .editor-product-card:hover .edit-badge { opacity: 1; }
+    /* Hero-page editor entry. Sits left of the .edit-badge in the corner.
+       Uses the same warm tan as the product-page accent so the visual
+       cue is consistent with where the click takes you. */
+    .editor-product-card .page-badge {
+      position: absolute; top: 8px; right: 56px;
+      background: rgba(138, 111, 74, 0.92); color: #fff;
+      font-size: 0.7rem; padding: 4px 8px; border-radius: 12px;
+      text-transform: uppercase; letter-spacing: 0.08em;
+      opacity: 0; transition: opacity 0.2s; cursor: pointer;
+      border: none; font-family: inherit;
+      z-index: 2;
+    }
+    .editor-product-card:hover .page-badge { opacity: 1; }
+    /* Hidden products don't get hero pages — suppress the badge entirely. */
+    .editor-product-card.is-hidden .page-badge { display: none; }
+    .editor-product-card .card-category-tag {
+      position: absolute; top: 8px; left: 8px;
+      background: rgba(0,0,0,0.55); color: #fff;
+      font-size: 0.65rem; padding: 3px 8px; border-radius: 10px;
+      text-transform: uppercase; letter-spacing: 0.08em;
+    }
+    .editor-product-card .card-hidden-tag {
+      position: absolute; top: 8px; right: 80px;
+      background: #c03a2b; color: #fff;
+      font-size: 0.65rem; padding: 3px 8px; border-radius: 10px;
+      text-transform: uppercase; letter-spacing: 0.08em;
+      z-index: 2;
+    }
+    .editor-product-card.is-hidden .product-image,
+    .editor-product-card.is-hidden .product-info { opacity: 0.45; }
+    .editor-product-card.is-hidden:hover .product-image,
+    .editor-product-card.is-hidden:hover .product-info { opacity: 0.7; }
+    .editor-product-card.new-marker::after {
+      content: 'NEW'; position: absolute; top: 8px; left: 8px;
+      background: #2ea043; color: #fff; font-size: 0.65rem;
+      padding: 3px 8px; border-radius: 10px;
+      text-transform: uppercase; letter-spacing: 0.08em;
+    }
+
+    .add-product-card {
+      background: #fafafa;
+      border: 2px dashed #ccc;
+      aspect-ratio: 1;
+      display: flex; align-items: center; justify-content: center; flex-direction: column;
+      cursor: pointer; color: #999; transition: all 0.2s;
+    }
+    .add-product-card:hover {
+      border-color: #0969da; color: #0969da; background: #f0f7ff;
+    }
+    .add-product-card .plus { font-size: 3rem; font-weight: 200; line-height: 1; }
+    .add-product-card .label { font-size: 0.85rem; margin-top: 6px; letter-spacing: 0.08em; text-transform: uppercase; }
+
+    /* ===== MODAL ===== */
+    .modal-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 500;
+      display: none; align-items: center; justify-content: center;
+      padding: 20px;
+    }
+    .modal-overlay.visible { display: flex; }
+    .modal {
+      background: #fff; padding: 30px; border-radius: 12px;
+      max-width: 640px; width: 100%; max-height: 90vh; overflow-y: auto;
+    }
+    .modal h3 {
+      font-size: 1.8rem; margin: 0 0 6px; text-transform: none;
+      font-family: 'Cormorant Garamond', serif;
+    }
+    .modal .modal-sub { font-size: 0.9rem; color: #777; margin-bottom: 20px; }
+
+    .fetch-row {
+      display: flex; gap: 8px; margin-bottom: 8px;
+    }
+    .fetch-row input {
+      flex: 1; padding: 11px 14px; border: 1px solid #ccc; font-family: inherit;
+      font-size: 0.95rem; outline: none; border-radius: 6px;
+    }
+    .fetch-row input:focus { border-color: #000; }
+    .fetch-row button {
+      padding: 11px 20px; background: #0969da; color: #fff; border: none;
+      font-family: inherit; font-size: 0.9rem; cursor: pointer; border-radius: 6px;
+      white-space: nowrap;
+    }
+    .fetch-row button:hover { background: #0552b3; }
+    .fetch-row button:disabled { background: #888; cursor: not-allowed; }
+
+    .fetch-status {
+      font-size: 0.85rem; min-height: 1.3em; margin-bottom: 16px;
+    }
+    .fetch-status.loading { color: #0969da; }
+    .fetch-status.success { color: #2ea043; }
+    .fetch-status.error { color: #c00; }
+    .fetch-status.warn { color: #b8860b; }
+
+    .preview-row {
+      display: grid; grid-template-columns: 150px 1fr; gap: 18px; align-items: start;
+    }
+    .preview-image {
+      width: 150px; height: 150px; background: #f0eded;
+      display: flex; align-items: center; justify-content: center;
+      color: #aaa; font-style: italic; font-size: 0.8rem; overflow: hidden;
+      border-radius: 6px;
+    }
+    .preview-image img { width: 100%; height: 100%; object-fit: cover; }
+
+    .fields { display: flex; flex-direction: column; gap: 10px; }
+    .field { display: flex; flex-direction: column; gap: 4px; }
+    .field label {
+      font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; color: #666;
+    }
+    .field input, .field select {
+      padding: 9px 12px; border: 1px solid #ccc; font-family: inherit;
+      font-size: 0.92rem; outline: none; border-radius: 4px;
+      background: #fff;
+    }
+    .field input:focus, .field select:focus { border-color: #000; }
+    .field-full { grid-column: 1 / -1; }
+
+    /* Visibility toggle inside the edit modal */
+    .visibility-field { border: 1px solid #e5e5e5; border-radius: 6px; padding: 14px; background: #fafafa; }
+    .visibility-toggle {
+      display: flex; align-items: center; gap: 14px; cursor: pointer; user-select: none;
+    }
+    .visibility-toggle input[type="checkbox"] {
+      position: absolute; opacity: 0; pointer-events: none;
+    }
+    .visibility-slider {
+      position: relative; flex-shrink: 0;
+      width: 44px; height: 24px; background: #2ea043;
+      border-radius: 999px; transition: background 0.2s;
+    }
+    .visibility-slider::after {
+      content: ''; position: absolute; top: 2px; left: 2px;
+      width: 20px; height: 20px; background: #fff; border-radius: 50%;
+      transition: transform 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.25);
+    }
+    /* When checked = hidden */
+    .visibility-toggle input:checked + .visibility-slider { background: #888; }
+    .visibility-toggle input:checked + .visibility-slider::after { transform: translateX(20px); }
+    .visibility-labels { display: flex; flex-direction: column; gap: 2px; }
+    .visibility-labels strong { font-size: 0.95rem; color: #000; }
+    .visibility-labels .visibility-sub { font-size: 0.8rem; color: #777; }
+
+    .modal .btn-row {
+      display: flex; gap: 10px; justify-content: space-between; margin-top: 22px;
+      padding-top: 20px; border-top: 1px solid #eee;
+    }
+    .modal .btn-row .left-btns { display: flex; gap: 10px; }
+    .modal .btn-row .right-btns { display: flex; gap: 10px; }
+    .modal .btn-row button {
+      padding: 10px 20px; font-family: inherit; font-size: 0.9rem; cursor: pointer;
+      border-radius: 6px; border: 1px solid #ccc; background: #fff;
+    }
+    .modal .btn-row button:hover { background: #f4f4f4; }
+    .modal .btn-row .btn-primary {
+      background: #2ea043; color: #fff; border-color: #2ea043;
+    }
+    .modal .btn-row .btn-primary:hover { background: #238636; }
+    .modal .btn-row .btn-danger {
+      background: #fff; color: #c00; border-color: #e8b4b4;
+    }
+    .modal .btn-row .btn-danger:hover { background: #ffeaea; }
+
+    /* Publish modal */
+    .publish-field { text-align: left; margin-bottom: 12px; }
+    .publish-field label {
+      display: block; font-size: 0.75rem; text-transform: uppercase;
+      letter-spacing: 0.1em; color: #666; margin-bottom: 4px;
+    }
+    .publish-field input {
+      width: 100%; padding: 10px 12px; border: 1px solid #ccc; font-family: inherit;
+      font-size: 0.92rem; outline: none; border-radius: 4px; box-sizing: border-box;
+    }
+    .status-msg { margin-top: 12px; font-size: 0.88rem; min-height: 1.3em; }
+    .status-msg.success { color: #2ea043; }
+    .status-msg.error { color: #c00; }
+    .status-msg.loading { color: #0969da; }
+    .status-msg.warn { color: #b8860b; }
+
+    .loading-screen {
+      min-height: 200px; display: flex; align-items: center; justify-content: center;
+      color: #888; font-style: italic; font-size: 1rem;
+    }
+
+    /* ===== HERO PAGE EDITOR MODAL ===== */
+    /* Compact summary strip at the top of the page-editor modal so the
+       author always knows which product they're writing about. */
+    .page-modal-product-strip {
+      display: flex; align-items: center; gap: 12px;
+      padding: 10px 12px; background: #faf7f2;
+      border: 1px solid #e8e1d4; border-radius: 6px;
+      margin-bottom: 18px;
+    }
+    .page-modal-product-strip img {
+      width: 48px; height: 48px; object-fit: cover;
+      background: #fff; border-radius: 4px; flex-shrink: 0;
+    }
+    .page-modal-product-strip .info { flex: 1; min-width: 0; }
+    .page-modal-product-strip .info .b {
+      font-size: 0.7rem; color: #888;
+      text-transform: uppercase; letter-spacing: 0.1em;
+    }
+    .page-modal-product-strip .info .t {
+      font-weight: 500; font-size: 0.95rem; line-height: 1.3; margin-top: 2px;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+
+    .page-field { margin-bottom: 14px; text-align: left; }
+    .page-field label {
+      display: block; font-size: 0.75rem; margin-bottom: 5px;
+      color: #555; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 500;
+    }
+    .page-field input,
+    .page-field textarea {
+      width: 100%; padding: 10px 12px; border: 1px solid #ccc; border-radius: 6px;
+      font-family: inherit; font-size: 0.95rem; outline: none; box-sizing: border-box;
+      line-height: 1.5;
+    }
+    .page-field input:focus,
+    .page-field textarea:focus { border-color: #000; }
+    .page-field textarea { resize: vertical; min-height: 70px; }
+  </style>
+</head>
+<body>
+
+  <!-- PASSWORD GATE -->
+  <div class="password-overlay" id="passwordGate">
+    <h2>Product Editor</h2>
+    <p>Enter password to continue</p>
+    <input type="password" id="passwordInput" placeholder="****" autofocus
+           onkeydown="if(event.key==='Enter') checkPassword()">
+    <button onclick="checkPassword()">Enter</button>
+    <div class="error" id="passwordError"></div>
+  </div>
+
+  <!-- TOOLBAR -->
+  <div class="editor-toolbar">
+    <span class="toolbar-title">Skin Safe Product List — Editor</span>
+    <span class="toolbar-status" id="toolbarStatus">Loading&hellip;</span>
+    <button class="toolbar-btn reload-btn" onclick="reloadProducts()" title="Discard changes and reload from site">Reload</button>
+    <button class="toolbar-btn publish-btn" id="publishBtn" onclick="showPublishModal()" disabled>Publish Changes</button>
+  </div>
+
+  <!-- HERO -->
+  <section class="editor-hero">
+    <h1>Skin Safe Product List</h1>
+    <p>Click a product card to edit. Paste a URL to auto-fetch image, title, and price.</p>
+  </section>
+
+  <!-- PAGE HEADER EDITOR -->
+  <section class="page-header-editor" id="pageHeaderEditor">
+    <div class="page-header-editor-inner">
+      <div class="page-header-editor-title">
+        <span class="page-header-editor-label">Page Header</span>
+        <button class="page-header-save-btn" id="pageHeaderSaveBtn" onclick="savePageHeader()" disabled>Save Page Header</button>
+      </div>
+      <div class="page-header-editor-fields">
+        <div class="page-header-field">
+          <label>Heading</label>
+          <input type="text" id="editPageHeading" placeholder="Welcome to Your Clear Skin Sanctuary" oninput="markHeaderDirty()">
+        </div>
+        <div class="page-header-field">
+          <label>Body <span class="page-header-hint">(formatting: select text, then click a button below)</span></label>
+          <div class="page-header-format-bar">
+            <button type="button" onclick="execHeaderFormat('bold')" title="Bold"><strong>B</strong></button>
+            <button type="button" onclick="execHeaderFormat('italic')" title="Italic"><em>I</em></button>
+            <button type="button" onclick="execHeaderFormat('underline')" title="Underline"><u>U</u></button>
+            <button type="button" onclick="insertHeaderLink()" title="Link">&#128279;</button>
+            <select class="page-header-size-select" onchange="execHeaderFontSize(this)" title="Font size">
+              <option value="">Size</option>
+              <option value="2">Small</option>
+              <option value="3">Normal</option>
+              <option value="4">Medium</option>
+              <option value="5">Large</option>
+              <option value="6">X-Large</option>
+              <option value="7">Huge</option>
+            </select>
+            <button type="button" onclick="execHeaderFormat('removeFormat')" title="Clear formatting">&#8709;</button>
+          </div>
+          <div class="page-header-body-editable" id="editPageBody" contenteditable="true" oninput="markHeaderDirty()"></div>
+        </div>
+      </div>
+      <div class="page-header-status" id="pageHeaderStatus"></div>
+    </div>
+  </section>
+
+  <!-- CATEGORY FILTER -->
+  <nav class="editor-category-nav" id="categoryNav">
+    <a data-filter="all" class="active" onclick="filterBy('all', this)">All</a>
+    <a data-filter="skincare" onclick="filterBy('skincare', this)">Skincare</a>
+    <a data-filter="body" onclick="filterBy('body', this)">Body</a>
+    <a data-filter="makeup" onclick="filterBy('makeup', this)">Makeup</a>
+    <a data-filter="hair" onclick="filterBy('hair', this)">Hair</a>
+    <a data-filter="tools" onclick="filterBy('tools', this)">Tools &amp; Technology</a>
+    <a data-filter="fragrance" onclick="filterBy('fragrance', this)">Fragrance</a>
+  </nav>
+
+  <!-- PRODUCT GRID -->
+  <section class="editor-product-area">
+    <div class="editor-product-grid" id="editorProductGrid">
+      <div class="loading-screen">Loading products from the shop&hellip;</div>
+    </div>
+  </section>
+
+  <!-- EDIT MODAL -->
+  <div class="modal-overlay" id="editModal">
+    <div class="modal">
+      <h3 id="modalTitle">Edit Product</h3>
+      <p class="modal-sub">Paste a product URL and click Fetch. Image, title, and price will be pulled from the source site.</p>
+
+      <div class="fetch-row">
+        <input type="url" id="fetchUrl" placeholder="https://www.sephora.com/product/..." onkeydown="if(event.key==='Enter'){event.preventDefault(); fetchProductData();}">
+        <button id="fetchBtn" onclick="fetchProductData()">Fetch</button>
+      </div>
+      <div class="fetch-status" id="fetchStatus"></div>
+
+      <div class="preview-row">
+        <div class="preview-image" id="previewImage">No image</div>
+        <div class="fields">
+          <div class="field">
+            <label>Brand</label>
+            <input type="text" id="editBrand" placeholder="The Ordinary">
+          </div>
+          <div class="field">
+            <label>Product name</label>
+            <input type="text" id="editTitle" placeholder="Squalane Cleanser">
+          </div>
+          <div class="field">
+            <label>Price</label>
+            <input type="text" id="editPrice" placeholder="$21.00">
+          </div>
+          <div class="field">
+            <label>Category</label>
+            <select id="editCategory" onchange="onCategoryChange()">
+              <option value="skincare">Skincare</option>
+              <option value="body">Body</option>
+              <option value="makeup">Makeup</option>
+              <option value="hair">Hair</option>
+              <option value="tools">Tools &amp; Technology</option>
+              <option value="fragrance">Fragrance</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="field field-full" style="margin-top:12px;">
+        <label>Image URL</label>
+        <input type="url" id="editImage" placeholder="https://..." oninput="updatePreviewImage()">
+      </div>
+
+      <div class="field field-full" style="margin-top:10px;">
+        <label>Subcategory label</label>
+        <select id="editSubcategory">
+          <option value="">-- None --</option>
+        </select>
+      </div>
+
+      <div class="field field-full" style="margin-top:10px;">
+        <label>Product URL <span style="text-transform:none; font-size:0.75rem; color:#999;">(links the "Shop Now" button on the product card)</span></label>
+        <input type="url" id="editProductUrl" placeholder="https://www.sephora.com/product/...">
+      </div>
+
+      <div class="field field-full visibility-field" style="margin-top:16px;">
+        <label class="visibility-toggle">
+          <input type="checkbox" id="editHidden">
+          <span class="visibility-slider"></span>
+          <span class="visibility-labels">
+            <strong id="visibilityLabel">Live</strong>
+            <span class="visibility-sub">Product is visible on the shop page</span>
+          </span>
+        </label>
+      </div>
+
+      <div class="btn-row">
+        <div class="left-btns">
+          <button class="btn-danger" id="deleteBtn" onclick="deleteCurrentProduct()">Delete</button>
+        </div>
+        <div class="right-btns">
+          <button onclick="closeEditModal()">Cancel</button>
+          <button class="btn-primary" onclick="saveProductFromModal()">Save</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PUBLISH MODAL -->
+  <div class="modal-overlay" id="publishModal">
+    <div class="modal" style="max-width: 480px;">
+      <h3>Publish Changes</h3>
+      <p class="modal-sub">This will commit the updated product list to GitHub. Vercel will auto-deploy shortly after.</p>
+
+      <div class="publish-field">
+        <label>GitHub Token <span style="font-size:0.7rem; color:#999; text-transform:none;">(stored locally, never uploaded)</span></label>
+        <input type="password" id="githubToken" placeholder="ghp_xxxx or gho_xxxx">
+      </div>
+
+      <div class="btn-row">
+        <div class="left-btns"></div>
+        <div class="right-btns">
+          <button onclick="closePublishModal()">Cancel</button>
+          <button class="btn-primary" id="publishNowBtn" onclick="publishChanges()">Publish Now</button>
+        </div>
+      </div>
+      <div class="status-msg" id="publishStatus"></div>
+    </div>
+  </div>
+
+  <!-- HERO PAGE EDITOR MODAL -->
+  <div class="modal-overlay" id="pageEditorModal">
+    <div class="modal" style="max-width: 700px;">
+      <h3>Edit Hero Page</h3>
+      <p class="modal-sub">Author the personal copy for this product's detail page. Saves directly to GitHub.</p>
+
+      <div class="page-modal-product-strip">
+        <img id="pageProductImage" src="" alt="">
+        <div class="info">
+          <div class="b" id="pageProductBrand"></div>
+          <div class="t" id="pageProductTitle"></div>
+        </div>
+      </div>
+
+      <div class="page-field">
+        <label>Why I picked this</label>
+        <textarea id="pageWhy" rows="4" placeholder="2–3 sentences. The specific scenario where it earns its spot, a sensory detail, what it replaces or outperforms."></textarea>
+      </div>
+
+      <div class="page-field">
+        <label>Best for</label>
+        <input type="text" id="pageBestFor" placeholder="One line. Who should buy this.">
+      </div>
+
+      <div class="page-field">
+        <label>How I use it</label>
+        <textarea id="pageHowUse" rows="3" placeholder="Practical usage. Morning or night? Amount? Pairs with what?"></textarea>
+      </div>
+
+      <div class="page-field">
+        <label>One honest note (the tradeoff)</label>
+        <textarea id="pageTradeoff" rows="2" placeholder="One line. The caveat — don't skip this."></textarea>
+      </div>
+
+      <div class="page-field">
+        <label>Vetting note <span style="text-transform:none; color:#999; font-weight:400; letter-spacing:0;">(optional, appended to the default)</span></label>
+        <input type="text" id="pageVetting" placeholder="e.g. No coconut oil, isopropyl myristate, or algae extract.">
+      </div>
+
+      <div class="status-msg" id="pageEditorStatus"></div>
+
+      <div class="btn-row">
+        <div class="left-btns">
+          <a id="pageViewLink" href="#" target="_blank" rel="noopener" style="display:none; font-size:0.85rem; color:#0969da; text-decoration:none; align-self:center;">View on GitHub →</a>
+        </div>
+        <div class="right-btns">
+          <button onclick="closePageEditorModal()">Cancel</button>
+          <button class="btn-primary" id="pageSaveBtn" onclick="savePageToGitHub()">Save Page</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ============================================================
+    // CONFIG
+    // ============================================================
+    const GITHUB_REPO = 'irive033/the-dermal-archive';
+    const GITHUB_BRANCH = 'main';
+    const SHOP_FILE_PATH = 'index.html';
+    const PASSWORD = '2626';
+    const CORS_PROXY = 'https://corsproxy.io/?';
+    const MICROLINK_API = 'https://api.microlink.io/?url=';
+
+    // Pretty display names for category slugs. The slug stays in data-category
+    // (e.g. "tools") so existing products keep working; the display name is
+    // what the user sees on the shop page and in the editor.
+    const CATEGORY_DISPLAY = {
+      skincare: 'Skincare',
+      body: 'Body',
+      makeup: 'Makeup',
+      hair: 'Hair',
+      tools: 'Tools & Technology',
+      fragrance: 'Fragrance'
+    };
+
+    // Subcategory options scoped per category. Controls the dropdown in the
+    // edit modal. Existing products with values not in this list are kept as
+    // "(custom)" orphan options so no data is lost on edit.
+    const SUBCATEGORIES = {
+      skincare:  ['Cleansers', 'Moisturizers', 'Treatments', 'Masks', 'Sunscreen', 'Eye Care', 'Lip Care', 'Self Tanners'],
+      body:      ['Body Wash', 'Moisturizers', 'Scrubs', 'Deodorant', 'Self Tanners'],
+      makeup:    ['Foundations', 'Tinted Moisturizers', 'Concealers', 'Primers', 'Setting Sprays', 'Highlighter', 'Bronzers', 'Contours', 'Blushes', 'Brushes & Tools'],
+      hair:      ['Shampoo', 'Conditioner', 'Masks', 'Treatments', 'Oils', 'Styling'],
+      tools:     ['Body', 'Face', 'Hair'],
+      fragrance: ['Oil', 'Balm', 'Sprays']
+    };
+
+    // ============================================================
+    // STATE
+    // ============================================================
+    let products = [];          // [{id, category, subcategory, brand, title, price, image, sourceUrl, hidden}]
+    let originalProducts = [];  // snapshot for dirty detection
+    let shopHtmlCache = '';     // raw shop.html from initial load
+    let editingId = null;       // id of product being edited (null = adding new)
+    let currentFilter = 'all';
+    let nextLocalId = 0;
+
+    // ============================================================
+    // PASSWORD
+    // ============================================================
+    function checkPassword() {
+      const input = document.getElementById('passwordInput');
+      if (input.value === PASSWORD) {
+        document.getElementById('passwordGate').classList.add('hidden');
+        sessionStorage.setItem('blog_editor_auth', 'true');
+        loadProducts();
+      } else {
+        document.getElementById('passwordError').textContent = 'Incorrect password';
+        input.value = '';
+        input.focus();
+      }
+    }
+    if (sessionStorage.getItem('blog_editor_auth') === 'true') {
+      document.getElementById('passwordGate').classList.add('hidden');
+      loadProducts();
+    }
+
+    // ============================================================
+    // LOAD + PARSE shop.html
+    // ============================================================
+    async function loadProducts() {
+      setStatus('Loading...');
+      try {
+        // Try same-directory fetch first (works on live site + local preview)
+        const resp = await fetch('../index.html?_=' + Date.now());
+        if (!resp.ok) throw new Error('HTTP ' + resp.status);
+        const html = await resp.text();
+        shopHtmlCache = html;
+        products = parseProductsFromHtml(html);
+        originalProducts = JSON.parse(JSON.stringify(products));
+        nextLocalId = products.length;
+        renderGrid();
+        loadPageHeader(html);
+        setStatus(`${products.length} products loaded`);
+        markClean();
+      } catch (e) {
+        setStatus('Failed to load: ' + e.message, true);
+        document.getElementById('editorProductGrid').innerHTML =
+          `<div class="loading-screen">Could not load the shop — ${escapeHtml(e.message)}</div>`;
+      }
+    }
+
+    function reloadProducts() {
+      if (isDirty() && !confirm('Discard unsaved changes and reload?')) return;
+      loadProducts();
+    }
+
+    function parseProductsFromHtml(html) {
+      const doc = new DOMParser().parseFromString(html, 'text/html');
+      const grid = doc.getElementById('productGrid');
+      if (!grid) return [];
+      const cards = grid.querySelectorAll('.product-card');
+      return Array.from(cards).map((card, i) => {
+        const category = card.dataset.category || '';
+        const sourceUrl = card.dataset.sourceUrl || '';
+        const brand = card.dataset.brand || '';
+        const hidden = card.dataset.hidden === 'true';
+        const subcategoryAttr = card.dataset.subcategory || '';
+        const imageEl = card.querySelector('.product-image');
+        const img = imageEl ? imageEl.querySelector('img') : null;
+        const image = img ? img.getAttribute('src') : '';
+        // If no image, the .product-image text content is the subcategory label ("Cleanser", etc.)
+        const subcategory = subcategoryAttr ||
+          (!image && imageEl ? imageEl.textContent.trim() : '');
+        const h4 = card.querySelector('h4');
+        const priceEl = card.querySelector('.price');
+        return {
+          id: i,
+          category,
+          subcategory,
+          brand,
+          title: h4 ? h4.textContent.trim() : '',
+          price: priceEl ? priceEl.textContent.trim() : '',
+          image,
+          sourceUrl,
+          hidden
+        };
+      });
+    }
+
+    // ============================================================
+    // RENDER GRID
+    // ============================================================
+    // Sort by brand (A-Z), then product name (A-Z).
+    // Products with no brand sort to the end.
+    function sortByBrandThenTitle(arr) {
+      return arr.slice().sort((a, b) => {
+        const aBrand = (a.brand || '').toLowerCase();
+        const bBrand = (b.brand || '').toLowerCase();
+        if (!aBrand && bBrand) return 1;
+        if (aBrand && !bBrand) return -1;
+        if (aBrand !== bBrand) return aBrand.localeCompare(bBrand);
+        return (a.title || '').toLowerCase().localeCompare((b.title || '').toLowerCase());
+      });
+    }
+
+    function renderGrid() {
+      const grid = document.getElementById('editorProductGrid');
+      const visible = sortByBrandThenTitle(
+        products.filter(p => currentFilter === 'all' || p.category === currentFilter)
+      );
+      const cardsHtml = visible.map(p => renderEditorCard(p)).join('');
+      const addCardHtml = `
+        <div class="add-product-card" onclick="openAddModal()">
+          <div class="plus">+</div>
+          <div class="label">Add Product</div>
+        </div>`;
+      grid.innerHTML = cardsHtml + addCardHtml;
+    }
+
+    function renderEditorCard(p) {
+      const imageHtml = p.image
+        ? `<img src="${escapeAttr(p.image)}" alt="${escapeAttr(p.title)}" onerror="this.remove();">`
+        : escapeHtml(p.subcategory || 'No image');
+      const categoryDisplay = CATEGORY_DISPLAY[p.category] || p.category || '';
+      const categoryTag = p.category
+        ? `<div class="card-category-tag">${escapeHtml(categoryDisplay)}</div>` : '';
+      const categoryLabelHtml = p.category
+        ? `<div class="product-category-label">${escapeHtml(categoryDisplay)}</div>`
+        : '';
+      // Preview of the Shop Now button; clicks are swallowed so they don't
+      // navigate — the card's own click handler opens the edit modal instead.
+      const shopNowBtnHtml = p.sourceUrl
+        ? `<span class="product-shop-now">Shop Now</span>`
+        : '';
+      const brandLabelHtml = p.brand
+        ? `<div class="product-brand-label">${escapeHtml(p.brand)}</div>`
+        : '';
+      const hiddenBadgeHtml = p.hidden
+        ? `<div class="card-hidden-tag">Hidden</div>`
+        : '';
+      const hiddenClass = p.hidden ? ' is-hidden' : '';
+      // The "Page" badge opens the hero-page editor; only meaningful for live
+      // products. Click is stopped from bubbling up so it doesn't also fire
+      // the card's openEditModal handler.
+      const pageBadgeHtml = p.hidden
+        ? ''
+        : `<button class="page-badge" onclick="event.stopPropagation(); openPageEditorModal(${p.id})">Page</button>`;
+      return `
+        <div class="editor-product-card${hiddenClass}" onclick="openEditModal(${p.id})">
+          ${categoryTag}
+          ${hiddenBadgeHtml}
+          ${pageBadgeHtml}
+          <div class="edit-badge">Edit</div>
+          <div class="product-image">${imageHtml}</div>
+          <div class="product-info">
+            ${brandLabelHtml}
+            <h4>${escapeHtml(p.title || 'Untitled')}</h4>
+            ${categoryLabelHtml}
+            <div class="price">${escapeHtml(formatPriceDisplay(p.price))}</div>
+            ${shopNowBtnHtml}
+          </div>
+        </div>`;
+    }
+
+    // Matches the auto-$ prefixing in shop.html so the editor grid shows what the live page will show.
+    // State still stores raw input (e.g. "21.00"); display shows "$21.00".
+    function formatPriceDisplay(price) {
+      if (!price) return '';
+      const trimmed = String(price).trim();
+      if (!trimmed) return '';
+      if (/^[$€£¥]/.test(trimmed)) return trimmed;
+      if (/^[\d.]/.test(trimmed)) return '$' + trimmed;
+      return trimmed;
+    }
+
+    function filterBy(category, el) {
+      currentFilter = category;
+      document.querySelectorAll('.editor-category-nav a').forEach(a => a.classList.remove('active'));
+      if (el) el.classList.add('active');
+      renderGrid();
+    }
+
+    // ============================================================
+    // EDIT / ADD MODAL
+    // ============================================================
+    function openEditModal(id) {
+      const p = products.find(x => x.id === id);
+      if (!p) return;
+      editingId = id;
+      document.getElementById('modalTitle').textContent = 'Edit Product';
+      document.getElementById('fetchUrl').value = p.sourceUrl || '';
+      document.getElementById('editBrand').value = p.brand || '';
+      document.getElementById('editTitle').value = p.title || '';
+      document.getElementById('editPrice').value = p.price || '';
+      document.getElementById('editCategory').value = p.category || 'skincare';
+      document.getElementById('editImage').value = p.image || '';
+      // Subcategory must be set AFTER category so the options list is correct.
+      populateSubcategoryOptions(p.category || 'skincare', p.subcategory || '');
+      document.getElementById('editProductUrl').value = p.sourceUrl || '';
+      document.getElementById('editHidden').checked = !!p.hidden;
+      syncVisibilityLabel();
+      document.getElementById('fetchStatus').textContent = '';
+      document.getElementById('fetchStatus').className = 'fetch-status';
+      document.getElementById('deleteBtn').style.display = '';
+      updatePreviewImage();
+      document.getElementById('editModal').classList.add('visible');
+    }
+
+    function openAddModal() {
+      editingId = null;
+      document.getElementById('modalTitle').textContent = 'Add Product';
+      document.getElementById('fetchUrl').value = '';
+      document.getElementById('editBrand').value = '';
+      document.getElementById('editTitle').value = '';
+      document.getElementById('editPrice').value = '';
+      document.getElementById('editCategory').value = 'skincare';
+      document.getElementById('editImage').value = '';
+      populateSubcategoryOptions('skincare', '');
+      document.getElementById('editProductUrl').value = '';
+      document.getElementById('editHidden').checked = false;
+      syncVisibilityLabel();
+      document.getElementById('fetchStatus').textContent = '';
+      document.getElementById('fetchStatus').className = 'fetch-status';
+      document.getElementById('deleteBtn').style.display = 'none';
+      updatePreviewImage();
+      document.getElementById('editModal').classList.add('visible');
+      document.getElementById('fetchUrl').focus();
+    }
+
+    // Keeps the toggle label in sync with the checkbox state in real time
+    function syncVisibilityLabel() {
+      const hidden = document.getElementById('editHidden').checked;
+      const label = document.getElementById('visibilityLabel');
+      const sub = label.nextElementSibling;
+      if (hidden) {
+        label.textContent = 'Hidden';
+        sub.textContent = 'Product will not appear on the shop page';
+      } else {
+        label.textContent = 'Live';
+        sub.textContent = 'Product is visible on the shop page';
+      }
+    }
+    document.addEventListener('change', (e) => {
+      if (e.target && e.target.id === 'editHidden') syncVisibilityLabel();
+    });
+
+    function closeEditModal() {
+      document.getElementById('editModal').classList.remove('visible');
+      editingId = null;
+    }
+
+    // Rebuild the subcategory <select> based on the category. If currentValue
+    // is provided and not in the canonical list, keep it as an orphan option
+    // so legacy data isn't silently dropped on save.
+    function populateSubcategoryOptions(category, currentValue) {
+      const select = document.getElementById('editSubcategory');
+      const options = SUBCATEGORIES[category] || [];
+      select.innerHTML = '<option value="">-- None --</option>';
+      options.forEach(opt => {
+        const el = document.createElement('option');
+        el.value = opt;
+        el.textContent = opt;
+        select.appendChild(el);
+      });
+      if (currentValue && !options.includes(currentValue)) {
+        const orphan = document.createElement('option');
+        orphan.value = currentValue;
+        orphan.textContent = currentValue + ' (custom)';
+        // Insert right after "-- None --"
+        select.insertBefore(orphan, select.children[1]);
+      }
+      select.value = currentValue || '';
+    }
+
+    // Called when the user changes the category dropdown — reset the
+    // subcategory selection since the options list is now different.
+    function onCategoryChange() {
+      const category = document.getElementById('editCategory').value;
+      populateSubcategoryOptions(category, '');
+    }
+
+    function updatePreviewImage() {
+      const url = document.getElementById('editImage').value.trim();
+      const preview = document.getElementById('previewImage');
+      if (url) {
+        preview.innerHTML = `<img src="${escapeAttr(url)}" alt="preview" onerror="this.parentElement.innerHTML='Image failed to load';">`;
+      } else {
+        preview.textContent = 'No image';
+      }
+    }
+
+    function saveProductFromModal() {
+      const brand = document.getElementById('editBrand').value.trim();
+      const title = document.getElementById('editTitle').value.trim();
+      const price = document.getElementById('editPrice').value.trim();
+      const category = document.getElementById('editCategory').value;
+      const image = document.getElementById('editImage').value.trim();
+      const subcategory = document.getElementById('editSubcategory').value.trim();
+      // Prefer the dedicated Product URL field; fall back to the Fetch URL field
+      // if Product URL is empty (so legacy behavior still works).
+      const sourceUrl = document.getElementById('editProductUrl').value.trim()
+                     || document.getElementById('fetchUrl').value.trim();
+      const hidden = document.getElementById('editHidden').checked;
+
+      if (!title) {
+        document.getElementById('fetchStatus').textContent = 'Product name is required.';
+        document.getElementById('fetchStatus').className = 'fetch-status error';
+        return;
+      }
+
+      if (editingId === null) {
+        // Adding new
+        const newProduct = {
+          id: nextLocalId++,
+          category, subcategory, brand, title, price, image, sourceUrl, hidden
+        };
+        products.push(newProduct);
+      } else {
+        // Editing existing
+        const idx = products.findIndex(x => x.id === editingId);
+        if (idx >= 0) {
+          products[idx] = { ...products[idx], category, subcategory, brand, title, price, image, sourceUrl, hidden };
+        }
+      }
+      closeEditModal();
+      renderGrid();
+      markDirty();
+    }
+
+    function deleteCurrentProduct() {
+      if (editingId === null) return;
+      if (!confirm('Delete this product? You can still undo by clicking Reload before publishing.')) return;
+      products = products.filter(x => x.id !== editingId);
+      closeEditModal();
+      renderGrid();
+      markDirty();
+    }
+
+    // ============================================================
+    // FETCH PRODUCT DATA FROM URL
+    // ============================================================
+    async function fetchProductData() {
+      const url = document.getElementById('fetchUrl').value.trim();
+      const status = document.getElementById('fetchStatus');
+      const btn = document.getElementById('fetchBtn');
+      if (!url) {
+        status.textContent = 'Please paste a product URL first.';
+        status.className = 'fetch-status error';
+        return;
+      }
+      if (!/^https?:\/\//i.test(url)) {
+        status.textContent = 'URL must start with http:// or https://';
+        status.className = 'fetch-status error';
+        return;
+      }
+
+      // Convenience: if Product URL is empty, copy the Fetch URL into it so
+      // the Shop Now button has a target by default (user can override after).
+      const productUrlInput = document.getElementById('editProductUrl');
+      if (!productUrlInput.value.trim()) {
+        productUrlInput.value = url;
+      }
+
+      btn.disabled = true;
+      btn.textContent = 'Fetching...';
+      status.textContent = 'Fetching product info (this may take 5-10s)...';
+      status.className = 'fetch-status loading';
+
+      try {
+        // Parallel: Microlink (og:image + og:title) + CORS proxy (JSON-LD for price)
+        const [microResult, htmlResult] = await Promise.allSettled([
+          fetch(MICROLINK_API + encodeURIComponent(url)).then(r => r.json()),
+          fetch(CORS_PROXY + encodeURIComponent(url)).then(r => r.text())
+        ]);
+
+        let gotTitle = '', gotImage = '', gotPrice = '';
+        const sources = [];
+        let blocked = false;
+
+        // Microlink
+        if (microResult.status === 'fulfilled' &&
+            microResult.value &&
+            microResult.value.status === 'success') {
+          const d = microResult.value.data || {};
+          const title = d.title || '';
+          if (looksBlocked(title)) {
+            blocked = true;
+          } else {
+            if (title) gotTitle = title;
+            if (d.image && d.image.url) gotImage = d.image.url;
+            if (title || d.image) sources.push('Microlink');
+          }
+        }
+
+        // JSON-LD / OG via CORS proxy
+        if (htmlResult.status === 'fulfilled' && htmlResult.value) {
+          const html = htmlResult.value;
+          // Detect blocked HTML (Access Denied pages are usually tiny)
+          if (html.length < 3000 && /access denied|forbidden|robot|captcha/i.test(html)) {
+            blocked = true;
+          } else {
+            const parsed = parseJsonLdProduct(html);
+            if (parsed) {
+              if (!gotTitle && parsed.title && !looksBlocked(parsed.title)) gotTitle = parsed.title;
+              if (!gotImage && parsed.image) gotImage = parsed.image;
+              if (parsed.price) gotPrice = parsed.price;
+              sources.push('JSON-LD');
+            } else {
+              // Fallback: parse OG tags from raw HTML
+              const og = parseOgTags(html);
+              if (!gotTitle && og.title && !looksBlocked(og.title)) gotTitle = og.title;
+              if (!gotImage && og.image) gotImage = og.image;
+              if (!gotPrice && og.price) gotPrice = og.price;
+              if (og.title || og.image || og.price) sources.push('OG tags');
+            }
+          }
+        }
+
+        // Fill fields with whatever we got
+        if (gotTitle) document.getElementById('editTitle').value = gotTitle;
+        if (gotImage) {
+          document.getElementById('editImage').value = gotImage;
+          updatePreviewImage();
+        }
+        if (gotPrice) document.getElementById('editPrice').value = gotPrice;
+
+        // Auto-detect subcategory from title if empty. Route through
+        // populateSubcategoryOptions so a guess that isn't in the canonical
+        // list becomes a "(custom)" orphan instead of silently failing.
+        if (!document.getElementById('editSubcategory').value.trim()) {
+          const guess = guessSubcategory(gotTitle || document.getElementById('editTitle').value);
+          if (guess) {
+            const currentCat = document.getElementById('editCategory').value;
+            populateSubcategoryOptions(currentCat, guess);
+          }
+        }
+
+        const fields = [];
+        if (gotTitle) fields.push('title');
+        if (gotImage) fields.push('image');
+        if (gotPrice) fields.push('price');
+
+        if (fields.length === 0) {
+          if (blocked) {
+            status.innerHTML = 'This retailer blocks auto-fetch (Sephora, Nordstrom, Amazon etc. use bot protection). <b>Workaround:</b> right-click the product image on the source page, choose "Copy image address", and paste it into the Image URL field below. Type the title and price manually.';
+          } else {
+            status.innerHTML = 'Could not extract any data from this URL. You can fill in fields manually, or try pasting the image URL directly.';
+          }
+          status.className = 'fetch-status warn';
+        } else if (blocked && fields.length < 3) {
+          status.innerHTML = `Partial data: ${fields.join(', ')}. Some of this retailer's data is blocked — fill in the rest manually.`;
+          status.className = 'fetch-status warn';
+        } else {
+          status.textContent = `Got ${fields.join(', ')} (${sources.join(' + ')}). Edit as needed, then Save.`;
+          status.className = 'fetch-status success';
+        }
+      } catch (e) {
+        status.textContent = 'Fetch failed: ' + e.message + '. Please fill in fields manually.';
+        status.className = 'fetch-status error';
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Fetch';
+      }
+    }
+
+    // Detect common bot-block / error page titles or URL-fallback titles
+    function looksBlocked(title) {
+      if (!title) return false;
+      const t = title.toLowerCase().trim();
+      // Common bot-block / error titles
+      const patterns = [
+        'access denied', 'forbidden', 'page not found', '404', 'not found',
+        'error', 'blocked', 'captcha', 'security check', 'robot check',
+        'are you a human', 'pardon our interruption', 'just a moment'
+      ];
+      if (patterns.some(p => t === p || t.startsWith(p) || t.endsWith(p))) return true;
+      // URL-fragment fallback (e.g. "the-ordinary-squalane-cleanser-P444718?skuId=2278091")
+      // Real product titles have spaces; URL-derived titles don't and contain slug chars.
+      if (title.includes('?') || title.includes('=')) return true;
+      if (!title.includes(' ') && /-/.test(title) && title.length > 12) return true;
+      return false;
+    }
+
+    // JSON-LD Product schema parser
+    function parseJsonLdProduct(html) {
+      try {
+        const doc = new DOMParser().parseFromString(html, 'text/html');
+        const scripts = doc.querySelectorAll('script[type="application/ld+json"]');
+        for (const script of scripts) {
+          const text = script.textContent.trim();
+          if (!text) continue;
+          let data;
+          try { data = JSON.parse(text); } catch (e) { continue; }
+          const product = findProductSchema(data);
+          if (product) {
+            return {
+              title: product.name || '',
+              image: getImageFromProduct(product),
+              price: getPriceFromProduct(product)
+            };
+          }
+        }
+      } catch (e) { /* ignore */ }
+      return null;
+    }
+
+    function findProductSchema(node) {
+      if (!node || typeof node !== 'object') return null;
+      if (node['@type'] === 'Product') return node;
+      if (Array.isArray(node['@type']) && node['@type'].includes('Product')) return node;
+      if (Array.isArray(node)) {
+        for (const item of node) {
+          const r = findProductSchema(item);
+          if (r) return r;
+        }
+      }
+      if (node['@graph']) {
+        const r = findProductSchema(node['@graph']);
+        if (r) return r;
+      }
+      // Some sites nest Product inside other types
+      for (const key of Object.keys(node)) {
+        if (key.startsWith('@')) continue;
+        const val = node[key];
+        if (val && typeof val === 'object') {
+          const r = findProductSchema(val);
+          if (r) return r;
+        }
+      }
+      return null;
+    }
+
+    function getImageFromProduct(product) {
+      if (!product.image) return '';
+      if (typeof product.image === 'string') return product.image;
+      if (Array.isArray(product.image)) {
+        const first = product.image[0];
+        if (typeof first === 'string') return first;
+        if (first && first.url) return first.url;
+      }
+      if (product.image.url) return product.image.url;
+      return '';
+    }
+
+    function getPriceFromProduct(product) {
+      if (!product.offers) return '';
+      const offers = Array.isArray(product.offers) ? product.offers[0] : product.offers;
+      if (!offers || typeof offers !== 'object') return '';
+      const price = offers.price || offers.lowPrice || offers.highPrice;
+      if (!price) return '';
+      const currency = offers.priceCurrency || 'USD';
+      return formatPrice(price, currency);
+    }
+
+    function formatPrice(price, currency) {
+      const num = parseFloat(price);
+      if (isNaN(num)) return String(price);
+      const symbol = { USD: '$', EUR: '€', GBP: '£', CAD: 'C$', AUD: 'A$' }[currency] || '';
+      return symbol + num.toFixed(2);
+    }
+
+    // Fallback OG tag parser
+    function parseOgTags(html) {
+      try {
+        const doc = new DOMParser().parseFromString(html, 'text/html');
+        const get = (prop) => {
+          const el = doc.querySelector(`meta[property="${prop}"], meta[name="${prop}"]`);
+          return el ? el.getAttribute('content') || '' : '';
+        };
+        let price = '';
+        const priceAmt = get('og:price:amount') || get('product:price:amount');
+        const priceCur = get('og:price:currency') || get('product:price:currency') || 'USD';
+        if (priceAmt) price = formatPrice(priceAmt, priceCur);
+        return {
+          title: get('og:title'),
+          image: get('og:image:secure_url') || get('og:image'),
+          price
+        };
+      } catch (e) { return { title: '', image: '', price: '' }; }
+    }
+
+    function guessSubcategory(title) {
+      if (!title) return '';
+      const t = title.toLowerCase();
+      const map = [
+        // Values here should match entries in SUBCATEGORIES so the guess
+        // auto-selects from the dropdown instead of creating an orphan.
+        ['cleanser', 'Cleansers'], ['face wash', 'Cleansers'], ['cleansing balm', 'Cleansers'],
+        ['moisturizer', 'Moisturizers'], ['moisturiser', 'Moisturizers'], ['face cream', 'Moisturizers'], ['hydrating cream', 'Moisturizers'],
+        ['sunscreen', 'Sunscreen'], ['spf', 'Sunscreen'],
+        ['serum', 'Treatments'], ['essence', 'Treatments'], ['toner', 'Treatments'], ['retinol', 'Treatments'], ['exfoliant', 'Treatments'],
+        ['mask', 'Masks'],
+        ['eye cream', 'Eye Care'], ['eye serum', 'Eye Care'],
+        ['lip balm', 'Lip Care'], ['lip mask', 'Lip Care'], ['lip treatment', 'Lip Care'],
+        ['self tanner', 'Self Tanners'], ['self-tanner', 'Self Tanners'],
+        ['body wash', 'Body Wash'], ['shower gel', 'Body Wash'],
+        ['scrub', 'Scrubs'],
+        ['deodorant', 'Deodorant'],
+        ['foundation', 'Foundations'],
+        ['tinted moisturizer', 'Tinted Moisturizers'], ['skin tint', 'Tinted Moisturizers'],
+        ['concealer', 'Concealers'],
+        ['primer', 'Primers'],
+        ['setting spray', 'Setting Sprays'],
+        ['highlighter', 'Highlighter'],
+        ['bronzer', 'Bronzers'],
+        ['contour', 'Contours'],
+        ['blush', 'Blushes'],
+        ['brush', 'Brushes & Tools'],
+        ['shampoo', 'Shampoo'], ['conditioner', 'Conditioner'],
+        ['hair oil', 'Oils'], ['hair serum', 'Oils'],
+      ];
+      for (const [k, v] of map) if (t.includes(k)) return v;
+      return '';
+    }
+
+    // ============================================================
+    // DIRTY TRACKING
+    // ============================================================
+    function isDirty() {
+      return JSON.stringify(products) !== JSON.stringify(originalProducts);
+    }
+    function markDirty() {
+      const s = document.getElementById('toolbarStatus');
+      s.textContent = `${products.length} products • unsaved changes`;
+      s.classList.add('dirty');
+      document.getElementById('publishBtn').disabled = false;
+    }
+    function markClean() {
+      const s = document.getElementById('toolbarStatus');
+      s.textContent = `${products.length} products loaded`;
+      s.classList.remove('dirty');
+      document.getElementById('publishBtn').disabled = true;
+    }
+    function setStatus(msg, isError) {
+      const s = document.getElementById('toolbarStatus');
+      s.textContent = msg;
+      s.classList.toggle('dirty', !!isError);
+    }
+
+    // ============================================================
+    // GENERATE NEW GRID HTML
+    // ============================================================
+    function generateGridHtml(products) {
+      // Sort by brand (A-Z), then product name (A-Z)
+      const sorted = sortByBrandThenTitle(products);
+      return sorted.map(p => renderCardHtml(p)).join('\n');
+    }
+
+    function renderCardHtml(p) {
+      const dataAttrs = [
+        `data-category="${escapeAttr(p.category || '')}"`
+      ];
+      if (p.subcategory) dataAttrs.push(`data-subcategory="${escapeAttr(p.subcategory)}"`);
+      if (p.brand) dataAttrs.push(`data-brand="${escapeAttr(p.brand)}"`);
+      if (p.sourceUrl) dataAttrs.push(`data-source-url="${escapeAttr(p.sourceUrl)}"`);
+      if (p.hidden) dataAttrs.push(`data-hidden="true"`);
+
+      const imageInner = p.image
+        ? `<img src="${escapeAttr(p.image)}" alt="${escapeAttr(p.title)}">`
+        : escapeHtml(p.subcategory || '');
+
+      const brandLabel = p.brand
+        ? `\n            <div class="product-brand-label">${escapeHtml(p.brand)}</div>`
+        : '';
+
+      const categoryLabel = p.category
+        ? `\n            <div class="product-category-label">${escapeHtml(CATEGORY_DISPLAY[p.category] || p.category)}</div>`
+        : '';
+
+      const shopNowBtn = p.sourceUrl
+        ? `\n            <a class="product-shop-now" href="${escapeAttr(p.sourceUrl)}" target="_blank" rel="noopener">Shop Now</a>`
+        : '';
+
+      return `        <div class="product-card" ${dataAttrs.join(' ')}>
+          <div class="product-image">${imageInner}</div>
+          <div class="product-info">${brandLabel}
+            <h4>${escapeHtml(p.title || '')}</h4>${categoryLabel}
+            <div class="price">${escapeHtml(p.price || '')}</div>${shopNowBtn}
+          </div>
+        </div>`;
+    }
+
+    function updateShopHtml(shopHtml, newGridInnerHtml) {
+      const openMarker = '<div class="product-grid" id="productGrid">';
+      const openIdx = shopHtml.indexOf(openMarker);
+      if (openIdx === -1) throw new Error('Could not find product grid in shop.html');
+      const contentStart = openIdx + openMarker.length;
+      // The grid closes with a </div> right before </section>
+      const sectionEnd = shopHtml.indexOf('</section>', contentStart);
+      if (sectionEnd === -1) throw new Error('Could not find section close');
+      const gridClose = shopHtml.lastIndexOf('</div>', sectionEnd);
+      if (gridClose === -1 || gridClose < contentStart) {
+        throw new Error('Could not find grid closing div');
+      }
+      const before = shopHtml.slice(0, contentStart);
+      const after = shopHtml.slice(gridClose);
+      return before + '\n' + newGridInnerHtml + '\n      ' + after;
+    }
+
+    // Regenerate the static PRODUCT_PAGES manifest in index.html so each
+    // product name links to its hero page. Source of truth = products/ folder.
+    function updateManifest(shopHtml, slugs) {
+      const re = /const PRODUCT_PAGES = new Set\(\[[\s\S]*?\]\);/;
+      if (!re.test(shopHtml)) return shopHtml;
+      const body = slugs.slice().sort().map(x => '      ' + JSON.stringify(x)).join(',\n');
+      return shopHtml.replace(re, 'const PRODUCT_PAGES = new Set([\n' + body + '\n    ]);');
+    }
+
+    async function listProductPageSlugs(token) {
+      const headers = token ? { 'Authorization': `token ${token}` } : {};
+      const resp = await fetch(
+        `https://api.github.com/repos/${GITHUB_REPO}/contents/${PRODUCT_PAGE_DIR}?ref=${GITHUB_BRANCH}`,
+        { headers }
+      );
+      if (!resp.ok) return null;
+      const list = await resp.json();
+      if (!Array.isArray(list)) return null;
+      return list.filter(f => f.type === 'file' && f.name.endsWith('.html'))
+                 .map(f => f.name.replace(/\.html$/, ''));
+    }
+
+    // ============================================================
+    // PUBLISH
+    // ============================================================
+    function showPublishModal() {
+      if (!isDirty()) {
+        alert('No changes to publish.');
+        return;
+      }
+      const savedToken = localStorage.getItem('github_token');
+      if (savedToken) document.getElementById('githubToken').value = savedToken;
+      document.getElementById('publishStatus').textContent = '';
+      document.getElementById('publishStatus').className = 'status-msg';
+      document.getElementById('publishModal').classList.add('visible');
+    }
+    function closePublishModal() {
+      document.getElementById('publishModal').classList.remove('visible');
+    }
+
+    async function publishChanges() {
+      const status = document.getElementById('publishStatus');
+      const btn = document.getElementById('publishNowBtn');
+      const token = document.getElementById('githubToken').value.trim();
+      if (!token) {
+        status.textContent = 'Please enter your GitHub token.';
+        status.className = 'status-msg error';
+        return;
+      }
+      localStorage.setItem('github_token', token);
+
+      btn.disabled = true;
+      status.textContent = 'Fetching latest shop.html from GitHub...';
+      status.className = 'status-msg loading';
+
+      try {
+        const result = await commitShopHtml(token, status);
+        status.innerHTML = `Published! <a href="${result.html_url}" target="_blank" style="color:#0969da;">View on GitHub</a><br>Vercel will auto-deploy in ~30s.`;
+        status.className = 'status-msg success';
+        originalProducts = JSON.parse(JSON.stringify(products));
+        markClean();
+      } catch (e) {
+        status.textContent = `Failed: ${e.message}`;
+        status.className = 'status-msg error';
+      } finally {
+        btn.disabled = false;
+      }
+    }
+
+    // Fetch latest shop.html, splice in the product grid, and commit.
+    // Retries once on a 409 SHA conflict (common when the remote was
+    // updated moments before — e.g. by a concurrent push or deploy).
+    async function commitShopHtml(token, status, attempt = 1) {
+      const headers = { 'Authorization': `token ${token}` };
+
+      // 1. Get current shop.html + SHA
+      status.textContent = attempt > 1
+        ? 'SHA conflict — retrying with latest version...'
+        : 'Fetching latest shop.html from GitHub...';
+      status.className = 'status-msg loading';
+      const getResp = await fetch(
+        `https://api.github.com/repos/${GITHUB_REPO}/contents/${SHOP_FILE_PATH}?ref=${GITHUB_BRANCH}`,
+        { headers }
+      );
+      if (!getResp.ok) {
+        const err = await getResp.json().catch(() => ({}));
+        throw new Error(err.message || `HTTP ${getResp.status}`);
+      }
+      const getJson = await getResp.json();
+      const sha = getJson.sha;
+      const currentHtml = decodeBase64(getJson.content);
+
+      // 2. Update the product grid section
+      status.textContent = 'Updating product grid...';
+      const newGridHtml = generateGridHtml(products);
+      let newShopHtml = updateShopHtml(currentHtml, newGridHtml);
+      // Keep product-name -> hero-page links (PRODUCT_PAGES) in sync with products/.
+      try {
+        const pageSlugs = await listProductPageSlugs(token);
+        if (pageSlugs) newShopHtml = updateManifest(newShopHtml, pageSlugs);
+      } catch (e) { /* non-fatal */ }
+
+      // 3. Commit
+      status.textContent = 'Committing to GitHub...';
+      const commitResp = await fetch(
+        `https://api.github.com/repos/${GITHUB_REPO}/contents/${SHOP_FILE_PATH}`,
+        {
+          method: 'PUT',
+          headers: { ...headers, 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            message: `Update Skin Safe Product List (${products.length} products)`,
+            content: encodeBase64(newShopHtml),
+            branch: GITHUB_BRANCH,
+            sha
+          })
+        }
+      );
+
+      if (commitResp.ok) {
+        const result = await commitResp.json();
+        return result.content;
+      }
+
+      const err = await commitResp.json().catch(() => ({}));
+      // 409 = SHA conflict — retry once with a fresh SHA
+      if (commitResp.status === 409 && attempt < 3) {
+        return commitShopHtml(token, status, attempt + 1);
+      }
+      throw new Error(err.message || 'Failed to commit');
+    }
+
+    // ============================================================
+    // PAGE HEADER EDITOR
+    // ============================================================
+    // Tracks the snapshot of what's currently on disk so we can diff and
+    // only show the Save button as active when the user has made changes.
+    let originalHeading = '';
+    let originalBodyHtml = '';
+
+    function loadPageHeader(html) {
+      const doc = new DOMParser().parseFromString(html, 'text/html');
+      const header = doc.getElementById('customPageHeader');
+      const headingEl = header ? header.querySelector('.custom-page-header-heading h1') : null;
+      const bodyEl = header ? header.querySelector('.custom-page-header-body') : null;
+      const heading = headingEl ? headingEl.textContent.trim() : '';
+      const bodyHtml = bodyEl ? bodyEl.innerHTML.trim() : '';
+      document.getElementById('editPageHeading').value = heading;
+      document.getElementById('editPageBody').innerHTML = bodyHtml;
+      originalHeading = heading;
+      originalBodyHtml = bodyHtml;
+      document.getElementById('pageHeaderSaveBtn').disabled = true;
+      document.getElementById('pageHeaderStatus').textContent = '';
+      document.getElementById('pageHeaderStatus').className = 'page-header-status';
+    }
+
+    function markHeaderDirty() {
+      const heading = document.getElementById('editPageHeading').value;
+      const bodyHtml = document.getElementById('editPageBody').innerHTML;
+      const dirty = heading !== originalHeading || bodyHtml !== originalBodyHtml;
+      document.getElementById('pageHeaderSaveBtn').disabled = !dirty;
+    }
+
+    function execHeaderFormat(command) {
+      document.getElementById('editPageBody').focus();
+      document.execCommand(command, false, null);
+      markHeaderDirty();
+    }
+
+    function execHeaderFontSize(select) {
+      const size = select.value;
+      select.selectedIndex = 0; // reset back to "Size" label after applying
+      if (!size) return;
+      document.getElementById('editPageBody').focus();
+      // styleWithCSS makes execCommand emit `<span style="font-size: ...">`
+      // instead of the deprecated `<font size>` tag — keeps the HTML clean.
+      document.execCommand('styleWithCSS', false, true);
+      document.execCommand('fontSize', false, size);
+      markHeaderDirty();
+    }
+
+    function insertHeaderLink() {
+      const url = prompt('Enter URL (include https://):', 'https://');
+      if (!url || url === 'https://') return;
+      document.getElementById('editPageBody').focus();
+      document.execCommand('createLink', false, url);
+      // Ensure all new links open in a new tab
+      const bodyEl = document.getElementById('editPageBody');
+      bodyEl.querySelectorAll('a').forEach(a => {
+        if (!a.getAttribute('target')) {
+          a.setAttribute('target', '_blank');
+          a.setAttribute('rel', 'noopener');
+        }
+      });
+      markHeaderDirty();
+    }
+
+    // Build the replacement HTML block for the custom page header,
+    // matching the indentation already used in shop.html.
+    function buildCustomHeaderHtml(heading, bodyHtml) {
+      return `    <!-- Editable custom page header (managed via product-editor.html) -->
+    <section class="custom-page-header" id="customPageHeader">
+      <div class="custom-page-header-grid">
+        <div class="custom-page-header-heading">
+          <h1>${escapeHtml(heading)}</h1>
+        </div>
+        <div class="custom-page-header-body-wrap">
+          <div class="custom-page-header-body">
+${indentBodyHtml(bodyHtml)}
+          </div>
+          <!-- Static badge — preserved through page-header edits. -->
+          <div class="vetted-badge">
+            <a href="https://acneclinicnyc.com/pore-clogging-ingredients/" target="_blank" rel="noopener">Vetted with the Acne Clinic NYC Ingredient Checker</a>
+          </div>
+        </div>
+      </div>
+    </section>`;
+    }
+
+    // Indent inner body HTML to line up with the surrounding shop.html tags.
+    function indentBodyHtml(html) {
+      return html.split('\n').map(line => '            ' + line.trim()).filter(l => l.trim() !== '').join('\n');
+    }
+
+    // Replace the <section id="customPageHeader">…</section> block in the given
+    // full shop.html string with the new block, preserving everything else.
+    function updateShopHtmlHeader(shopHtml, newBlock) {
+      const openMarker = '<section class="custom-page-header" id="customPageHeader">';
+      const openIdx = shopHtml.indexOf(openMarker);
+      if (openIdx === -1) throw new Error('Could not find custom page header section in shop.html');
+      // Find the matching </section>. The next </section> from openIdx is it
+      // (there are no nested sections inside the custom header).
+      const endTag = '</section>';
+      const endIdx = shopHtml.indexOf(endTag, openIdx);
+      if (endIdx === -1) throw new Error('Could not find custom page header closing tag');
+      const sliceEnd = endIdx + endTag.length;
+      // Include leading whitespace on the opening line so we replace the
+      // indent correctly. Walk back from openIdx to the start of the line.
+      let lineStart = openIdx;
+      while (lineStart > 0 && shopHtml[lineStart - 1] !== '\n') lineStart--;
+      return shopHtml.slice(0, lineStart) + newBlock + shopHtml.slice(sliceEnd);
+    }
+
+    async function savePageHeader() {
+      const status = document.getElementById('pageHeaderStatus');
+      const btn = document.getElementById('pageHeaderSaveBtn');
+      const heading = document.getElementById('editPageHeading').value.trim();
+      const bodyHtml = document.getElementById('editPageBody').innerHTML.trim();
+
+      if (!heading && !bodyHtml) {
+        status.textContent = 'Heading and body are both empty — nothing to save.';
+        status.className = 'page-header-status error';
+        return;
+      }
+
+      // Prompt for GitHub token if we don't have one saved.
+      let token = localStorage.getItem('github_token');
+      if (!token) {
+        token = prompt('Paste your GitHub token to publish the page header change:');
+        if (!token) return;
+        localStorage.setItem('github_token', token);
+      }
+
+      btn.disabled = true;
+      status.textContent = 'Fetching latest shop.html from GitHub...';
+      status.className = 'page-header-status loading';
+
+      try {
+        // Fetch the latest shop.html + its SHA
+        const getResp = await fetch(
+          `https://api.github.com/repos/${GITHUB_REPO}/contents/${SHOP_FILE_PATH}?ref=${GITHUB_BRANCH}`,
+          { headers: { 'Authorization': `token ${token}` } }
+        );
+        if (!getResp.ok) {
+          const err = await getResp.json().catch(() => ({}));
+          throw new Error(err.message || `HTTP ${getResp.status}`);
+        }
+        const getJson = await getResp.json();
+        const sha = getJson.sha;
+        const currentHtml = decodeBase64(getJson.content);
+
+        // Build the replacement block and splice it in
+        status.textContent = 'Updating header...';
+        const newBlock = buildCustomHeaderHtml(heading, bodyHtml);
+        const newShopHtml = updateShopHtmlHeader(currentHtml, newBlock);
+
+        // Commit back
+        status.textContent = 'Committing to GitHub...';
+        const commitResp = await fetch(
+          `https://api.github.com/repos/${GITHUB_REPO}/contents/${SHOP_FILE_PATH}`,
+          {
+            method: 'PUT',
+            headers: {
+              'Authorization': `token ${token}`,
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              message: `Update shop page header`,
+              content: encodeBase64(newShopHtml),
+              branch: GITHUB_BRANCH,
+              sha
+            })
+          }
+        );
+        if (commitResp.ok) {
+          const result = await commitResp.json();
+          status.innerHTML = `Saved! <a href="${result.content.html_url}" target="_blank" style="color:#0969da;">View on GitHub</a> — Vercel will auto-deploy in ~30s.`;
+          status.className = 'page-header-status success';
+          originalHeading = heading;
+          originalBodyHtml = bodyHtml;
+          // Keep button disabled now that we're clean
+          btn.disabled = true;
+        } else {
+          const err = await commitResp.json().catch(() => ({}));
+          status.textContent = `Error: ${err.message || 'Failed to commit'}`;
+          status.className = 'page-header-status error';
+          btn.disabled = false;
+        }
+      } catch (e) {
+        status.textContent = `Failed: ${e.message}`;
+        status.className = 'page-header-status error';
+        btn.disabled = false;
+      }
+    }
+
+    // ============================================================
+    // UTILITIES
+    // ============================================================
+    function escapeHtml(str) {
+      if (str == null) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+    function escapeAttr(str) {
+      if (str == null) return '';
+      return String(str).replace(/&/g, '&amp;').replace(/"/g, '&quot;');
+    }
+    function capitalize(s) { return s ? s[0].toUpperCase() + s.slice(1) : ''; }
+
+    function encodeBase64(str) {
+      return btoa(unescape(encodeURIComponent(str)));
+    }
+    function decodeBase64(str) {
+      return decodeURIComponent(escape(atob(str.replace(/\s/g, ''))));
+    }
+
+    // ============================================================
+    // HERO PAGE EDITOR
+    // ============================================================
+    // Tracks which product is open in the page editor and the GitHub SHA of
+    // the existing file (null when creating a fresh page).
+    let editingPageId = null;
+    let editingPageSha = null;
+
+    const PRODUCT_PAGE_DIR = 'products';
+
+    // Slug used as the filename of products/<slug>.html. Must be stable
+    // across the editor and the shop page so links match what the editor
+    // produces. Keep simple: lowercase, kebab-case, alphanumeric only.
+    function slugifyForPage(name) {
+      return String(name || '')
+        .toLowerCase()
+        .replace(/&/g, ' and ')
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-+|-+$/g, '')
+        .slice(0, 90);
+    }
+
+    // Best-effort retailer label from the product's source URL (e.g.
+    // "Sephora", "Amazon"). Used in the "Shop at X →" CTA on the page.
+    function retailerFromUrl(url) {
+      try {
+        const host = new URL(url).hostname.replace(/^www\./, '');
+        const root = host.split('.').slice(-2, -1)[0] || 'Retailer';
+        return root.charAt(0).toUpperCase() + root.slice(1);
+      } catch (e) { return 'Retailer'; }
+    }
+
+    // Build the full HTML for a product hero page. The structure mirrors
+    // products/atobarrier365-...html (the seed sample) so the load function
+    // can round-trip copy via the data-field selectors.
+    function generateProductPageHTML(p, copy) {
+      const enc = (s) => String(s == null ? '' : s)
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+      // Convert author input (single textarea) to one or more <p> blocks,
+      // splitting on blank lines so paragraph breaks survive.
+      const paraHtml = (s) => {
+        const trimmed = String(s || '').trim();
+        if (!trimmed) return '';
+        return trimmed.split(/\n\s*\n+/)
+          .map(part => `<p>${enc(part).replace(/\n/g, '<br>')}</p>`)
+          .join('');
+      };
+      const categoryDisplay = CATEGORY_DISPLAY[p.category] || 'Skincare';
+      const retailer = retailerFromUrl(p.sourceUrl || '');
+      const priceDisplay = formatPriceDisplay(p.price);
+      const vettingExtra = (copy.vetting || '').trim()
+        ? ' ' + enc(copy.vetting.trim())
+        : '';
+
+      return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Why I Recommend ${enc(p.title)} — The Dermal Archive</title>
+  <meta name="description" content="My honest review of ${enc(p.title)} by ${enc(p.brand)}. Why I picked it, who it's best for, and what to know before you buy." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --bg: #faf7f2;
+      --ink: #2a2621;
+      --ink-soft: #6b6458;
+      --rule: #e8e1d4;
+      --accent: #8a6f4a;
+      --safe: #5c7a5c;
+      --card: #ffffff;
+      --serif: "Cormorant Garamond", Georgia, serif;
+      --sans: "Inter", -apple-system, sans-serif;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg); color: var(--ink);
+      font-family: var(--sans); font-weight: 300; line-height: 1.65;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; text-decoration: none; }
+    img { max-width: 100%; display: block; }
+    .nav {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 1.75rem 2.5rem; border-bottom: 1px solid var(--rule);
+    }
+    .nav-brand { font-family: var(--serif); font-size: 1.5rem; letter-spacing: 0.02em; }
+    .nav-links {
+      display: flex; gap: 2rem; list-style: none;
+      font-size: 0.8rem; letter-spacing: 0.12em; text-transform: uppercase;
+    }
+    .nav-links a { color: var(--ink-soft); transition: color .2s; }
+    .nav-links a:hover { color: var(--ink); }
+    .breadcrumb {
+      max-width: 1100px; margin: 2rem auto 0; padding: 0 2rem;
+      font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--ink-soft);
+    }
+    .breadcrumb a:hover { color: var(--accent); }
+    .breadcrumb .sep { margin: 0 0.5rem; opacity: 0.5; }
+    .product {
+      max-width: 1100px; margin: 2rem auto 4rem; padding: 0 2rem;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: start;
+    }
+    .product-image {
+      background: var(--card); border: 1px solid var(--rule);
+      aspect-ratio: 4 / 5; overflow: hidden;
+      position: sticky; top: 2rem;
+    }
+    .product-image img { width: 100%; height: 100%; object-fit: cover; }
+    .product-info .category {
+      font-size: 0.7rem; letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--ink-soft); margin-bottom: 0.75rem;
+    }
+    .product-info .brand {
+      font-family: var(--serif); font-style: italic;
+      font-size: 1.1rem; color: var(--accent); margin-bottom: 0.25rem;
+    }
+    .product-info h1 {
+      font-family: var(--serif);
+      font-size: clamp(2rem, 4vw, 3rem); font-weight: 400;
+      line-height: 1.1; margin-bottom: 1.25rem;
+    }
+    .product-info .price { font-size: 1.1rem; margin-bottom: 1.5rem; }
+    .safe-badge {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      padding: 0.5rem 0.9rem; border: 1px solid var(--safe); color: var(--safe);
+      font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase;
+      margin-bottom: 2rem;
+    }
+    .safe-badge::before { content: "\\2713"; font-size: 0.9rem; font-weight: 500; }
+    .section { margin-bottom: 2rem; }
+    .section-label {
+      font-family: var(--serif); font-style: italic;
+      font-size: 1.05rem; color: var(--accent); margin-bottom: 0.5rem;
+    }
+    .section p { font-size: 0.98rem; }
+    .section p + p { margin-top: 0.7em; }
+    .tradeoff {
+      background: rgba(138, 111, 74, 0.06); border-left: 2px solid var(--accent);
+      padding: 1rem 1.25rem; font-size: 0.95rem; margin: 2rem 0;
+    }
+    .tradeoff .section-label { margin-bottom: 0.25rem; }
+    .cta-row { display: flex; gap: 1rem; margin-top: 2rem; flex-wrap: wrap; }
+    .btn {
+      display: inline-block; padding: 0.9rem 2rem;
+      font-size: 0.8rem; letter-spacing: 0.18em; text-transform: uppercase;
+      transition: all .25s ease; border: 1px solid var(--ink);
+    }
+    .btn-primary { background: var(--ink); color: var(--bg); }
+    .btn-primary:hover { background: var(--accent); border-color: var(--accent); }
+    .btn-secondary { background: transparent; color: var(--ink); }
+    .btn-secondary:hover { background: var(--ink); color: var(--bg); }
+    .vetting-note {
+      margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--rule);
+      font-size: 0.85rem; color: var(--ink-soft); font-style: italic;
+      font-family: var(--serif);
+    }
+    .vetting-note a { color: var(--accent); border-bottom: 1px solid var(--accent); }
+    @media (max-width: 768px) {
+      .nav { padding: 1.25rem 1.5rem; flex-wrap: wrap; }
+      .nav-links { gap: 1rem; font-size: 0.7rem; }
+      .product { grid-template-columns: 1fr; gap: 2rem; margin-top: 1rem; }
+      .product-image { position: static; aspect-ratio: 1; }
+      .cta-row { flex-direction: column; }
+      .btn { text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="nav">
+    <a href="../index.html" class="nav-brand">The Dermal Archive</a>
+    <ul class="nav-links">
+      <li><a href="../routines.html">Routines</a></li>
+      <li><a href="../about.html">About</a></li>
+      <li><a href="../contact.html">Contact</a></li>
+    </ul>
+  </nav>
+
+  <div class="breadcrumb">
+    <a href="../index.html">Skin Safe List</a>
+    <span class="sep">/</span>
+    <span>${enc(categoryDisplay)}</span>
+    <span class="sep">/</span>
+    <span>${enc(p.title)}</span>
+  </div>
+
+  <article class="product">
+    <div class="product-image">
+      <img src="${enc(p.image || '')}" alt="${enc(p.title)} by ${enc(p.brand)}" />
+    </div>
+    <div class="product-info">
+      <div class="category">${enc(categoryDisplay)}</div>
+      <div class="brand">${enc(p.brand)}</div>
+      <h1>${enc(p.title)}</h1>
+      <div class="price">${enc(priceDisplay)}</div>
+
+      <div class="safe-badge">Acne-Safe Verified</div>
+
+      <div class="section" data-field="why">
+        <div class="section-label">Why I picked this</div>
+        ${paraHtml(copy.why)}
+      </div>
+
+      <div class="section" data-field="best-for">
+        <div class="section-label">Best for</div>
+        ${paraHtml(copy.bestFor)}
+      </div>
+
+      <div class="section" data-field="how">
+        <div class="section-label">How I use it</div>
+        ${paraHtml(copy.howUse)}
+      </div>
+
+      <div class="tradeoff" data-field="tradeoff">
+        <div class="section-label">One honest note</div>
+        ${paraHtml(copy.tradeoff)}
+      </div>
+
+      <div class="cta-row">
+        <a href="${enc(p.sourceUrl || '#')}" class="btn btn-primary" target="_blank" rel="noopener">
+          Shop at ${enc(retailer)} →
+        </a>
+        <a href="../index.html" class="btn btn-secondary">
+          Back to full list
+        </a>
+      </div>
+
+      <p class="vetting-note">
+        Cleared against <a href="https://acneclinicnyc.com/pore-clogging-ingredients/" target="_blank" rel="noopener">Acne Clinic NYC's Pore-Clogging Ingredients Checker</a>.<span data-field="vetting-extra">${vettingExtra}</span>
+      </p>
+    </div>
+  </article>
+
+</body>
+</html>
+`;
+    }
+
+    // Reverse of generateProductPageHTML for the four authoring fields plus
+    // the optional vetting extra. The page is parsed via the data-field
+    // attributes so the editor can round-trip copy without touching the
+    // rest of the markup.
+    function extractPageCopy(html) {
+      const doc = new DOMParser().parseFromString(html, 'text/html');
+      const pickPara = (selector) => {
+        const el = doc.querySelector(selector);
+        if (!el) return '';
+        const ps = el.querySelectorAll('p');
+        return Array.from(ps).map(p => p.textContent.trim()).join('\n\n');
+      };
+      const vettingSpan = doc.querySelector('span[data-field="vetting-extra"]');
+      return {
+        why: pickPara('[data-field="why"]'),
+        bestFor: pickPara('[data-field="best-for"]'),
+        howUse: pickPara('[data-field="how"]'),
+        tradeoff: pickPara('[data-field="tradeoff"]'),
+        vetting: vettingSpan ? vettingSpan.textContent.trim() : '',
+      };
+    }
+
+    async function openPageEditorModal(id) {
+      const p = products.find(x => x.id === id);
+      if (!p) return;
+      editingPageId = id;
+      editingPageSha = null;
+
+      document.getElementById('pageProductImage').src = p.image || '';
+      document.getElementById('pageProductBrand').textContent = p.brand || '';
+      document.getElementById('pageProductTitle').textContent = p.title || '';
+
+      // Reset form
+      ['pageWhy','pageBestFor','pageHowUse','pageTradeoff','pageVetting']
+        .forEach(idAttr => { document.getElementById(idAttr).value = ''; });
+      const status = document.getElementById('pageEditorStatus');
+      status.textContent = '';
+      status.className = 'status-msg';
+      document.getElementById('pageViewLink').style.display = 'none';
+
+      document.getElementById('pageEditorModal').classList.add('visible');
+
+      // Try to load existing page from GitHub. If absent, leave the form blank.
+      const slug = slugifyForPage(p.title);
+      const filePath = `${PRODUCT_PAGE_DIR}/${slug}.html`;
+      status.textContent = 'Checking for existing page...';
+      status.className = 'status-msg loading';
+      try {
+        const resp = await fetch(
+          `https://api.github.com/repos/${GITHUB_REPO}/contents/${filePath}?ref=${GITHUB_BRANCH}`,
+          { cache: 'no-store' }
+        );
+        if (resp.ok) {
+          const data = await resp.json();
+          editingPageSha = data.sha;
+          let html;
+          if (data.encoding === 'base64' && data.content) {
+            html = decodeBase64(data.content);
+          } else {
+            const raw = await fetch(
+              `https://raw.githubusercontent.com/${GITHUB_REPO}/${GITHUB_BRANCH}/${filePath}`,
+              { cache: 'no-store' }
+            );
+            html = await raw.text();
+          }
+          const copy = extractPageCopy(html);
+          document.getElementById('pageWhy').value = copy.why;
+          document.getElementById('pageBestFor').value = copy.bestFor;
+          document.getElementById('pageHowUse').value = copy.howUse;
+          document.getElementById('pageTradeoff').value = copy.tradeoff;
+          document.getElementById('pageVetting').value = copy.vetting;
+
+          const link = document.getElementById('pageViewLink');
+          link.href = data.html_url;
+          link.style.display = 'inline';
+
+          status.textContent = 'Loaded existing page. Edit and save to update.';
+          status.className = 'status-msg success';
+        } else if (resp.status === 404) {
+          status.textContent = 'No page yet — fill in the four sections and save to create one.';
+          status.className = 'status-msg';
+        } else {
+          throw new Error(`HTTP ${resp.status}`);
+        }
+      } catch (e) {
+        status.textContent = `Couldn't check for existing page (${e.message}). You can still save a new one.`;
+        status.className = 'status-msg warn';
+      }
+    }
+
+    function closePageEditorModal() {
+      document.getElementById('pageEditorModal').classList.remove('visible');
+      editingPageId = null;
+      editingPageSha = null;
+    }
+
+    async function savePageToGitHub() {
+      const p = products.find(x => x.id === editingPageId);
+      if (!p) return;
+      const status = document.getElementById('pageEditorStatus');
+      const btn = document.getElementById('pageSaveBtn');
+
+      let token = localStorage.getItem('github_token');
+      if (!token) {
+        token = prompt('Paste your GitHub token to save the page:');
+        if (!token) return;
+        localStorage.setItem('github_token', token);
+      }
+
+      const copy = {
+        why: document.getElementById('pageWhy').value,
+        bestFor: document.getElementById('pageBestFor').value,
+        howUse: document.getElementById('pageHowUse').value,
+        tradeoff: document.getElementById('pageTradeoff').value,
+        vetting: document.getElementById('pageVetting').value,
+      };
+
+      const empty = ['why','bestFor','howUse','tradeoff'].filter(k => !copy[k].trim());
+      if (empty.length > 0) {
+        status.textContent = 'Please fill in all four sections before saving.';
+        status.className = 'status-msg error';
+        return;
+      }
+
+      const slug = slugifyForPage(p.title);
+      const filePath = `${PRODUCT_PAGE_DIR}/${slug}.html`;
+      const html = generateProductPageHTML(p, copy);
+      const content = encodeBase64(html);
+
+      btn.disabled = true;
+      status.textContent = 'Saving page...';
+      status.className = 'status-msg loading';
+
+      try {
+        // Refresh SHA right before commit (avoids 409 if the file was
+        // modified elsewhere since the modal opened).
+        let sha = editingPageSha;
+        try {
+          const checkResp = await fetch(
+            `https://api.github.com/repos/${GITHUB_REPO}/contents/${filePath}?ref=${GITHUB_BRANCH}`,
+            { headers: { 'Authorization': `token ${token}` }, cache: 'no-store' }
+          );
+          if (checkResp.ok) sha = (await checkResp.json()).sha;
+          else if (checkResp.status === 404) sha = null;
+        } catch (e) { /* leave sha as-is */ }
+
+        const body = {
+          message: sha ? `Update hero page: ${p.title}` : `Add hero page: ${p.title}`,
+          content,
+          branch: GITHUB_BRANCH,
+        };
+        if (sha) body.sha = sha;
+
+        const resp = await fetch(
+          `https://api.github.com/repos/${GITHUB_REPO}/contents/${filePath}`,
+          {
+            method: 'PUT',
+            headers: { 'Authorization': `token ${token}`, 'Content-Type': 'application/json' },
+            body: JSON.stringify(body),
+          }
+        );
+        if (!resp.ok) {
+          const err = await resp.json().catch(() => ({}));
+          throw new Error(err.message || `HTTP ${resp.status}`);
+        }
+        const result = await resp.json();
+        editingPageSha = result.content.sha;
+
+        const link = document.getElementById('pageViewLink');
+        link.href = result.content.html_url;
+        link.style.display = 'inline';
+
+        status.innerHTML = `Saved! <a href="${result.content.html_url}" target="_blank" style="color:#0969da;">View on GitHub</a><br>Vercel will deploy in ~30s.`;
+        status.className = 'status-msg success';
+      } catch (e) {
+        status.textContent = `Failed: ${e.message}`;
+        status.className = 'status-msg error';
+      } finally {
+        btn.disabled = false;
+      }
+    }
+
+    // Warn before leaving with unsaved changes
+    window.addEventListener('beforeunload', (e) => {
+      if (isDirty()) {
+        e.preventDefault();
+        e.returnValue = '';
+      }
+    });
+  </script>
+</body>
+</html>
