@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Minimal SPF Makeup Routine — The Dermal Archive</title>
+  <link rel="stylesheet" href="../../css/style.css">
+  <meta name="date" content="2026-05-17T22:44:43.055Z">
+  <meta name="author" content="Isabella Rivera">
+  <meta name="category" content="beauty">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,400&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap');
+    body { font-family: 'EB Garamond', 'Garamond', 'Georgia', serif; }
+    h1, h2, h3, h4 { font-family: 'Cormorant Garamond', 'Didot', 'Georgia', serif; }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <a href="../../index.html" class="site-brand">The Dermal Archive</a>
+      <nav class="main-nav">
+        <a href="../../routines.html">Routines</a>
+        <a href="../../about.html">About</a>
+        <a href="../../contact.html">Contact</a>
+      </nav>
+    </div>
+  </header>
+  <main>
+    <section class="post-header has-header-image" style="background-image: url('../../images/uploads/2026/05/4d90d4f00592.png')">
+      <h1>Minimal SPF Makeup Routine</h1>
+      <div class="post-meta">
+        <span class="author">Isabella Rivera</span>
+        <span class="date">&middot; May 17, 2026</span>
+      </div>
+    </section>
+    <section class="post-body">
+      <div class="post-content">
+        <p>All good makeup starts with skincare. A streamlined cosmetics approach that prioritizes skin health while maintaining a polished look.</p>
+
+        <h2><b><font face="Georgia">Foundation</font></b></h2>
+
+        <p>Start with a foundation that includes SPF for everyday protection. Layer with concealer for targeted coverage where needed.</p>
+
+        <div class="img-wrap align-left">
+          <img src="../../images/uploads/2026/05/00a88fdd8a03.webp" alt="Minimal SPF Makeup Routine" style="width:38%; height:auto;">
+        </div>
+
+        <h2><b>Concealer</b></h2>
+
+        <div class="img-wrap align-left">
+          <img src="../../images/uploads/2026/05/a2c5c6df41d7.webp" alt="Minimal SPF Makeup Routine" style="width:38%; height:auto;">
+        </div>
+
+        <h2>Bronzer</h2>
+
+        <p>Add dimension with cream and powder bronzers. Blend for a natural, sun-kissed effect.</p>
+
+        <h2>Blush</h2>
+
+        <p>Apply blush in both liquid and powder formulations for a layered, long-lasting flush of color.</p>
+
+        <div class="img-wrap align-left">
+          <img src="../../images/uploads/2026/05/6bd338bc78d2.webp" alt="Minimal SPF Makeup Routine" style="width:38%; height:auto;">
+        </div>
+
+        <h2>Setting Powder</h2>
+
+        <p>Set everything in place with a light powder to ensure longevity throughout the day.</p>
+
+        <h2>Lips</h2>
+
+        <p>Finish with lip liner, lipstick, and a hydrating balm for a polished but natural lip.</p>
+
+        <h2>Optional</h2>
+
+        <p>Setting spray and mascara for finishing touches when you want a little extra.</p>
+
+        <p><em>Featured brands: Rare Beauty, Ciele, Westman Atelier, Saie, Charlotte Tilbury</em></p>
+
+
+      </div>
+    </section>
+    <section class="newsletter-section">
+      <h3>Never miss a post</h3>
+      <form class="newsletter-form" onsubmit="event.preventDefault(); this.querySelector('button').textContent='Thank you!';">
+        <input type="email" placeholder="Email Address" required>
+        <button type="submit">Sign Up</button>
+      </form>
+    </section>
+  </main>
+  <footer class="site-footer"><p>&copy; 2026 The Dermal Archive. All rights reserved.</p></footer>
+  <script>
+    // Gallery slideshow navigation (used by any .post-gallery on the page).
+    // Wrap-around: always show vis slides starting at idx, modulo total, so
+    // every position renders the same number of equally-sized slides.
+    // Queries figures (current format) AND legacy .gallery-slide elements
+    // so already-published posts that haven't been re-saved still work.
+    function gallerySlide(btn, dir) {
+      var gallery = btn.closest('.post-gallery');
+      if (!gallery) return;
+      var slides = gallery.querySelectorAll('.gallery-figure, .gallery-slide, .gallery-slide-link');
+      var vis = parseInt(gallery.dataset.visible || '1', 10);
+      var total = slides.length;
+      if (total <= vis) return;
+      var idx = parseInt(gallery.dataset.slide || '0', 10);
+      idx = ((idx + dir * vis) % total + total) % total;
+      gallery.dataset.slide = idx;
+      for (var i = 0; i < total; i++) {
+        var offset = ((i - idx) % total + total) % total;
+        var isActive = offset < vis;
+        slides[i].classList.toggle('active', isActive);
+        if (isActive) slides[i].style.order = offset;
+        else slides[i].style.removeProperty('order');
+      }
+      var counter = gallery.querySelector('.gallery-counter');
+      if (counter) {
+        if (vis === 1) {
+          counter.textContent = (idx + 1) + ' / ' + total;
+        } else {
+          var startIdx = idx + 1;
+          var endIdx = ((idx + vis - 1) % total) + 1;
+          counter.textContent = endIdx >= startIdx
+            ? startIdx + '–' + endIdx + ' / ' + total
+            : startIdx + '–' + total + ', 1–' + endIdx + ' / ' + total;
+        }
+      }
+    }
+  </script>
+</body>
+</html>

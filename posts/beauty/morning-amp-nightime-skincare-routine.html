@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Morning & Nighttime Skincare Routine — The Dermal Archive</title>
+  <link rel="stylesheet" href="../../css/style.css">
+  <meta name="date" content="2026-04-16T03:29:08.177Z">
+  <meta name="author" content="Isabella Rivera">
+  <meta name="category" content="beauty">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,400&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap');
+    body { font-family: 'EB Garamond', 'Garamond', 'Georgia', serif; }
+    h1, h2, h3, h4 { font-family: 'Cormorant Garamond', 'Didot', 'Georgia', serif; }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <a href="../../index.html" class="site-brand">The Dermal Archive</a>
+      <nav class="main-nav">
+        <a href="../../routines.html">Routines</a>
+        <a href="../../about.html">About</a>
+        <a href="../../contact.html">Contact</a>
+      </nav>
+    </div>
+  </header>
+  <main>
+    <section class="post-header has-header-image" style="background-image: url('../../images/uploads/2026/05/46334925cb04.png')">
+      <h1>Morning & Nighttime Skincare Routine</h1>
+      <div class="post-meta">
+        <span class="author">Isabella Rivera</span>
+        <span class="date">&middot; Apr 15, 2026</span>
+      </div>
+    </section>
+    <section class="post-body">
+      <div class="post-content">
+        <h2>Your Guide to Clear Skin. Simplified.</h2>
+
+        <p>A four &amp; five step skincare routine for morning and night. Focused on treating acne, aging, and irritation.</p>
+
+        <hr class="post-divider">
+
+        <div class="pdf-embed" data-filename="am-skincare-checklist.pdf">
+          <a class="pdf-card" href="../../files/uploads/2026/05/fd84b595ebdc.pdf" target="_blank" rel="noopener" download="am-skincare-checklist.pdf" style="width:75%;">
+            <iframe class="pdf-preview" src="../../files/uploads/2026/05/fd84b595ebdc.pdf#toolbar=0&navpanes=0&scrollbar=0&view=FitH&page=1" loading="lazy" title="am skincare checklist"></iframe>
+          </a>
+        </div>
+
+        <div class="pdf-embed" data-filename="pm-skincare-checklist.pdf">
+          <a class="pdf-card" href="../../files/uploads/2026/05/982c915d6ad9.pdf" target="_blank" rel="noopener" download="pm-skincare-checklist.pdf" style="width:75%;">
+            <iframe class="pdf-preview" src="../../files/uploads/2026/05/982c915d6ad9.pdf#toolbar=0&navpanes=0&scrollbar=0&view=FitH&page=1" loading="lazy" title="pm skincare checklist"></iframe>
+          </a>
+        </div>
+
+        <hr class="post-divider">
+
+        <h2><b><font face="Georgia">AM</font></b></h2>
+
+        <div class="post-gallery" data-slide="0" data-visible="4" style="gap: 0px;">
+          <figure class="gallery-figure active">
+            <img src="../../images/uploads/2026/05/e37ce8a6239e.png" alt="Gallery image">
+          </figure>
+          <figure class="gallery-figure active">
+            <img src="../../images/uploads/2026/05/33925a7c7833.png" alt="Gallery image">
+          </figure>
+          <figure class="gallery-figure active">
+            <img src="../../images/uploads/2026/05/8456dd9970e4.webp" alt="Gallery image">
+          </figure>
+          <figure class="gallery-figure active">
+            <img src="../../images/uploads/2026/05/820add863e20.jpg" alt="Gallery image">
+          </figure>
+        </div>
+
+        <h2><b><font face="Georgia">PM</font></b></h2>
+
+        <p>Introduce active ingredients slowly and alternate benzoyl peroxide and retinol on different nights initially to allow skin adjustment and minimize irritation.</p>
+
+
+      </div>
+    </section>
+    <section class="newsletter-section">
+      <h3>Never miss a post</h3>
+      <form class="newsletter-form" onsubmit="event.preventDefault(); this.querySelector('button').textContent='Thank you!';">
+        <input type="email" placeholder="Email Address" required>
+        <button type="submit">Sign Up</button>
+      </form>
+    </section>
+  </main>
+  <footer class="site-footer"><p>&copy; 2026 The Dermal Archive. All rights reserved.</p></footer>
+  <script>
+    // Gallery slideshow navigation (used by any .post-gallery on the page).
+    // Wrap-around: always show vis slides starting at idx, modulo total, so
+    // every position renders the same number of equally-sized slides.
+    // Queries figures (current format) AND legacy .gallery-slide elements
+    // so already-published posts that haven't been re-saved still work.
+    function gallerySlide(btn, dir) {
+      var gallery = btn.closest('.post-gallery');
+      if (!gallery) return;
+      var slides = gallery.querySelectorAll('.gallery-figure, .gallery-slide, .gallery-slide-link');
+      var vis = parseInt(gallery.dataset.visible || '1', 10);
+      var total = slides.length;
+      if (total <= vis) return;
+      var idx = parseInt(gallery.dataset.slide || '0', 10);
+      idx = ((idx + dir * vis) % total + total) % total;
+      gallery.dataset.slide = idx;
+      for (var i = 0; i < total; i++) {
+        var offset = ((i - idx) % total + total) % total;
+        var isActive = offset < vis;
+        slides[i].classList.toggle('active', isActive);
+        if (isActive) slides[i].style.order = offset;
+        else slides[i].style.removeProperty('order');
+      }
+      var counter = gallery.querySelector('.gallery-counter');
+      if (counter) {
+        if (vis === 1) {
+          counter.textContent = (idx + 1) + ' / ' + total;
+        } else {
+          var startIdx = idx + 1;
+          var endIdx = ((idx + vis - 1) % total) + 1;
+          counter.textContent = endIdx >= startIdx
+            ? startIdx + '–' + endIdx + ' / ' + total
+            : startIdx + '–' + total + ', 1–' + endIdx + ' / ' + total;
+        }
+      }
+    }
+  </script>
+</body>
+</html>

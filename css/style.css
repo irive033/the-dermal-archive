@@ -1,15 +1,3 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Routines — The Dermal Archive</title>
-  <style>
-  /* ----------------------------------------------------------------
-     Inlined from the Isabella Sofia stylesheet (originally css/style.css)
-     so this page is fully self-contained and can be developed as its own
-     standalone site with no external local dependencies.
-     ---------------------------------------------------------------- */
 /* ============================================
    Isabella Sofia - Main Stylesheet
    Fonts: Minerva Modern (headings), Adobe Garamond Pro (body/nav)
@@ -103,14 +91,14 @@ p {
   padding: 80px 4vw;
 }
 
-/* --- Header (brand left, nav right, warm minimal) --- */
+/* --- Header --- */
 .site-header {
-  background: #f4f2ec;
-  padding: 30px 5vw;
+  background: #fff;
+  padding: 30px 4vw;
   position: sticky;
   top: 0;
   z-index: 1000;
-  border-bottom: 1px solid #e6e1d6;
+  border-bottom: 1px solid #eee;
 }
 
 .header-inner {
@@ -118,45 +106,86 @@ p {
   margin: 0 auto;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 20px;
+  justify-content: center;
+  position: relative;
   flex-wrap: wrap;
+  gap: 15px;
 }
 
-.site-brand {
-  font-family: 'Cormorant Garamond', 'Didot', 'Georgia', serif;
-  font-size: 1.6rem;
-  font-weight: 500;
-  letter-spacing: 0.18em;
+.social-icons {
+  display: flex;
+  gap: 12px;
+  position: absolute;
+  left: 0;
+}
+
+.social-icons a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  color: #000;
+  transition: opacity 0.3s;
+}
+
+.social-icons a:hover {
+  opacity: 0.6;
+}
+
+.social-icons svg {
+  width: 20px;
+  height: 20px;
+  fill: currentColor;
+}
+
+.site-title {
+  font-family: 'minerva-modern', 'Didot', 'Georgia', serif;
+  font-size: 1.8rem;
+  font-weight: 400;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: #2a2621;
-  white-space: nowrap;
+  text-align: center;
+}
+
+.site-title a {
+  color: #000;
 }
 
 .main-nav {
+  width: 100%;
   display: flex;
-  align-items: center;
-  gap: 2.75rem;
+  justify-content: center;
+  gap: 30px;
+  margin-top: 5px;
 }
 
 .main-nav a {
-  font-family: 'EB Garamond', 'Garamond', 'Georgia', serif;
-  font-size: 0.8rem;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: #6b6458;
-  transition: color 0.2s;
+  font-family: 'adobe-garamond-pro', 'Garamond', 'Georgia', serif;
+  font-size: 1.2rem;
+  letter-spacing: 0.01em;
+  color: #000;
+  transition: opacity 0.3s;
   white-space: nowrap;
 }
 
 .main-nav a:hover {
-  color: #2a2621;
+  opacity: 0.6;
 }
 
 .main-nav a.active {
-  color: #2a2621;
-  border-bottom: 1px solid #2a2621;
-  padding-bottom: 2px;
+  border-bottom: 1px solid #000;
+}
+
+/* Mobile menu toggle */
+.menu-toggle {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  position: absolute;
+  right: 0;
+  font-size: 1.5rem;
 }
 
 /* --- Hero Section --- */
@@ -561,10 +590,23 @@ p {
 }
 
 .post-content p {
-  font-size: 1.15rem;
-  line-height: 1.9;
-  margin-bottom: 25px;
+  font-size: 1rem;
+  line-height: 1.85;
+  margin-bottom: 22px;
   color: #222;
+}
+
+/* Lede paragraph — the intro sentence(s) just after the byline. Same
+   regular weight as body copy but a step larger, slightly tighter
+   leading, and a hair lighter so it reads as introduction rather than
+   competing with H2/H3 section headings. */
+.post-content p.lede {
+  font-size: 1.18rem;
+  line-height: 1.7;
+  margin-bottom: 32px;
+  color: #333;
+  text-transform: none;
+  letter-spacing: normal;
 }
 
 .post-content h2 {
@@ -577,6 +619,177 @@ p {
   font-size: 1.5rem;
   margin: 40px 0 15px;
   text-transform: none;
+}
+
+/* Section label — small uppercase title flanked by a short left hairline
+   and a long right hairline. Editorial divider style for sub-sections
+   within an H2 (e.g. "CASUAL", "FORMAL", "FUN" inside a category). */
+.post-content h4 {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-family: 'EB Garamond', 'Garamond', 'Georgia', serif;
+  font-size: 0.9rem;
+  font-weight: 400;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #777;
+  margin: 50px 0 25px;
+  line-height: 1.3;
+}
+.post-content h4::before {
+  content: '';
+  flex-shrink: 0;
+  width: 50px;
+  height: 1px;
+  background: #d6ccba;
+}
+.post-content h4::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: #d6ccba;
+}
+
+/* Two-line captions used by gallery figcaptions AND standalone image
+   captions (<p class="image-caption">). The editor emits each caption
+   with a separate Caption + Price field; when both are present the
+   markup contains <span class="cap-title"> + <span class="cap-price">,
+   producing a darker title line above a lighter, italic price line. */
+.post-gallery .gallery-figure > figcaption {
+  font-style: normal;
+}
+.post-content .cap-title {
+  display: block;
+  font-size: 0.95rem;
+  color: #7a7a7a;
+  font-weight: 500;
+  line-height: 1.35;
+}
+.post-content .cap-price {
+  display: block;
+  font-size: 0.8rem;
+  color: #a8a8a8;
+  font-style: italic;
+  margin-top: 2px;
+  line-height: 1.35;
+}
+/* Standalone image caption — same paragraph the single-image block has
+   always emitted, now styled so it can host the cap-title/cap-price
+   pair without the inherited paragraph styling fighting the spans. */
+.post-content p.image-caption {
+  margin: 6px 0 0;
+  line-height: 1.35;
+  font-size: 0.85rem;
+  font-style: italic;
+  color: #888;
+}
+/* Inside an image-caption, the spans take over the line styling */
+.post-content p.image-caption .cap-title,
+.post-content p.image-caption .cap-price {
+  font-style: normal;
+}
+.post-content p.image-caption .cap-price {
+  font-style: italic;
+}
+
+/* Call-to-action block — eyebrow label + italic serif headline +
+   subtitle + a pair of outlined buttons. Sits inside .post-body (white)
+   on a warm cream panel that bleeds slightly past the .post-content
+   max-width using a negative horizontal margin and matching padding. */
+.post-content .post-cta {
+  background: #f4efe5;
+  border-top: 1px solid #d6ccba;
+  border-bottom: 1px solid #d6ccba;
+  margin: 60px -4vw;
+  padding: 70px 4vw;
+  text-align: center;
+}
+.post-content .post-cta-eyebrow,
+.post-content .post-cta-eyebrow-2 {
+  font-family: 'EB Garamond', 'Garamond', 'Georgia', serif;
+  font-size: 0.8rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: #a8a29d;
+  margin: 0 0 24px;
+}
+/* Optional second eyebrow line sits tight beneath the first. The
+   publisher skips emitting this element entirely when it's blank, so
+   if you see it on the live page it's because text was entered. */
+.post-content .post-cta-eyebrow + .post-cta-eyebrow-2 {
+  margin-top: -18px;
+}
+.post-content .post-cta-title {
+  font-family: 'Cormorant Garamond', 'Didot', 'Georgia', serif;
+  font-style: italic;
+  font-size: 2.5rem;
+  font-weight: 400;
+  color: #3a3530;
+  margin: 0 0 16px;
+  line-height: 1.2;
+  text-transform: none;
+  letter-spacing: 0;
+}
+.post-content .post-cta-subtitle {
+  font-family: 'EB Garamond', 'Garamond', 'Georgia', serif;
+  font-size: 1.05rem;
+  color: #7a7773;
+  margin: 0 0 36px;
+  font-style: normal;
+  line-height: 1.5;
+}
+.post-content .post-cta-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.post-content .post-cta-buttons .cta-btn {
+  display: inline-block;
+  padding: 14px 32px;
+  border: 1px solid #b8b0a0;
+  border-radius: 2px;
+  font-family: 'EB Garamond', 'Garamond', 'Georgia', serif;
+  font-size: 0.8rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #3a3530;
+  background: transparent;
+  text-decoration: none;
+  transition: background 0.2s, color 0.2s, border-color 0.2s;
+  cursor: pointer;
+}
+.post-content .post-cta-buttons .cta-btn:hover {
+  background: #d6ccba;
+  border-color: #d6ccba;
+  color: #1a1a1a;
+}
+
+/* Hairline divider — same color and weight as the H4 section-label
+   hairlines, but spanning the full content width with no text. Used as
+   a standalone block between sections when a section-label heading
+   isn't needed. */
+.post-content hr.post-divider {
+  border: 0;
+  height: 1px;
+  background: #d6ccba;
+  margin: 50px 0;
+  width: 100%;
+}
+
+/* Bold-weight variant for any post heading — toggled per-block in the
+   editor. Overrides the default 400 weight set on h1–h4 globally and
+   the h4-specific 400 inside .post-content. Color also bumps to pure
+   black on h4 so the bold reads clearly against its small label size. */
+.post-content h2.is-bold,
+.post-content h3.is-bold,
+.post-header h1.is-bold {
+  font-weight: 700;
+}
+.post-content h4.is-bold {
+  font-weight: 700;
+  color: #1a1a1a;
 }
 
 .post-content img {
@@ -617,6 +830,14 @@ p {
   opacity: 0.6;
 }
 
+/* Image-wrapping anchors should be invisible — they're just click targets,
+   not text links, so the 1px text-link underline doesn't apply. */
+.post-content a.img-link,
+.post-content a.gallery-figure-link,
+.post-content a.gallery-slide-link {
+  border-bottom: none;
+}
+
 /* --- Post Gallery (slideshow — 1 image at a time, left/right chevrons) --- */
 /* Intentionally NOT scoped to .post-content so the blog editor preview,
    which imports this stylesheet, renders galleries identically. */
@@ -635,7 +856,10 @@ p {
   display: none;
   width: 100%;
   max-height: 600px;
-  object-fit: cover;
+  /* contain instead of cover so the whole image is visible — never
+     crops a product photo even when the slide cell is a different
+     aspect ratio than the source. */
+  object-fit: contain;
   margin: 0;
 }
 
@@ -643,20 +867,31 @@ p {
   display: block;
 }
 
-/* Multi-image: 2–5 images visible at once in a flex row */
+/* Multi-image slideshow: 2–9 images visible at once in a flex row */
 .post-gallery[data-visible="2"],
 .post-gallery[data-visible="3"],
 .post-gallery[data-visible="4"],
-.post-gallery[data-visible="5"] {
+.post-gallery[data-visible="5"],
+.post-gallery[data-visible="6"],
+.post-gallery[data-visible="7"],
+.post-gallery[data-visible="8"],
+.post-gallery[data-visible="9"] {
   gap: 6px;
-  align-items: stretch;
+  /* flex-start so figure-based slides take their intrinsic height (image +
+     caption) instead of stretching uniformly; the explicit height on the
+     inner image keeps every image cell the same size. */
+  align-items: flex-start;
   min-height: 320px;
 }
 
 .post-gallery[data-visible="2"] .gallery-slide.active,
 .post-gallery[data-visible="3"] .gallery-slide.active,
 .post-gallery[data-visible="4"] .gallery-slide.active,
-.post-gallery[data-visible="5"] .gallery-slide.active {
+.post-gallery[data-visible="5"] .gallery-slide.active,
+.post-gallery[data-visible="6"] .gallery-slide.active,
+.post-gallery[data-visible="7"] .gallery-slide.active,
+.post-gallery[data-visible="8"] .gallery-slide.active,
+.post-gallery[data-visible="9"] .gallery-slide.active {
   flex: 1 1 0;
   min-width: 0;
   width: auto;
@@ -669,6 +904,7 @@ p {
   display: none;
   flex: 1 1 0;
   min-width: 0;
+  border: none;
 }
 .post-gallery a.gallery-slide-link.active {
   display: block;
@@ -676,9 +912,133 @@ p {
 .post-gallery a.gallery-slide-link img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
   display: block;
+  margin: 0;
 }
+
+/* Figure-based slides (current format): each <figure class="gallery-figure">
+   wraps the image (or a linked image) and its <figcaption>, so each image
+   gets its own caption directly underneath. Images get an explicit fixed
+   height so every gallery cell renders at the same size regardless of the
+   source image's native aspect ratio. */
+.post-gallery .gallery-figure {
+  display: none;
+  margin: 0;
+  flex-direction: column;
+  min-width: 0;
+}
+.post-gallery .gallery-figure.active {
+  display: flex;
+}
+.post-gallery .gallery-figure > img,
+.post-gallery .gallery-figure > .gallery-figure-link {
+  display: block;
+  width: 100%;
+  border: none;
+}
+.post-gallery .gallery-figure > img,
+.post-gallery .gallery-figure > .gallery-figure-link img {
+  width: 100%;
+  height: 100%;
+  /* contain (not cover) so a portrait product photo isn't cropped
+     when it sits in a wider cell, and vice versa. Letterbox bars sit
+     on the post-body white. */
+  object-fit: contain;
+  display: block;
+  margin: 0;
+}
+.post-gallery .gallery-figure > figcaption {
+  font-size: 0.85rem;
+  color: #888;
+  font-style: italic;
+  text-align: center;
+  margin-top: 8px;
+  line-height: 1.4;
+}
+
+/* Single-visible galleries: figure spans full width, image hugs the
+   bottom of the gallery box (matches legacy single-slide behaviour). */
+.post-gallery[data-visible="1"] .gallery-figure.active {
+  width: 100%;
+}
+.post-gallery[data-visible="1"] .gallery-figure.active > img,
+.post-gallery[data-visible="1"] .gallery-figure.active > .gallery-figure-link img {
+  max-height: 600px;
+  height: auto;
+}
+
+/* Multi-visible galleries: figures share the row evenly, image height is
+   fixed at 350 px so every cell is the same height. The figcaption sits
+   directly under each image. */
+.post-gallery[data-visible="2"] .gallery-figure.active,
+.post-gallery[data-visible="3"] .gallery-figure.active,
+.post-gallery[data-visible="4"] .gallery-figure.active,
+.post-gallery[data-visible="5"] .gallery-figure.active,
+.post-gallery[data-visible="6"] .gallery-figure.active,
+.post-gallery[data-visible="7"] .gallery-figure.active,
+.post-gallery[data-visible="8"] .gallery-figure.active,
+.post-gallery[data-visible="9"] .gallery-figure.active {
+  flex: 1 1 0;
+}
+.post-gallery[data-visible="2"] .gallery-figure.active > img,
+.post-gallery[data-visible="3"] .gallery-figure.active > img,
+.post-gallery[data-visible="4"] .gallery-figure.active > img,
+.post-gallery[data-visible="5"] .gallery-figure.active > img,
+.post-gallery[data-visible="6"] .gallery-figure.active > img,
+.post-gallery[data-visible="7"] .gallery-figure.active > img,
+.post-gallery[data-visible="8"] .gallery-figure.active > img,
+.post-gallery[data-visible="9"] .gallery-figure.active > img,
+.post-gallery[data-visible="2"] .gallery-figure.active > .gallery-figure-link,
+.post-gallery[data-visible="3"] .gallery-figure.active > .gallery-figure-link,
+.post-gallery[data-visible="4"] .gallery-figure.active > .gallery-figure-link,
+.post-gallery[data-visible="5"] .gallery-figure.active > .gallery-figure-link,
+.post-gallery[data-visible="6"] .gallery-figure.active > .gallery-figure-link,
+.post-gallery[data-visible="7"] .gallery-figure.active > .gallery-figure-link,
+.post-gallery[data-visible="8"] .gallery-figure.active > .gallery-figure-link,
+.post-gallery[data-visible="9"] .gallery-figure.active > .gallery-figure-link {
+  height: 350px;
+}
+
+/* ===== Grid layout — all images visible in a 3-column grid ===== */
+.post-gallery[data-layout="grid"] {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  align-items: stretch;
+  min-height: 0;
+  /* Beat the slideshow flex layout — every figure shows in DOM order */
+}
+.post-gallery[data-layout="grid"] .gallery-figure {
+  display: flex;
+  flex-direction: column;
+  flex: initial;
+  margin: 0;
+  min-width: 0;
+  order: 0;
+}
+.post-gallery[data-layout="grid"] .gallery-figure > img,
+.post-gallery[data-layout="grid"] .gallery-figure > .gallery-figure-link {
+  display: block;
+  width: 100%;
+  height: 280px;
+  border: none;
+}
+.post-gallery[data-layout="grid"] .gallery-figure > img,
+.post-gallery[data-layout="grid"] .gallery-figure > .gallery-figure-link img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+  margin: 0;
+}
+/* Grid mode has no slide window — kill the nav buttons and counter
+   even if they were emitted */
+.post-gallery[data-layout="grid"] .gallery-nav,
+.post-gallery[data-layout="grid"] .gallery-counter {
+  display: none !important;
+}
+
 
 .post-gallery .gallery-nav {
   position: absolute;
@@ -789,6 +1149,67 @@ p {
 .post-content .img-wrap.align-center { text-align: center; }
 .post-content .img-wrap.align-right { text-align: right; }
 .post-content .img-wrap img { display: inline-block; margin: 0; }
+.post-content .img-wrap a.img-link { display: inline-block; line-height: 0; }
+.post-content .img-wrap a.img-link img { transition: opacity 0.2s ease; }
+.post-content .img-wrap a.img-link:hover img { opacity: 0.85; }
+
+/* Image with a text column on the opposite side. The image's existing
+   width:N% is preserved (relative to the row, which is the full content
+   width), and the text fills the remaining space. */
+.post-content .img-wrap.has-side-text {
+  text-align: initial;
+}
+.post-content .img-wrap.has-side-text .img-side-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 30px;
+}
+.post-content .img-wrap.has-side-text.align-right .img-side-row {
+  flex-direction: row-reverse;
+}
+.post-content .img-wrap.has-side-text .img-side-row > img,
+.post-content .img-wrap.has-side-text .img-side-row > a.img-link {
+  flex-shrink: 0;
+}
+.post-content .img-wrap.has-side-text .img-side-row > img,
+.post-content .img-wrap.has-side-text .img-side-row > a.img-link img {
+  display: block;
+  margin: 0;
+}
+.post-content .img-wrap.has-side-text .img-side-text {
+  flex: 1;
+  min-width: 0;
+  font-size: 1.15rem;
+  line-height: 1.9;
+  color: #222;
+}
+.post-content .img-wrap.has-side-text .img-side-text > *:first-child { margin-top: 0; }
+.post-content .img-wrap.has-side-text .img-side-text > *:last-child { margin-bottom: 0; }
+
+/* Editorial callout that sits below the image (and side text, if present),
+   spanning the full width of the .img-wrap. Mirrors the "One honest note"
+   pattern from product hero pages. */
+.post-content .img-wrap .image-callout {
+  margin: 24px 0 0;
+  padding: 18px 24px;
+  background: rgba(138, 111, 74, 0.06);
+  max-width: 85%;
+  border-radius: 6px;
+}
+.post-content .img-wrap .image-callout .callout-label {
+  font-family: 'Cormorant Garamond', 'Didot', 'Georgia', serif;
+  font-style: italic;
+  font-size: 1.15rem;
+  color: #888;
+  margin-bottom: 0.5rem;
+}
+.post-content .img-wrap .image-callout .callout-body {
+  font-size: 0.95rem;
+  line-height: 1.75;
+  color: #555;
+}
+.post-content .img-wrap .image-callout .callout-body > *:first-child { margin-top: 0; }
+.post-content .img-wrap .image-callout .callout-body > *:last-child { margin-bottom: 0; }
 
 @media (max-width: 768px) {
   .post-content .post-hero,
@@ -799,6 +1220,14 @@ p {
   }
   .post-content .post-hero .hero-image {
     height: 280px;
+  }
+  .post-content .img-wrap.has-side-text .img-side-row,
+  .post-content .img-wrap.has-side-text.align-right .img-side-row {
+    flex-direction: column;
+    gap: 16px;
+  }
+  .post-content .img-wrap.has-side-text .img-side-row > img {
+    width: 100% !important;
   }
   .post-gallery {
     min-height: 320px;
@@ -816,6 +1245,39 @@ p {
   }
   .post-gallery .gallery-prev { left: 10px; }
   .post-gallery .gallery-next { right: 10px; }
+}
+
+/* --- PDF embed (the screenshot itself is the clickable download link) ---
+   The .pdf-card holds the letter aspect-ratio + overflow-clip; the iframe
+   inside extends ~8px beyond on every side so Chrome's PDF viewer can paint
+   its intrinsic page bezel/shadow OUTSIDE the visible area — the clip crops
+   it away and the embed reads as a clean screenshot. */
+.post-content .pdf-embed {
+  margin: 30px 0;
+}
+.post-content .pdf-embed .pdf-card {
+  display: block;
+  margin: 0 auto;
+  position: relative;
+  aspect-ratio: 8.5 / 11;
+  line-height: 0;
+  border-radius: 8px;
+  overflow: hidden;
+  text-decoration: none;
+  color: inherit;
+  transition: opacity 0.2s;
+}
+.post-content .pdf-embed .pdf-card:hover {
+  opacity: 0.85;
+}
+.post-content .pdf-embed .pdf-preview {
+  position: absolute;
+  inset: -8px;
+  width: calc(100% + 16px);
+  height: calc(100% + 16px);
+  border: 0;
+  background: #fff;
+  pointer-events: none;
 }
 
 .post-image-placeholder {
@@ -972,6 +1434,13 @@ p {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+/* Category landing pages (Style / Beauty / Lifestyle) — swap the
+   default grey hero panel for the soft light blue swatch. About,
+   Contact, and Shop still get the grey. */
+body.category-page .page-hero {
+  background: #DAE1E4;
 }
 
 .page-hero h1 {
@@ -1375,22 +1844,32 @@ p {
 }
 
 @media (max-width: 768px) {
-  .site-header {
-    padding: 22px 6vw;
-  }
-
-  .site-brand {
-    font-size: 1.1rem;
-    letter-spacing: 0.12em;
-  }
-
   .main-nav {
-    gap: 1.4rem;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    padding: 20px 0;
   }
 
-  .main-nav a {
-    font-size: 0.72rem;
-    letter-spacing: 0.12em;
+  .main-nav.open {
+    display: flex;
+  }
+
+  .menu-toggle {
+    display: block;
+  }
+
+  .header-inner {
+    justify-content: space-between;
+  }
+
+  .social-icons {
+    position: static;
+  }
+
+  .site-title {
+    font-size: 1.4rem;
   }
 
   h1 { font-size: 2rem; }
@@ -1440,98 +1919,20 @@ p {
     grid-template-columns: 1fr;
   }
 }
-  </style>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,400&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap');
-    body { font-family: 'EB Garamond', 'Garamond', 'Georgia', serif; }
-    h1, h2, h3, h4 { font-family: 'Cormorant Garamond', 'Didot', 'Georgia', serif; }
-  </style>
-</head>
-<body>
 
-  <header class="site-header">
-    <div class="header-inner">
-      <a href="index.html" class="site-brand">The Dermal Archive</a>
-      <nav class="main-nav">
-        <a href="routines.html" class="active">Routines</a>
-        <a href="about.html">About</a>
-        <a href="contact.html">Contact</a>
-      </nav>
-    </div>
-  </header>
 
-  <main>
-    <section class="page-hero">
-      <h1>Routines</h1>
-    </section>
-
-    <section style="background:#fff; padding: 40px 0 60px;">
-      <div class="blog-grid">
-        <article class="blog-grid-item">
-          <a href="posts/beauty/makeup-routine-for-your-next-night-out.html" class="thumb-link" style="display:block;">
-            <div class="thumb" style="background-image: url('images/uploads/2026/05/60f008558f11.jpg'); background-size: cover; background-position: center;"></div>
-          </a>
-          <div class="post-info">
-            <h3><a href="posts/beauty/makeup-routine-for-your-next-night-out.html" style="color:inherit; text-decoration:none;">Makeup Routine For Your Next Night Out</a></h3>
-            <div class="meta">Isabella Rivera &middot; May 22, 2026</div>
-            <a href="posts/beauty/makeup-routine-for-your-next-night-out.html" class="read-more">Read more</a>
-          </div>
-        </article>
-        <article class="blog-grid-item">
-          <a href="posts/beauty/5-acne-safe-sunscreens-i-actually-wear-daily.html" class="thumb-link" style="display:block;">
-            <div class="thumb" style="background-image: url('images/uploads/2026/05/ed5460beebc7.webp'); background-size: cover; background-position: center;"></div>
-          </a>
-          <div class="post-info">
-            <h3><a href="posts/beauty/5-acne-safe-sunscreens-i-actually-wear-daily.html" style="color:inherit; text-decoration:none;">5 Acne-Safe Sunscreens I Actually Wear Daily</a></h3>
-            <div class="meta">Isabella Rivera &middot; May 18, 2026</div>
-            <a href="posts/beauty/5-acne-safe-sunscreens-i-actually-wear-daily.html" class="read-more">Read more</a>
-          </div>
-        </article>
-        <article class="blog-grid-item">
-          <a href="posts/beauty/minimal-makeup-routine.html" class="thumb-link" style="display:block;">
-            <div class="thumb" style="background-image: url('images/uploads/2026/05/4d90d4f00592.png'); background-size: cover; background-position: center;"></div>
-          </a>
-          <div class="post-info">
-            <h3><a href="posts/beauty/minimal-makeup-routine.html" style="color:inherit; text-decoration:none;">Minimal SPF Makeup Routine</a></h3>
-            <div class="meta">Isabella Rivera &middot; May 17, 2026</div>
-            <a href="posts/beauty/minimal-makeup-routine.html" class="read-more">Read more</a>
-          </div>
-        </article>
-        <article class="blog-grid-item">
-          <a href="posts/beauty/everyday-hair-routine.html" class="thumb-link" style="display:block;">
-            <div class="thumb" style="background-image: url('images/uploads/2026/05/51c1b6912b22.jpg'); background-size: cover; background-position: center;"></div>
-          </a>
-          <div class="post-info">
-            <h3><a href="posts/beauty/everyday-hair-routine.html" style="color:inherit; text-decoration:none;">Everyday Hair Routine</a></h3>
-            <div class="meta">Isabella Rivera &middot; May 7, 2026</div>
-            <a href="posts/beauty/everyday-hair-routine.html" class="read-more">Read more</a>
-          </div>
-        </article>
-        <article class="blog-grid-item">
-          <a href="posts/beauty/morning-amp-nightime-skincare-routine.html" class="thumb-link" style="display:block;">
-            <div class="thumb" style="background-image: url('images/uploads/2026/05/46334925cb04.png'); background-size: cover; background-position: center;"></div>
-          </a>
-          <div class="post-info">
-            <h3><a href="posts/beauty/morning-amp-nightime-skincare-routine.html" style="color:inherit; text-decoration:none;">Morning &amp; Nighttime Skincare Routine</a></h3>
-            <div class="meta">Isabella Rivera &middot; Apr 16, 2026</div>
-            <a href="posts/beauty/morning-amp-nightime-skincare-routine.html" class="read-more">Read more</a>
-          </div>
-        </article>
-      </div>
-    </section>
-
-    <section class="newsletter-section">
-      <h3>Never miss a post</h3>
-      <form class="newsletter-form" onsubmit="event.preventDefault(); this.querySelector('button').textContent='Thank you!';">
-        <input type="email" placeholder="Email Address" required>
-        <button type="submit">Sign Up</button>
-      </form>
-    </section>
-  </main>
-
-  <footer class="site-footer">
-    <p>&copy; 2026 The Dermal Archive. All rights reserved.</p>
-  </footer>
-
-</body>
-</html>
+/* ===== The Dermal Archive — header overrides (appended) ===== */
+.site-header { background: #f4f2ec; padding: 30px 5vw; position: sticky; top: 0; z-index: 1000; border-bottom: 1px solid #e6e1d6; }
+.header-inner { max-width: 1500px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
+.site-brand { font-family: 'Cormorant Garamond','Didot','Georgia',serif; font-size: 1.6rem; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: #2a2621; white-space: nowrap; }
+.main-nav { width: auto; margin-top: 0; display: flex; align-items: center; justify-content: flex-end; gap: 2.75rem; }
+.main-nav a { font-family: 'EB Garamond','Garamond','Georgia',serif; font-size: 0.8rem; letter-spacing: 0.18em; text-transform: uppercase; color: #6b6458; transition: color 0.2s; white-space: nowrap; }
+.main-nav a:hover { color: #2a2621; }
+.main-nav a.active { color: #2a2621; border-bottom: 1px solid #2a2621; padding-bottom: 2px; }
+@media (max-width: 768px) {
+  .site-header { padding: 22px 6vw; }
+  .header-inner { justify-content: space-between; }
+  .site-brand { font-size: 1.1rem; letter-spacing: 0.12em; }
+  .main-nav { display: flex; flex-direction: row; gap: 1.4rem; padding: 0; }
+  .main-nav a { font-size: 0.72rem; letter-spacing: 0.12em; }
+}
