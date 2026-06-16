@@ -1,0 +1,2024 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blog Editor — The Dermal Archive</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,400&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap');
+    body { font-family: 'EB Garamond', 'Garamond', 'Georgia', serif; margin: 0; }
+    h1, h2, h3, h4 { font-family: 'Cormorant Garamond', 'Didot', 'Georgia', serif; }
+
+    /* ===== PASSWORD GATE ===== */
+    .password-overlay {
+      position: fixed; inset: 0; background: #DAE1E4; z-index: 9999;
+      display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 20px;
+    }
+    .password-overlay.hidden { display: none; }
+    .password-overlay h2 { font-size: 2rem; text-transform: none; }
+    .password-overlay input {
+      padding: 14px 20px; font-size: 1.1rem; border: 1px solid #000; background: #fff;
+      font-family: inherit; text-align: center; width: 250px; letter-spacing: 0.3em;
+    }
+    .password-overlay button {
+      padding: 12px 30px; background: #000; color: #fff; border: none;
+      font-family: inherit; font-size: 1rem; cursor: pointer; letter-spacing: 0.1em; text-transform: uppercase;
+    }
+    .password-overlay .error { color: #c00; font-size: 0.9rem; min-height: 1.2em; }
+
+    /* ===== TOOLBAR ===== */
+    .editor-toolbar {
+      position: sticky; top: 0; z-index: 100;
+      background: #1a1a1a; color: #fff; padding: 10px 20px;
+      display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    }
+    .toolbar-group {
+      display: flex; align-items: center; gap: 4px; padding: 0 8px;
+      border-right: 1px solid #444;
+    }
+    .toolbar-group:last-child { border-right: none; }
+    .toolbar-btn {
+      background: transparent; color: #fff; border: 1px solid transparent;
+      padding: 6px 10px; font-size: 0.85rem; cursor: pointer; border-radius: 4px;
+      font-family: inherit; transition: background 0.2s; white-space: nowrap;
+    }
+    .toolbar-btn:hover { background: #333; }
+    .toolbar-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; color: #888; margin-right: 4px; }
+    .publish-btn { background: #2ea043 !important; font-weight: 600; padding: 8px 18px !important; border-radius: 6px !important; margin-left: auto; }
+    .publish-btn:hover { background: #238636 !important; }
+    .preview-btn { background: #0969da !important; padding: 8px 14px !important; border-radius: 6px !important; }
+    .download-btn { background: #555 !important; padding: 8px 14px !important; border-radius: 6px !important; }
+
+    /* ===== META FIELDS ===== */
+    .editor-meta {
+      background: #DAE1E4; padding: 60px 4vw 40px; text-align: center;
+      background-size: cover; background-position: center; position: relative;
+    }
+    .editor-meta.has-header-image::before {
+      content: ''; position: absolute; inset: 0;
+      background: rgba(0,0,0,0.35);
+    }
+    .editor-meta.has-header-image > * {
+      position: relative; z-index: 1;
+    }
+    .editor-meta.has-header-image input,
+    .editor-meta.has-header-image select { color: #fff; }
+    .editor-meta.has-header-image input::placeholder { color: rgba(255,255,255,0.4); }
+    .editor-meta.has-header-image .meta-row input { color: rgba(255,255,255,0.8); }
+    .header-image-controls { margin-bottom: 15px; display: flex; justify-content: center; gap: 8px; }
+    .header-image-btn {
+      background: rgba(255,255,255,0.25); color: #333; border: 1px dashed rgba(0,0,0,0.25);
+      padding: 7px 16px; font-family: inherit; font-size: 0.75rem; cursor: pointer;
+      border-radius: 4px; text-transform: uppercase; letter-spacing: 0.08em;
+    }
+    .header-image-btn:hover { background: rgba(255,255,255,0.5); }
+    .editor-meta.has-header-image .header-image-btn {
+      color: #fff; border-color: rgba(255,255,255,0.4);
+      background: rgba(255,255,255,0.15);
+    }
+    .editor-meta.has-header-image .header-image-btn:hover { background: rgba(255,255,255,0.3); }
+    .editor-meta input {
+      display: block; width: 100%; max-width: 750px; margin: 0 auto;
+      background: transparent; border: none; border-bottom: 2px dashed rgba(0,0,0,0.2);
+      text-align: center; outline: none;
+      font-family: 'Cormorant Garamond', 'Didot', 'Georgia', serif;
+    }
+    .editor-meta input:focus { border-bottom-color: #000; border-bottom-style: solid; }
+    #postTitle {
+      font-size: 2.8rem; font-weight: 400; text-transform: uppercase;
+      letter-spacing: 0.04em; margin-bottom: 15px; padding: 10px;
+    }
+    #postTitle::placeholder { color: rgba(0,0,0,0.3); }
+    .meta-row {
+      display: flex; justify-content: center; align-items: center; gap: 15px;
+      max-width: 500px; margin: 0 auto;
+    }
+    .meta-row input {
+      font-family: 'EB Garamond', 'Garamond', 'Georgia', serif;
+      font-size: 0.95rem; padding: 8px; color: #555; letter-spacing: 0.05em;
+    }
+    .meta-row select {
+      font-family: inherit; font-size: 0.95rem; padding: 8px;
+      background: transparent; border: none; border-bottom: 2px dashed rgba(0,0,0,0.2);
+      outline: none; cursor: pointer; color: #555;
+    }
+
+    /* ===== VERTICAL CANVAS ===== */
+    .editor-content-area {
+      background: #fff; padding: 60px 4vw; min-height: 500px;
+    }
+    .editor-canvas {
+      max-width: 750px; margin: 0 auto;
+    }
+    .editor-canvas:empty::before {
+      content: 'Click a toolbar button to start building your post...';
+      color: #bbb; font-style: italic; font-size: 1.1rem;
+    }
+
+    /* Content blocks */
+    .content-block {
+      position: relative;
+      margin-bottom: 25px;
+      border: 2px solid transparent;
+      border-radius: 4px;
+      transition: border-color 0.2s;
+      padding: 4px;
+    }
+    .content-block:hover { border-color: #ddd; }
+    .content-block:focus-within { border-color: #0969da; }
+    .content-block.selected { border-left: 3px solid #0969da; }
+
+    .content-block .block-controls {
+      position: absolute; top: -14px; right: 0;
+      display: none; gap: 4px; background: #1a1a1a;
+      padding: 3px 6px; border-radius: 6px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2); z-index: 5;
+    }
+    .content-block:hover .block-controls { display: flex; }
+    .block-ctrl-btn {
+      width: 22px; height: 22px; border-radius: 4px; border: none;
+      font-size: 11px; cursor: pointer; display: flex; align-items: center;
+      justify-content: center; background: #333; color: #ccc; transition: background 0.2s;
+    }
+    .block-ctrl-btn:hover { background: #555; color: #fff; }
+    .block-ctrl-btn.delete { background: #5c1a1a; color: #f88; }
+    .block-ctrl-btn.delete:hover { background: #7a2020; }
+
+    /* Editable text */
+    .content-block [contenteditable] {
+      outline: none; min-height: 1.5em; padding: 4px;
+    }
+    .content-block p[contenteditable] { font-size: 1.15rem; line-height: 1.9; color: #222; }
+    .content-block h2[contenteditable] { font-size: 2rem; margin: 20px 0; text-transform: none; }
+    .content-block h3[contenteditable] { font-size: 1.5rem; margin: 15px 0; text-transform: none; }
+    .content-block blockquote[contenteditable] {
+      border-left: 3px solid #000; padding-left: 25px;
+      font-style: italic; color: #444; font-size: 1.15rem; line-height: 1.9;
+    }
+    .content-block ul[contenteditable],
+    .content-block ol[contenteditable] { padding-left: 25px; }
+    .content-block li { font-size: 1.1rem; line-height: 1.8; margin-bottom: 8px; list-style: disc; }
+    .content-block ol li { list-style: decimal; }
+
+    /* ===== SINGLE IMAGE BLOCK (proportional) ===== */
+    .image-block { text-align: center; }
+    .image-block .img-container {
+      position: relative; display: inline-block; max-width: 100%;
+    }
+    .image-block img {
+      display: block;
+      max-width: 100%;
+      height: auto; /* ← key: aspect ratio preserved */
+      margin: 0 auto;
+    }
+    .image-block .image-toolbar {
+      display: flex; align-items: center; gap: 12px;
+      padding: 8px 12px; background: #f4f4f4; border-radius: 6px;
+      margin-top: 10px; font-size: 0.85rem;
+    }
+    .image-block .image-toolbar label { color: #555; }
+    .image-block .image-toolbar input[type="range"] { flex: 1; }
+    .image-block .align-buttons { display: flex; gap: 2px; }
+    .image-block .align-buttons button {
+      background: #fff; border: 1px solid #ccc; padding: 4px 10px;
+      cursor: pointer; font-size: 0.8rem; border-radius: 3px;
+    }
+    .image-block .align-buttons button.active { background: #0969da; color: #fff; border-color: #0969da; }
+    .image-block .caption {
+      font-size: 0.85rem; color: #888; font-style: italic;
+      text-align: center; margin-top: 8px;
+    }
+
+    /* ===== GALLERY BLOCK (slideshow) ===== */
+    /* The .post-gallery inside the block uses the same rules as style.css,
+       so we only style the editor-specific controls and empty-state hint. */
+    .gallery-block .post-gallery .empty-hint {
+      color: #aaa; font-style: italic; font-size: 1rem; padding: 20px; text-align: center;
+    }
+    .gallery-block .gallery-editor-controls {
+      display: flex; gap: 8px; padding: 8px 12px; background: #f4f4f4;
+      border-radius: 6px; margin-top: 10px; font-size: 0.85rem; align-items: center;
+      flex-wrap: wrap;
+    }
+    .gallery-block .gallery-editor-controls button {
+      background: #fff; border: 1px solid #ccc; padding: 6px 12px;
+      cursor: pointer; font-size: 0.8rem; border-radius: 4px; font-family: inherit;
+    }
+    .gallery-block .gallery-editor-controls button:hover {
+      background: #0969da; color: #fff; border-color: #0969da;
+    }
+    .gallery-block .gallery-editor-controls select {
+      background: #fff; border: 1px solid #ccc; padding: 5px 8px;
+      font-size: 0.8rem; border-radius: 4px; font-family: inherit;
+    }
+    .gallery-block .gallery-editor-controls label {
+      color: #555; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em;
+    }
+    .gallery-block .gallery-link-row {
+      display: flex; gap: 6px; align-items: center; width: 100%; margin-top: 4px;
+    }
+    .gallery-block .gallery-link-row input {
+      flex: 1; padding: 5px 8px; border: 1px solid #ccc; border-radius: 4px;
+      font-size: 0.8rem; font-family: inherit; outline: none;
+    }
+    .gallery-block .gallery-link-row input:focus { border-color: #000; }
+    .gallery-block .caption {
+      font-size: 0.85rem; color: #888; font-style: italic;
+      text-align: center; margin-top: 8px;
+    }
+
+    /* ===== HERO BLOCK ===== */
+    .hero-block .hero-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center;
+    }
+    .hero-block.ratio-60-40 .hero-grid { grid-template-columns: 3fr 2fr; }
+    .hero-block.ratio-40-60 .hero-grid { grid-template-columns: 2fr 3fr; }
+    .hero-block .hero-image-slot {
+      width: 100%; height: 400px; background: #f0eded;
+      display: flex; align-items: center; justify-content: center;
+      color: #aaa; font-style: italic; cursor: pointer; position: relative;
+      overflow: hidden;
+    }
+    .hero-block .hero-image-slot img {
+      width: 100%; height: 100%; object-fit: cover; display: block;
+    }
+    .hero-block .hero-image-slot .slot-hint { pointer-events: none; }
+    .hero-block .hero-image-slot img + .slot-hint { display: none; }
+    .hero-block .hero-text h2[contenteditable],
+    .hero-block .hero-text h3[contenteditable] { margin-top: 0; }
+    .hero-block .hero-options {
+      display: flex; gap: 8px; padding: 8px 12px; background: #f4f4f4;
+      border-radius: 6px; margin-top: 10px; font-size: 0.85rem; align-items: center;
+    }
+    .hero-block .hero-options label { color: #555; }
+    .hero-block .hero-options select {
+      background: #fff; border: 1px solid #ccc; padding: 4px 8px;
+      border-radius: 3px; font-family: inherit; font-size: 0.8rem;
+    }
+
+    /* ===== FLOATING FORMAT BAR ===== */
+    .format-bar {
+      position: fixed; display: none; background: #1a1a1a; color: #fff;
+      padding: 6px 10px; border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+      z-index: 200; gap: 2px; align-items: center;
+    }
+    .format-bar.visible { display: flex; }
+    .format-bar button {
+      background: transparent; color: #fff; border: none; padding: 5px 7px;
+      cursor: pointer; border-radius: 4px; font-size: 13px; font-family: inherit;
+    }
+    .format-bar button:hover { background: #333; }
+    .format-bar .sep { width: 1px; height: 18px; background: #444; margin: 0 3px; }
+    .format-bar select {
+      background: #333; color: #fff; border: 1px solid #555; padding: 2px 5px;
+      font-size: 11px; border-radius: 4px; font-family: inherit;
+    }
+    .format-bar input[type="color"] { width: 22px; height: 22px; border: none; padding: 0; cursor: pointer; background: transparent; }
+
+    /* ===== MODAL ===== */
+    .modal-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 500;
+      display: none; align-items: center; justify-content: center;
+    }
+    .modal-overlay.visible { display: flex; }
+    .modal {
+      background: #fff; padding: 40px; border-radius: 12px; max-width: 500px; width: 90%; text-align: center;
+    }
+    .modal h3 { font-size: 1.6rem; margin-bottom: 20px; text-transform: none; }
+    .modal p { font-size: 1rem; color: #555; margin-bottom: 15px; }
+    .modal input {
+      width: 100%; padding: 12px; border: 1px solid #ccc; font-family: inherit;
+      font-size: 1rem; margin-bottom: 15px; outline: none; box-sizing: border-box;
+    }
+    .modal input:focus { border-color: #000; }
+    .modal .btn-row { display: flex; gap: 10px; justify-content: center; margin-top: 20px; }
+    .modal .btn-row button {
+      padding: 12px 24px; font-family: inherit; font-size: 0.95rem; cursor: pointer;
+      border-radius: 6px; border: 1px solid #ccc; background: #fff;
+    }
+    .modal .btn-row .btn-primary { background: #2ea043; color: #fff; border-color: #2ea043; }
+    .modal .btn-row .btn-primary:hover { background: #238636; }
+    .status-msg { margin-top: 15px; font-size: 0.9rem; min-height: 1.2em; }
+    .status-msg.success { color: #2ea043; }
+    .status-msg.error { color: #c00; }
+    .status-msg.loading { color: #0969da; }
+
+    /* ===== LOAD POST MODAL ===== */
+    .load-post-tabs {
+      display: flex; justify-content: center; gap: 4px;
+      margin-bottom: 18px; border-bottom: 1px solid #eee;
+    }
+    .load-post-tab {
+      background: transparent; border: none; border-bottom: 2px solid transparent;
+      padding: 10px 20px; font-family: inherit; font-size: 0.9rem;
+      cursor: pointer; color: #666; transition: all 0.15s;
+      text-transform: uppercase; letter-spacing: 0.08em;
+    }
+    .load-post-tab:hover { color: #000; }
+    .load-post-tab.active {
+      color: #000; border-bottom-color: #000;
+    }
+    .load-post-list {
+      max-height: 340px; overflow-y: auto;
+      text-align: left; margin-bottom: 10px;
+    }
+    .load-post-item {
+      display: flex; align-items: center; gap: 8px;
+      padding: 8px 8px 8px 14px; margin-bottom: 4px;
+      background: #f9f9f9; border: 1px solid transparent;
+      border-radius: 6px; transition: all 0.15s;
+      font-size: 0.92rem;
+    }
+    .load-post-item:hover {
+      background: #e8f1ff; border-color: #0969da;
+    }
+    .load-post-item-body {
+      flex: 1; display: flex; align-items: center; gap: 10px;
+      cursor: pointer; padding: 4px 0;
+    }
+    .load-post-item-name { flex: 1; }
+    .load-post-badge {
+      font-size: 0.65rem; letter-spacing: 0.1em; color: #777;
+      background: #e6e6e6; padding: 2px 8px; border-radius: 10px;
+      text-transform: uppercase; flex-shrink: 0;
+    }
+    .load-post-delete {
+      background: transparent; border: 1px solid transparent; color: #c00;
+      width: 28px; height: 28px; font-size: 1.2rem; line-height: 1;
+      cursor: pointer; border-radius: 4px; flex-shrink: 0;
+      padding: 0; font-family: inherit;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .load-post-delete:hover {
+      background: #ffeaea; border-color: #f5c4c4;
+    }
+    .load-post-empty, .load-post-loading, .load-post-error {
+      padding: 30px 20px; text-align: center; color: #888;
+      font-size: 0.9rem; font-style: italic;
+    }
+    .load-post-error { color: #c00; }
+
+    .toolbar-btn.load-btn {
+      background: #6f42c1 !important;
+      padding: 8px 14px !important; border-radius: 6px !important;
+    }
+    .toolbar-btn.load-btn:hover { background: #5a32a3 !important; }
+
+    .editing-banner {
+      background: #fff3cd; border-bottom: 1px solid #ffecb5;
+      padding: 10px 20px; text-align: center;
+      font-size: 0.85rem; color: #664d03;
+      display: none;
+    }
+    .editing-banner.visible { display: block; }
+    .editing-banner strong { color: #000; }
+    .editing-banner button {
+      background: transparent; border: 1px solid #664d03; color: #664d03;
+      font-family: inherit; font-size: 0.75rem;
+      padding: 3px 10px; margin-left: 12px; cursor: pointer; border-radius: 4px;
+    }
+    .editing-banner button:hover { background: #664d03; color: #fff; }
+
+    /* ===== PREVIEW MODE ===== */
+    body.preview-mode .content-block { border-color: transparent !important; padding: 0; }
+    body.preview-mode .content-block .block-controls { display: none !important; }
+    body.preview-mode .image-block .image-toolbar,
+    body.preview-mode .hero-block .hero-options,
+    body.preview-mode .gallery-block .gallery-editor-controls { display: none !important; }
+    body.preview-mode .editor-toolbar { display: none; }
+    body.preview-mode .editor-meta input,
+    body.preview-mode .editor-meta select { border-bottom-color: transparent; pointer-events: none; }
+  </style>
+</head>
+<body>
+
+  <!-- PASSWORD GATE -->
+  <div class="password-overlay" id="passwordGate">
+    <h2>Blog Editor</h2>
+    <p>Enter password to continue</p>
+    <input type="password" id="passwordInput" placeholder="****" autofocus
+           onkeydown="if(event.key==='Enter') checkPassword()">
+    <button onclick="checkPassword()">Enter</button>
+    <div class="error" id="passwordError"></div>
+  </div>
+
+  <!-- EDITING BANNER: shown when loading an existing post for edit -->
+  <div class="editing-banner" id="editingBanner">
+    Editing existing post: <strong id="editingBannerPath"></strong>
+    <button onclick="exitEditMode()">Start new post instead</button>
+  </div>
+
+  <!-- TOOLBAR -->
+  <div class="editor-toolbar" id="editorToolbar">
+    <div class="toolbar-group">
+      <span class="toolbar-label">Add</span>
+      <button class="toolbar-btn" onclick="addBlock('p')">+ Text</button>
+      <button class="toolbar-btn" onclick="addBlock('h2')">+ H2</button>
+      <button class="toolbar-btn" onclick="addBlock('h3')">+ H3</button>
+      <button class="toolbar-btn" onclick="addBlock('blockquote')">+ Quote</button>
+      <button class="toolbar-btn" onclick="addBlock('ul')">+ List</button>
+      <button class="toolbar-btn" onclick="addBlock('ol')">+ Num List</button>
+    </div>
+    <div class="toolbar-group">
+      <span class="toolbar-label">Media</span>
+      <button class="toolbar-btn" onclick="triggerImageUpload()">+ Image</button>
+      <button class="toolbar-btn" onclick="addBlock('gallery')">+ Gallery</button>
+      <button class="toolbar-btn" onclick="addBlock('hero')">+ Image Hero</button>
+      <input type="file" id="imageInput" accept="image/*" style="display:none" onchange="handleImageUpload(event)">
+      <input type="file" id="galleryInput" accept="image/*" multiple style="display:none" onchange="handleGalleryUpload(event)">
+      <input type="file" id="heroInput" accept="image/*" style="display:none" onchange="handleHeroUpload(event)">
+    </div>
+    <div class="toolbar-group">
+      <button class="toolbar-btn load-btn" onclick="showLoadPostModal()">Load Post</button>
+      <button class="toolbar-btn preview-btn" onclick="togglePreview()" id="previewBtn">Preview</button>
+      <button class="toolbar-btn download-btn" onclick="downloadHTML()">Download</button>
+      <button class="toolbar-btn publish-btn" onclick="showPublishModal()" id="publishBtn">Publish</button>
+    </div>
+  </div>
+
+  <!-- META -->
+  <section class="editor-meta" id="editorMeta">
+    <div class="header-image-controls">
+      <button class="header-image-btn" onclick="triggerHeaderImageUpload()" id="headerImageBtn">+ Header Image</button>
+      <button class="header-image-btn" onclick="removeHeaderImage()" id="removeHeaderImageBtn" style="display:none">Remove Image</button>
+    </div>
+    <input type="text" id="postTitle" placeholder="Your Post Title">
+    <div class="meta-row">
+      <input type="text" id="postAuthor" value="Isabella Rivera" placeholder="Author">
+      <select id="postCategory">
+        <option value="beauty">Routines</option>
+      </select>
+    </div>
+    <input type="file" id="headerImageInput" accept="image/*" style="display:none" onchange="handleHeaderImageUpload(event)">
+  </section>
+
+  <!-- CANVAS -->
+  <section class="editor-content-area">
+    <div class="editor-canvas" id="editorCanvas"></div>
+  </section>
+
+  <!-- FORMAT BAR -->
+  <div class="format-bar" id="formatBar">
+    <button onclick="formatCmd('bold')" title="Bold"><strong>B</strong></button>
+    <button onclick="formatCmd('italic')" title="Italic"><em>I</em></button>
+    <button onclick="formatCmd('underline')" title="Underline"><u>U</u></button>
+    <div class="sep"></div>
+    <select onchange="formatCmd('fontName', this.value); this.selectedIndex=0;" title="Font">
+      <option value="">Font</option>
+      <option value="Cormorant Garamond">Cormorant Garamond</option>
+      <option value="EB Garamond">EB Garamond</option>
+      <option value="Georgia">Georgia</option>
+      <option value="Arial">Arial</option>
+      <option value="Helvetica">Helvetica</option>
+    </select>
+    <select onchange="formatCmd('fontSize', this.value); this.selectedIndex=0;" title="Size">
+      <option value="">Size</option>
+      <option value="1">Small</option>
+      <option value="3">Normal</option>
+      <option value="4">Medium</option>
+      <option value="5">Large</option>
+      <option value="6">X-Large</option>
+      <option value="7">Huge</option>
+    </select>
+    <div class="sep"></div>
+    <input type="color" value="#222222" onchange="formatCmd('foreColor', this.value)" title="Text Color">
+    <div class="sep"></div>
+    <button onclick="insertLink()" title="Link">&#128279;</button>
+  </div>
+
+  <!-- PUBLISH MODAL -->
+  <div class="modal-overlay" id="publishModal">
+    <div class="modal">
+      <h3 id="publishModalTitle">Publish Post</h3>
+      <p id="publishModalSub">This will push your post directly to your website.</p>
+      <div style="text-align:left; margin-bottom:15px;">
+        <div id="publishFilenameRow">
+          <label style="font-size:0.85rem; text-transform:uppercase; letter-spacing:0.1em; color:#666;">File name</label>
+          <input type="text" id="publishFilename" placeholder="my-post-title">
+        </div>
+        <div id="publishEditingRow" style="display:none; padding:10px 12px; background:#f4f4f4; border-radius:6px; margin-bottom:10px;">
+          <div style="font-size:0.7rem; text-transform:uppercase; letter-spacing:0.12em; color:#666; margin-bottom:4px;">Updating existing post</div>
+          <div id="publishEditingPath" style="font-family:monospace; font-size:0.85rem; color:#000;"></div>
+        </div>
+        <label style="font-size:0.85rem; text-transform:uppercase; letter-spacing:0.1em; color:#666;">GitHub Token <span style="font-size:0.75rem; color:#999;">(stored locally, never uploaded)</span></label>
+        <input type="password" id="githubToken" placeholder="ghp_xxxx or gho_xxxx">
+      </div>
+      <div class="btn-row">
+        <button onclick="closePublishModal()">Cancel</button>
+        <button class="btn-primary" id="publishNowBtn" onclick="publishToGitHub()">Publish Now</button>
+      </div>
+      <div class="status-msg" id="publishStatus"></div>
+    </div>
+  </div>
+
+  <!-- LOAD POST MODAL -->
+  <div class="modal-overlay" id="loadPostModal">
+    <div class="modal" style="max-width: 640px;">
+      <h3>Load Existing Post</h3>
+      <p>Click a post to open it for editing, or &times; to delete.</p>
+      <div class="load-post-tabs">
+        <button class="load-post-tab active" data-category="all" onclick="filterPostList('all')">All</button>
+      </div>
+      <div class="load-post-list" id="loadPostList">
+        <div class="load-post-empty">Loading posts...</div>
+      </div>
+      <div class="btn-row" style="justify-content: space-between;">
+        <button onclick="migrateToCorrectFolders()" title="Move any post whose folder doesn't match its category meta tag">Migrate folders</button>
+        <button onclick="closeLoadPostModal()">Close</button>
+      </div>
+      <div class="status-msg" id="loadPostStatus"></div>
+    </div>
+  </div>
+
+  <script>
+    const GITHUB_REPO = 'irive033/the-dermal-archive';
+    const GITHUB_BRANCH = 'main';
+    const PASSWORD = '2626';
+
+    let blockCounter = 0;
+    let pendingHeroBlock = null; // reference to hero block awaiting image upload
+    let headerImageUrl = '';     // data URL or remote URL for post header background
+
+    // ===== EDIT-EXISTING-POST STATE =====
+    // When set, the editor is in "edit mode" — save writes back to the
+    // existing file path instead of creating a new one.
+    let editingFilePath = null;  // e.g. 'posts/beauty/hotel-spotlight-five-5-star-stays.html'
+    let editingFileSha = null;   // SHA of the file at load time (refreshed at save time)
+    let preservedDate = null;    // ISO date from the post's <meta name="date"> or .post-meta
+
+    // ===== PASSWORD =====
+    function checkPassword() {
+      const input = document.getElementById('passwordInput');
+      if (input.value === PASSWORD) {
+        document.getElementById('passwordGate').classList.add('hidden');
+        sessionStorage.setItem('blog_editor_auth', 'true');
+      } else {
+        document.getElementById('passwordError').textContent = 'Incorrect password';
+        input.value = '';
+        input.focus();
+      }
+    }
+    if (sessionStorage.getItem('blog_editor_auth') === 'true') {
+      document.getElementById('passwordGate').classList.add('hidden');
+    }
+
+    // ===== HEADER IMAGE =====
+    function triggerHeaderImageUpload() {
+      document.getElementById('headerImageInput').click();
+    }
+
+    function handleHeaderImageUpload(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        headerImageUrl = e.target.result;
+        applyHeaderImage();
+      };
+      reader.readAsDataURL(file);
+      event.target.value = '';
+    }
+
+    function applyHeaderImage() {
+      const meta = document.getElementById('editorMeta');
+      if (headerImageUrl) {
+        meta.style.backgroundImage = `url('${headerImageUrl}')`;
+        meta.classList.add('has-header-image');
+        document.getElementById('headerImageBtn').textContent = 'Change Image';
+        document.getElementById('removeHeaderImageBtn').style.display = '';
+      } else {
+        meta.style.backgroundImage = '';
+        meta.classList.remove('has-header-image');
+        document.getElementById('headerImageBtn').textContent = '+ Header Image';
+        document.getElementById('removeHeaderImageBtn').style.display = 'none';
+      }
+    }
+
+    function removeHeaderImage() {
+      headerImageUrl = '';
+      applyHeaderImage();
+    }
+
+    // ===== BLOCK CONTROLS TEMPLATE =====
+    function controlsHTML() {
+      return `
+        <div class="block-controls">
+          <button class="block-ctrl-btn" onclick="event.stopPropagation(); moveBlock(this.closest('.content-block'), -1)" title="Move up">&uarr;</button>
+          <button class="block-ctrl-btn" onclick="event.stopPropagation(); moveBlock(this.closest('.content-block'), 1)" title="Move down">&darr;</button>
+          <button class="block-ctrl-btn delete" onclick="event.stopPropagation(); deleteBlock(this.closest('.content-block'))" title="Delete">&times;</button>
+        </div>
+      `;
+    }
+
+    // ===== BLOCK SELECTION (insert-after target) =====
+    function selectBlock(block) {
+      document.querySelectorAll('.content-block.selected').forEach(b => b.classList.remove('selected'));
+      if (block) block.classList.add('selected');
+    }
+
+    // Track which block the user is working in
+    document.addEventListener('click', (e) => {
+      const block = e.target.closest('.content-block');
+      if (block && document.getElementById('editorCanvas').contains(block)) {
+        selectBlock(block);
+      }
+    });
+    document.addEventListener('focusin', (e) => {
+      const block = e.target.closest('.content-block');
+      if (block && document.getElementById('editorCanvas').contains(block)) {
+        selectBlock(block);
+      }
+    });
+
+    // Insert a block element into the canvas — after the selected block,
+    // or at the end if nothing is selected.
+    function insertBlockInCanvas(block) {
+      const canvas = document.getElementById('editorCanvas');
+      const selected = canvas.querySelector('.content-block.selected');
+      if (selected && selected.nextSibling) {
+        canvas.insertBefore(block, selected.nextSibling);
+      } else {
+        canvas.appendChild(block);
+      }
+      selectBlock(block);
+    }
+
+    // ===== ADD BLOCK =====
+    function addBlock(type, content = '') {
+      const canvas = document.getElementById('editorCanvas');
+      const block = document.createElement('div');
+      block.className = 'content-block';
+      block.dataset.blockType = type;
+      block.dataset.blockId = ++blockCounter;
+
+      if (type === 'ul' || type === 'ol') {
+        block.innerHTML = controlsHTML() + `<${type} contenteditable="true"><li>${content || 'List item'}</li></${type}>`;
+      } else if (type === 'gallery') {
+        block.classList.add('gallery-block');
+        block.innerHTML = controlsHTML() + `
+          <div class="post-gallery" data-slide="0" data-visible="1">
+            <span class="empty-hint">No images yet &mdash; click + Add Image below</span>
+            <button class="gallery-nav gallery-prev" onclick="gallerySlide(this,-1)" aria-label="Previous" style="display:none">&#10094;</button>
+            <button class="gallery-nav gallery-next" onclick="gallerySlide(this,1)" aria-label="Next" style="display:none">&#10095;</button>
+            <div class="gallery-counter" style="display:none"></div>
+          </div>
+          <div class="gallery-editor-controls">
+            <button onclick="addSlideshowImage(this)">+ Add Image</button>
+            <button onclick="removeCurrentSlide(this)">Remove current slide</button>
+            <label>Show</label>
+            <select onchange="setGalleryVisible(this)">
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+            </select>
+            <label>at a time</label>
+            <div class="gallery-link-row">
+              <label>Link</label>
+              <input type="url" placeholder="https://..." oninput="updateSlideLink(this)">
+            </div>
+          </div>
+          <div class="caption" contenteditable="true">Add caption</div>
+        `;
+      } else if (type === 'hero') {
+        block.classList.add('hero-block');
+        block.innerHTML = controlsHTML() + `
+          <div class="hero-grid">
+            <div class="hero-image-slot" onclick="triggerHeroUpload(this.closest('.content-block'))">
+              <span class="slot-hint">Click to upload image</span>
+            </div>
+            <div class="hero-text">
+              <h2 contenteditable="true">Your heading</h2>
+              <p contenteditable="true">Write a description here.</p>
+            </div>
+          </div>
+          <div class="hero-options">
+            <label>Layout:</label>
+            <select onchange="setHeroRatio(this)">
+              <option value="50-50">50 / 50</option>
+              <option value="60-40">60 / 40</option>
+              <option value="40-60">40 / 60</option>
+            </select>
+          </div>
+        `;
+      } else {
+        const placeholder = type === 'p' ? 'Start typing...' : (type === 'h2' ? 'Heading' : (type === 'h3' ? 'Subheading' : ''));
+        block.innerHTML = controlsHTML() + `<${type} contenteditable="true">${content || placeholder}</${type}>`;
+      }
+
+      insertBlockInCanvas(block);
+
+      // Focus first editable
+      const editable = block.querySelector('[contenteditable]');
+      if (editable && type !== 'gallery' && type !== 'hero') {
+        editable.focus();
+        if (['Start typing...', 'Heading', 'Subheading'].includes(editable.textContent)) {
+          document.execCommand('selectAll');
+        }
+      }
+
+      return block;
+    }
+
+    function deleteBlock(block) {
+      if (confirm('Delete this block?')) block.remove();
+    }
+
+    function moveBlock(block, direction) {
+      const sibling = direction === -1 ? block.previousElementSibling : block.nextElementSibling;
+      if (sibling && sibling.classList.contains('content-block')) {
+        if (direction === -1) block.parentNode.insertBefore(block, sibling);
+        else block.parentNode.insertBefore(sibling, block);
+      }
+    }
+
+    // ===== SINGLE IMAGE UPLOAD =====
+    function triggerImageUpload() {
+      document.getElementById('imageInput').click();
+    }
+
+    function handleImageUpload(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (e) => createImageBlock(e.target.result);
+      reader.readAsDataURL(file);
+      event.target.value = '';
+    }
+
+    function createImageBlock(dataUrl) {
+      const canvas = document.getElementById('editorCanvas');
+      const block = document.createElement('div');
+      block.className = 'content-block image-block';
+      block.dataset.blockType = 'image';
+      block.dataset.blockId = ++blockCounter;
+      block.dataset.width = '100';
+      block.dataset.align = 'center';
+      block.innerHTML = controlsHTML() + `
+        <div class="img-container" style="width:100%;">
+          <img src="${dataUrl}" alt="Blog image">
+        </div>
+        <div class="image-toolbar">
+          <label>Width</label>
+          <input type="range" min="20" max="100" value="100" oninput="updateImageWidth(this)">
+          <span class="width-label">100%</span>
+          <div class="align-buttons">
+            <button onclick="setImageAlign(this, 'left')">L</button>
+            <button class="active" onclick="setImageAlign(this, 'center')">C</button>
+            <button onclick="setImageAlign(this, 'right')">R</button>
+          </div>
+        </div>
+        <div class="caption" contenteditable="true">Add caption</div>
+      `;
+      insertBlockInCanvas(block);
+      applyImageAlignment(block);
+    }
+
+    function updateImageWidth(slider) {
+      const block = slider.closest('.content-block');
+      const container = block.querySelector('.img-container');
+      const label = block.querySelector('.width-label');
+      container.style.width = slider.value + '%';
+      label.textContent = slider.value + '%';
+      block.dataset.width = slider.value;
+    }
+
+    function setImageAlign(btn, align) {
+      const block = btn.closest('.content-block');
+      block.dataset.align = align;
+      block.querySelectorAll('.align-buttons button').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      applyImageAlignment(block);
+    }
+
+    function applyImageAlignment(block) {
+      const align = block.dataset.align || 'center';
+      block.style.textAlign = align;
+      const container = block.querySelector('.img-container');
+      if (align === 'left') container.style.margin = '0';
+      else if (align === 'right') container.style.margin = '0 0 0 auto';
+      else container.style.margin = '0 auto';
+    }
+
+    // ===== GALLERY (slideshow — 1 to 5 images at a time) =====
+    let activeGalleryBlock = null;
+
+    function addSlideshowImage(btn) {
+      activeGalleryBlock = btn.closest('.content-block');
+      document.getElementById('galleryInput').click();
+    }
+
+    function handleGalleryUpload(event) {
+      const files = Array.from(event.target.files);
+      if (!files.length || !activeGalleryBlock) return;
+      const gallery = activeGalleryBlock.querySelector('.post-gallery');
+      const firstNav = gallery.querySelector('.gallery-nav');
+      files.forEach(file => {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const img = document.createElement('img');
+          img.className = 'gallery-slide';
+          img.src = e.target.result;
+          img.alt = 'Gallery image';
+          img.dataset.link = '';
+          gallery.insertBefore(img, firstNav);
+          const allSlides = gallery.querySelectorAll('.gallery-slide');
+          gallery.dataset.slide = (allSlides.length - 1).toString();
+          refreshSlideshow(activeGalleryBlock);
+        };
+        reader.readAsDataURL(file);
+      });
+      event.target.value = '';
+    }
+
+    function getVisibleCount(gallery) {
+      return parseInt(gallery.dataset.visible || '1', 10);
+    }
+
+    function refreshSlideshow(block) {
+      const gallery = block.querySelector('.post-gallery');
+      const slides = gallery.querySelectorAll('.gallery-slide');
+      const counter = gallery.querySelector('.gallery-counter');
+      const prev = gallery.querySelector('.gallery-prev');
+      const next = gallery.querySelector('.gallery-next');
+      const vis = getVisibleCount(gallery);
+
+      let idx = parseInt(gallery.dataset.slide || '0', 10);
+      if (slides.length === 0) idx = 0;
+      else if (idx >= slides.length) idx = Math.max(0, slides.length - vis);
+      else if (idx < 0) idx = 0;
+      gallery.dataset.slide = idx;
+
+      // Show slides in the visible window [idx .. idx+vis-1]
+      slides.forEach((s, i) => {
+        s.classList.toggle('active', i >= idx && i < idx + vis);
+      });
+
+      const needsNav = slides.length > vis;
+      if (prev) prev.style.display = needsNav ? '' : 'none';
+      if (next) next.style.display = needsNav ? '' : 'none';
+      if (counter) {
+        counter.style.display = needsNav ? '' : 'none';
+        if (vis === 1) {
+          counter.textContent = slides.length ? `${idx + 1} / ${slides.length}` : '';
+        } else {
+          const end = Math.min(idx + vis, slides.length);
+          counter.textContent = slides.length ? `${idx + 1}–${end} / ${slides.length}` : '';
+        }
+      }
+
+      // Empty-state hint
+      let hint = gallery.querySelector('.empty-hint');
+      if (slides.length === 0) {
+        if (!hint) {
+          hint = document.createElement('span');
+          hint.className = 'empty-hint';
+          hint.innerHTML = 'No images yet &mdash; click + Add Image below';
+          gallery.insertBefore(hint, gallery.firstChild);
+        }
+      } else if (hint) {
+        hint.remove();
+      }
+
+      // Sync link input to current slide
+      const linkInput = block.querySelector('.gallery-link-row input');
+      if (linkInput && slides.length > 0) {
+        linkInput.value = slides[idx].dataset.link || '';
+      } else if (linkInput) {
+        linkInput.value = '';
+      }
+    }
+
+    function gallerySlide(btn, dir) {
+      const gallery = btn.closest('.post-gallery');
+      if (!gallery) return;
+      const slides = gallery.querySelectorAll('.gallery-slide');
+      const vis = getVisibleCount(gallery);
+      if (slides.length <= vis) return;
+      let idx = parseInt(gallery.dataset.slide || '0', 10);
+      idx += dir * vis;
+      // Wrap around
+      if (idx >= slides.length) idx = 0;
+      else if (idx < 0) idx = Math.max(0, slides.length - vis);
+      gallery.dataset.slide = idx;
+      // Find parent block for full refresh
+      const block = gallery.closest('.content-block') || gallery.parentElement;
+      refreshSlideshow(block);
+    }
+
+    function removeCurrentSlide(btn) {
+      const block = btn.closest('.content-block');
+      const gallery = block.querySelector('.post-gallery');
+      const slides = gallery.querySelectorAll('.gallery-slide');
+      if (!slides.length) return;
+      let idx = parseInt(gallery.dataset.slide || '0', 10);
+      slides[idx].remove();
+      refreshSlideshow(block);
+    }
+
+    function setGalleryVisible(select) {
+      const block = select.closest('.content-block');
+      const gallery = block.querySelector('.post-gallery');
+      gallery.dataset.visible = select.value;
+      gallery.dataset.slide = '0';
+      refreshSlideshow(block);
+    }
+
+    function updateSlideLink(input) {
+      const block = input.closest('.content-block');
+      const gallery = block.querySelector('.post-gallery');
+      const slides = gallery.querySelectorAll('.gallery-slide');
+      const idx = parseInt(gallery.dataset.slide || '0', 10);
+      if (slides[idx]) {
+        slides[idx].dataset.link = input.value.trim();
+      }
+    }
+
+    // ===== HERO =====
+    function triggerHeroUpload(block) {
+      pendingHeroBlock = block;
+      document.getElementById('heroInput').click();
+    }
+
+    function handleHeroUpload(event) {
+      const file = event.target.files[0];
+      if (!file || !pendingHeroBlock) return;
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const slot = pendingHeroBlock.querySelector('.hero-image-slot');
+        const existing = slot.querySelector('img');
+        if (existing) existing.remove();
+        const img = document.createElement('img');
+        img.src = e.target.result;
+        img.alt = 'Hero image';
+        slot.insertBefore(img, slot.firstChild);
+        pendingHeroBlock = null;
+      };
+      reader.readAsDataURL(file);
+      event.target.value = '';
+    }
+
+    function setHeroRatio(select) {
+      const block = select.closest('.content-block');
+      block.classList.remove('ratio-60-40', 'ratio-40-60');
+      if (select.value === '60-40') block.classList.add('ratio-60-40');
+      else if (select.value === '40-60') block.classList.add('ratio-40-60');
+    }
+
+    // ===== FORMAT BAR =====
+    function formatCmd(command, value = null) {
+      document.execCommand(command, false, value);
+    }
+    function insertLink() {
+      const url = prompt('Enter URL:');
+      if (url) document.execCommand('createLink', false, url);
+    }
+
+    document.addEventListener('mouseup', updateFormatBar);
+    document.addEventListener('keyup', updateFormatBar);
+
+    function updateFormatBar() {
+      const sel = window.getSelection();
+      const bar = document.getElementById('formatBar');
+      if (sel.rangeCount > 0 && !sel.isCollapsed) {
+        const range = sel.getRangeAt(0);
+        const container = range.commonAncestorContainer;
+        const editable = container.nodeType === 3
+          ? container.parentElement.closest('[contenteditable]')
+          : container.closest('[contenteditable]');
+        if (editable && document.querySelector('.editor-canvas').contains(editable)) {
+          const rect = range.getBoundingClientRect();
+          bar.style.top = (rect.top + window.scrollY - 50) + 'px';
+          bar.style.left = Math.max(10, rect.left + rect.width / 2 - 140) + 'px';
+          bar.classList.add('visible');
+          return;
+        }
+      }
+      bar.classList.remove('visible');
+    }
+
+    document.addEventListener('mousedown', (e) => {
+      if (!document.getElementById('formatBar').contains(e.target)) {
+        setTimeout(() => {
+          const sel = window.getSelection();
+          if (sel.isCollapsed) document.getElementById('formatBar').classList.remove('visible');
+        }, 200);
+      }
+    });
+
+    // ===== PREVIEW =====
+    function togglePreview() {
+      document.body.classList.toggle('preview-mode');
+      document.getElementById('previewBtn').textContent =
+        document.body.classList.contains('preview-mode') ? 'Edit' : 'Preview';
+    }
+
+    // ===== GENERATE HTML =====
+    function generatePostHTML() {
+      const title = document.getElementById('postTitle').value || 'Untitled Post';
+      const author = document.getElementById('postAuthor').value || 'Isabella Rivera';
+      const category = document.getElementById('postCategory').value;
+      // When editing an existing post, reuse the original publication date so
+      // edits don't bump the post to "today".
+      const dateObj = preservedDate ? new Date(preservedDate) : new Date();
+      const now = dateObj; // legacy variable used below for footer year
+      const dateStr = dateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+      const isoDate = dateObj.toISOString();
+
+      const blocks = [...document.querySelectorAll('#editorCanvas .content-block')];
+      let contentHTML = '';
+
+      blocks.forEach(block => {
+        const type = block.dataset.blockType;
+
+        if (type === 'image') {
+          const img = block.querySelector('img');
+          const width = block.dataset.width || '100';
+          const align = block.dataset.align || 'center';
+          const caption = block.querySelector('.caption');
+          const captionText = caption && caption.textContent.trim() !== 'Add caption' ? caption.textContent.trim() : '';
+          contentHTML += `        <div class="img-wrap align-${align}">\n`;
+          contentHTML += `          <img src="${img.src}" alt="${captionText || title}" style="width:${width}%; height:auto;">\n`;
+          if (captionText) {
+            contentHTML += `          <p style="font-size:0.85rem; color:#888; font-style:italic; text-align:center; margin-top:6px;">${captionText}</p>\n`;
+          }
+          contentHTML += `        </div>\n\n`;
+        } else if (type === 'gallery') {
+          const imgs = block.querySelectorAll('.post-gallery .gallery-slide');
+          if (imgs.length) {
+            const vis = block.querySelector('.post-gallery').dataset.visible || '1';
+            const visNum = parseInt(vis, 10);
+            contentHTML += `        <div class="post-gallery" data-slide="0" data-visible="${vis}">\n`;
+            imgs.forEach((img, i) => {
+              const isActive = i < visNum;
+              const link = img.dataset.link || '';
+              if (link) {
+                const cls = isActive ? 'gallery-slide-link active' : 'gallery-slide-link';
+                contentHTML += `          <a class="${cls}" href="${link}" target="_blank" rel="noopener"><img src="${img.src}" alt="Gallery image"></a>\n`;
+              } else {
+                const cls = isActive ? 'gallery-slide active' : 'gallery-slide';
+                contentHTML += `          <img class="${cls}" src="${img.src}" alt="Gallery image">\n`;
+              }
+            });
+            if (imgs.length > visNum) {
+              contentHTML += `          <button class="gallery-nav gallery-prev" onclick="gallerySlide(this,-1)" aria-label="Previous">&#10094;</button>\n`;
+              contentHTML += `          <button class="gallery-nav gallery-next" onclick="gallerySlide(this,1)" aria-label="Next">&#10095;</button>\n`;
+              const end = Math.min(visNum, imgs.length);
+              const counterText = visNum === 1 ? `1 / ${imgs.length}` : `1–${end} / ${imgs.length}`;
+              contentHTML += `          <div class="gallery-counter">${counterText}</div>\n`;
+            }
+            contentHTML += `        </div>\n`;
+            const cap = block.querySelector('.caption');
+            if (cap && cap.textContent.trim() && cap.textContent.trim() !== 'Add caption') {
+              contentHTML += `        <p class="gallery-caption" style="font-size:0.85rem; color:#888; font-style:italic; text-align:center; margin-top:-20px; margin-bottom:30px;">${cap.textContent.trim()}</p>\n`;
+            }
+            contentHTML += `\n`;
+          }
+        } else if (type === 'hero') {
+          const img = block.querySelector('.hero-image-slot img');
+          const heroText = block.querySelector('.hero-text');
+          const ratioClass = block.classList.contains('ratio-60-40') ? ' ratio-60-40' : (block.classList.contains('ratio-40-60') ? ' ratio-40-60' : '');
+          if (img || heroText) {
+            contentHTML += `        <div class="post-hero${ratioClass}">\n`;
+            if (img) {
+              contentHTML += `          <img class="hero-image" src="${img.src}" alt="Hero image">\n`;
+            } else {
+              contentHTML += `          <div class="hero-image" style="background:#f0eded;"></div>\n`;
+            }
+            contentHTML += `          <div class="hero-text">\n`;
+            if (heroText) {
+              heroText.querySelectorAll('[contenteditable]').forEach(el => {
+                const tag = el.tagName.toLowerCase();
+                const html = el.innerHTML.trim();
+                if (html) contentHTML += `            <${tag}>${html}</${tag}>\n`;
+              });
+            }
+            contentHTML += `          </div>\n`;
+            contentHTML += `        </div>\n\n`;
+          }
+        } else {
+          const editable = block.querySelector('[contenteditable]');
+          if (editable) {
+            const tag = editable.tagName.toLowerCase();
+            const html = editable.innerHTML.trim();
+            if (html && !['Start typing...', 'Heading', 'Subheading'].includes(html)) {
+              contentHTML += `        <${tag}>${html}</${tag}>\n\n`;
+            }
+          }
+        }
+      });
+
+
+      return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>${title} — The Dermal Archive</title>
+  <link rel="stylesheet" href="../../css/style.css">
+  <meta name="date" content="${isoDate}">
+  <meta name="author" content="${author}">
+  <meta name="category" content="${category}">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,400&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap');
+    body { font-family: 'EB Garamond', 'Garamond', 'Georgia', serif; }
+    h1, h2, h3, h4 { font-family: 'Cormorant Garamond', 'Didot', 'Georgia', serif; }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <a href="../../index.html" class="site-brand">The Dermal Archive</a>
+      <nav class="main-nav">
+        <a href="../../routines.html">Routines</a>
+        <a href="../../about.html">About</a>
+        <a href="../../contact.html">Contact</a>
+      </nav>
+    </div>
+  </header>
+  <main>
+    <section class="post-header${headerImageUrl ? ' has-header-image' : ''}"${headerImageUrl ? ` style="background-image: url('${headerImageUrl}')"` : ''}>
+      <h1>${title}</h1>
+      <div class="post-meta">
+        <span class="author">${author}</span>
+        <span class="date">&middot; ${dateStr}</span>
+      </div>
+    </section>
+    <section class="post-body">
+      <div class="post-content">
+${contentHTML}
+      </div>
+    </section>
+    <section class="newsletter-section">
+      <h3>Never miss a post</h3>
+      <form class="newsletter-form" onsubmit="event.preventDefault(); this.querySelector('button').textContent='Thank you!';">
+        <input type="email" placeholder="Email Address" required>
+        <button type="submit">Sign Up</button>
+      </form>
+    </section>
+  </main>
+  <footer class="site-footer"><p>&copy; ${now.getFullYear()} The Dermal Archive. All rights reserved.</p></footer>
+  <script>
+    // Gallery slideshow navigation (used by any .post-gallery on the page)
+    function gallerySlide(btn, dir) {
+      var gallery = btn.closest('.post-gallery');
+      if (!gallery) return;
+      var slides = gallery.querySelectorAll('.gallery-slide, .gallery-slide-link');
+      var vis = parseInt(gallery.dataset.visible || '1', 10);
+      if (slides.length <= vis) return;
+      var idx = parseInt(gallery.dataset.slide || '0', 10);
+      idx += dir * vis;
+      if (idx >= slides.length) idx = 0;
+      else if (idx < 0) idx = Math.max(0, slides.length - vis);
+      gallery.dataset.slide = idx;
+      for (var i = 0; i < slides.length; i++) {
+        slides[i].classList.toggle('active', i >= idx && i < idx + vis);
+      }
+      var counter = gallery.querySelector('.gallery-counter');
+      if (counter) {
+        var end = Math.min(idx + vis, slides.length);
+        counter.textContent = vis === 1
+          ? (idx + 1) + ' / ' + slides.length
+          : (idx + 1) + '\u2013' + end + ' / ' + slides.length;
+      }
+    }
+  <\/script>
+</body>
+</html>`;
+    }
+
+    // ===== DOWNLOAD =====
+    function downloadHTML() {
+      const html = generatePostHTML();
+      const title = document.getElementById('postTitle').value || 'untitled';
+      const filename = slugify(title) + '.html';
+      const blob = new Blob([html], { type: 'text/html' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = filename;
+      a.click();
+      URL.revokeObjectURL(a.href);
+    }
+
+    function slugify(text) {
+      return text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').substring(0, 60);
+    }
+
+    // ===== PUBLISH =====
+    function showPublishModal() {
+      const title = document.getElementById('postTitle').value || 'untitled';
+      document.getElementById('publishFilename').value = slugify(title);
+      const savedToken = localStorage.getItem('github_token');
+      if (savedToken) document.getElementById('githubToken').value = savedToken;
+      document.getElementById('publishStatus').textContent = '';
+
+      // Adjust modal for "edit mode" vs "new post mode"
+      const titleEl = document.getElementById('publishModalTitle');
+      const subEl = document.getElementById('publishModalSub');
+      const filenameRow = document.getElementById('publishFilenameRow');
+      const editingRow = document.getElementById('publishEditingRow');
+      const editingPathEl = document.getElementById('publishEditingPath');
+      const publishBtn = document.getElementById('publishNowBtn');
+      if (editingFilePath) {
+        titleEl.textContent = 'Save Changes';
+        subEl.textContent = 'This will update the existing post on your website.';
+        filenameRow.style.display = 'none';
+        editingRow.style.display = 'block';
+        editingPathEl.textContent = editingFilePath;
+        publishBtn.textContent = 'Save Now';
+      } else {
+        titleEl.textContent = 'Publish Post';
+        subEl.textContent = 'This will push your post directly to your website.';
+        filenameRow.style.display = '';
+        editingRow.style.display = 'none';
+        publishBtn.textContent = 'Publish Now';
+      }
+
+      document.getElementById('publishModal').classList.add('visible');
+    }
+    function closePublishModal() {
+      document.getElementById('publishModal').classList.remove('visible');
+    }
+
+    // Walk the generated HTML for data:image/...;base64,... URIs, upload each
+    // unique one to images/uploads/YYYY/MM/<sha1-12>.<ext> in the repo, and
+    // return the HTML with the URIs replaced by relative paths.
+    //
+    // Without this, every uploaded image gets baked into the post HTML as a
+    // multi-MB base64 blob (one capsule-wardrobe post hit 10 MB). Identical
+    // images dedup by content hash, both within one publish and across posts
+    // — files that already exist in the repo are skipped, so republishing or
+    // reusing an image elsewhere costs nothing.
+    async function uploadEmbeddedImages(html, headers, statusEl) {
+      const re = /data:image\/([a-zA-Z0-9.+-]+);base64,([A-Za-z0-9+/=]+)/g;
+      const unique = new Map(); // b64 -> mime
+      let m;
+      while ((m = re.exec(html)) !== null) {
+        if (!unique.has(m[2])) unique.set(m[2], m[1]);
+      }
+      if (unique.size === 0) return html;
+
+      const mimeToExt = (mime) => {
+        let ext = mime.toLowerCase();
+        if (ext === 'jpeg') return 'jpg';
+        if (ext === 'svg+xml') return 'svg';
+        if (ext.startsWith('x-')) ext = ext.slice(2);
+        return ext.split('+')[0];
+      };
+
+      const now = new Date();
+      const dirPath = `images/uploads/${now.getFullYear()}/${String(now.getMonth() + 1).padStart(2, '0')}`;
+
+      const replacements = new Map();
+      let i = 0;
+      for (const [b64, mime] of unique) {
+        i++;
+        if (statusEl) {
+          statusEl.textContent = `Uploading image ${i} of ${unique.size}...`;
+          statusEl.className = 'status-msg loading';
+        }
+
+        // Hash the decoded bytes — same content yields same filename, which
+        // is what makes the cross-post dedup work.
+        const bin = atob(b64);
+        const bytes = new Uint8Array(bin.length);
+        for (let j = 0; j < bin.length; j++) bytes[j] = bin.charCodeAt(j);
+        const digest = await crypto.subtle.digest('SHA-1', bytes);
+        const hash = Array.from(new Uint8Array(digest))
+          .map(b => b.toString(16).padStart(2, '0'))
+          .join('')
+          .slice(0, 12);
+        const repoPath = `${dirPath}/${hash}.${mimeToExt(mime)}`;
+
+        // If the same content already lives at this path, no PUT needed.
+        const checkResp = await fetch(
+          `https://api.github.com/repos/${GITHUB_REPO}/contents/${repoPath}?ref=${GITHUB_BRANCH}`,
+          { headers: { 'Authorization': headers.Authorization }, cache: 'no-store' }
+        );
+        if (!checkResp.ok) {
+          const putResp = await fetch(
+            `https://api.github.com/repos/${GITHUB_REPO}/contents/${repoPath}`,
+            {
+              method: 'PUT',
+              headers,
+              body: JSON.stringify({
+                message: `Upload image: ${hash}.${mimeToExt(mime)}`,
+                content: b64,
+                branch: GITHUB_BRANCH,
+              }),
+            }
+          );
+          if (!putResp.ok) {
+            const err = await putResp.json().catch(() => ({}));
+            throw new Error(`Image upload failed: ${err.message || putResp.statusText}`);
+          }
+        }
+        replacements.set(b64, `../../${repoPath}`);
+      }
+
+      return html.replace(re, (full, _mime, b64) => replacements.get(b64) || full);
+    }
+
+    async function publishToGitHub() {
+      const status = document.getElementById('publishStatus');
+      const token = document.getElementById('githubToken').value.trim();
+      const filename = document.getElementById('publishFilename').value.trim();
+      const category = document.getElementById('postCategory').value;
+      if (!token) { status.textContent = 'Please enter your GitHub token'; status.className = 'status-msg error'; return; }
+      if (!editingFilePath && !filename) { status.textContent = 'Please enter a filename'; status.className = 'status-msg error'; return; }
+      localStorage.setItem('github_token', token);
+      const headers = { 'Authorization': `token ${token}`, 'Content-Type': 'application/json' };
+      const rawHtml = generatePostHTML();
+      let html;
+      try {
+        html = await uploadEmbeddedImages(rawHtml, headers, status);
+      } catch (e) {
+        status.textContent = e.message;
+        status.className = 'status-msg error';
+        return;
+      }
+      const content = btoa(unescape(encodeURIComponent(html)));
+
+      // Figure out the target path. When editing, detect a category change by
+      // comparing the folder segment of the old path to the dropdown value.
+      // If they differ, we'll create the file at the NEW path and delete the
+      // OLD one — effectively moving it. Otherwise just overwrite in place.
+      let targetPath;
+      let oldPathToDelete = null;
+      if (editingFilePath) {
+        const oldFolder = editingFilePath.split('/')[1]; // "posts/<folder>/name.html"
+        if (oldFolder !== category) {
+          const name = editingFilePath.split('/').pop();
+          targetPath = `posts/${category}/${name}`;
+          oldPathToDelete = editingFilePath;
+        } else {
+          targetPath = editingFilePath;
+        }
+      } else {
+        targetPath = `posts/${category}/${filename}.html`;
+      }
+
+      status.textContent = editingFilePath ? 'Fetching latest file...' : 'Publishing...';
+      status.className = 'status-msg loading';
+      try {
+        // Always refresh the SHA right before PUT to avoid 409 conflicts.
+        // Only needed when overwriting — a fresh path doesn't have a SHA.
+        let sha = null;
+        if (targetPath === editingFilePath) {
+          try {
+            const checkResp = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/${targetPath}?ref=${GITHUB_BRANCH}`, {
+              headers: { 'Authorization': `token ${token}` }, cache: 'no-store'
+            });
+            if (checkResp.ok) { sha = (await checkResp.json()).sha; }
+          } catch (e) {}
+        }
+        const postTitle = document.getElementById('postTitle').value;
+        const commitMsg = oldPathToDelete
+          ? `Move to ${category}: ${postTitle || targetPath}`
+          : editingFilePath
+            ? `Update: ${postTitle || targetPath}`
+            : `Publish: ${postTitle || filename}`;
+        const body = { message: commitMsg, content, branch: GITHUB_BRANCH };
+        if (sha) body.sha = sha;
+
+        status.textContent = oldPathToDelete
+          ? 'Creating file in new category folder...'
+          : (editingFilePath ? 'Committing update...' : 'Committing...');
+        const resp = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/${targetPath}`, {
+          method: 'PUT', headers, body: JSON.stringify(body)
+        });
+
+        if (!resp.ok) {
+          const err = await resp.json().catch(() => ({}));
+          status.textContent = `Error: ${err.message || 'Failed to publish'}`;
+          status.className = 'status-msg error';
+          return;
+        }
+        const result = await resp.json();
+
+        // If the category changed, delete the old file. A failure here leaves
+        // the post in both folders — not ideal, but the new path is correct.
+        if (oldPathToDelete) {
+          status.textContent = 'Removing file from old category folder...';
+          try {
+            const getOld = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/${oldPathToDelete}?ref=${GITHUB_BRANCH}`, {
+              headers: { 'Authorization': `token ${token}` }, cache: 'no-store'
+            });
+            if (getOld.ok) {
+              const oldMeta = await getOld.json();
+              await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/${oldPathToDelete}`, {
+                method: 'DELETE', headers,
+                body: JSON.stringify({
+                  message: `Delete old location after category move: ${postTitle}`,
+                  sha: oldMeta.sha, branch: GITHUB_BRANCH
+                })
+              });
+            }
+          } catch (e) { /* best-effort; the new file is already in place */ }
+          // Update editing state so subsequent saves target the new path.
+          editingFilePath = targetPath;
+          document.getElementById('editingBannerPath').textContent = targetPath;
+        }
+
+        const verb = oldPathToDelete ? 'Moved and updated' : (editingFilePath ? 'Updated' : 'Published');
+        status.innerHTML = `${verb}! <a href="${result.content.html_url}" target="_blank" style="color:#0969da;">View on GitHub</a><br>Vercel will auto-deploy shortly.`;
+        status.className = 'status-msg success';
+        if (editingFilePath) editingFileSha = result.content.sha;
+      } catch (e) {
+        status.textContent = `Network error: ${e.message}`;
+        status.className = 'status-msg error';
+      }
+    }
+
+    // ============================================================
+    // LOAD EXISTING POST
+    // ============================================================
+    // Flat cache of posts across all category folders, filled when the
+    // modal opens. Lets tab switching filter client-side instead of
+    // re-fetching per tab (and sidesteps 404s from missing folders).
+    let allPostsCache = [];
+    const POST_CATEGORIES = ['beauty'];
+    const POST_CATEGORY_LABEL = { beauty: 'Routines' };
+
+    // Existing posts may have been saved with the legacy `wellness` slug
+    // (before the Lifestyle rename). Anywhere we read a category from a
+    // file, funnel it through this helper so the UI always works in the
+    // new slug space. Return 'beauty' as a safe default for unknown values.
+    function normalizeCategorySlug(slug) {
+      const s = (slug || '').toLowerCase().trim();
+      if (s === 'wellness') return 'lifestyle';
+      if (['beauty', 'lifestyle', 'style'].includes(s)) return s;
+      return 'beauty';
+    }
+
+    async function showLoadPostModal() {
+      document.getElementById('loadPostModal').classList.add('visible');
+      document.getElementById('loadPostStatus').textContent = '';
+      document.getElementById('loadPostStatus').className = 'status-msg';
+      await fetchAllPostsList();
+      // Reset active tab to "All" each time the modal opens
+      document.querySelectorAll('.load-post-tab').forEach(t => t.classList.remove('active'));
+      document.querySelector('.load-post-tab[data-category="all"]').classList.add('active');
+      filterPostList('all');
+    }
+    function closeLoadPostModal() {
+      document.getElementById('loadPostModal').classList.remove('visible');
+    }
+
+    // Fetch HTML file listings from every category folder in parallel.
+    // Folders that don't exist (404) are skipped silently — this avoids
+    // the old bug where the Style tab hard-errored because posts/style/
+    // hadn't been created yet.
+    //
+    // After the listings are fetched, each post's HTML is fetched in
+    // parallel (via raw.githubusercontent.com — fast + cached) so we can
+    // read the real <meta name="category"> tag. That way a post that lives
+    // in posts/beauty/ but has category="style" in its HTML is correctly
+    // shown as Style in the load modal (folder is just storage, not truth).
+    async function fetchAllPostsList() {
+      const listEl = document.getElementById('loadPostList');
+      listEl.innerHTML = '<div class="load-post-loading">Loading posts...</div>';
+      const token = localStorage.getItem('github_token');
+      const headers = token ? { 'Authorization': `token ${token}` } : {};
+      // GitHub's contents API sends `cache-control: max-age=60`, so a recently
+      // deleted post would otherwise still appear for up to a minute. Force
+      // the browser to skip its HTTP cache so the list reflects the current
+      // state of the repo every time the modal opens.
+      const fetchOpts = { headers, cache: 'no-store' };
+      try {
+        // Step 1: list every HTML file in every category folder.
+        const results = await Promise.all(POST_CATEGORIES.map(async (cat) => {
+          try {
+            const resp = await fetch(
+              `https://api.github.com/repos/${GITHUB_REPO}/contents/posts/${cat}?ref=${GITHUB_BRANCH}`,
+              fetchOpts
+            );
+            if (!resp.ok) return []; // folder missing — just skip
+            const files = await resp.json();
+            return (Array.isArray(files) ? files : [])
+              .filter(f => f.type === 'file' && f.name.endsWith('.html'))
+              .map(f => ({
+                folder: cat,
+                name: f.name,
+                path: `posts/${cat}/${f.name}`,
+                sha: f.sha,
+                // Filled in by step 2; default to folder while we wait.
+                metaCategory: cat
+              }));
+          } catch (e) {
+            return [];
+          }
+        }));
+        allPostsCache = results.flat().sort((a, b) => a.name.localeCompare(b.name));
+
+        // Step 2: for each post, fetch only the start of the file and parse
+        // the <meta name="category"> tag out of the <head>. Use a Range
+        // request so we don't download megabytes per post — some posts
+        // include base64-embedded images and run to 10 MB+, which would
+        // otherwise hang the modal. 8 KB is plenty to cover the head.
+        listEl.innerHTML = '<div class="load-post-loading">Reading post categories...</div>';
+        await Promise.all(allPostsCache.map(async (p) => {
+          try {
+            const raw = await fetch(
+              `https://raw.githubusercontent.com/${GITHUB_REPO}/${GITHUB_BRANCH}/${p.path}`,
+              { cache: 'no-store', headers: { 'Range': 'bytes=0-8191' } }
+            );
+            if (!raw.ok) return;
+            const html = await raw.text();
+            const m = html.match(/<meta\s+name=["']category["']\s+content=["']([^"']+)["']/i);
+            if (m && m[1]) p.metaCategory = normalizeCategorySlug(m[1]);
+          } catch (e) { /* keep folder-based default */ }
+        }));
+      } catch (e) {
+        listEl.innerHTML = `<div class="load-post-error">Failed to load: ${escapeHtmlText(e.message)}</div>`;
+        allPostsCache = [];
+      }
+    }
+
+    // Render the list, optionally filtered by folder. Called from the tab
+    // buttons and after a successful delete.
+    function filterPostList(filter) {
+      document.querySelectorAll('.load-post-tab').forEach(t => t.classList.remove('active'));
+      const tab = document.querySelector(`.load-post-tab[data-category="${filter}"]`);
+      if (tab) tab.classList.add('active');
+
+      const listEl = document.getElementById('loadPostList');
+      // Filter by the post's actual category (from its <meta> tag),
+      // not by which folder the file happens to live in.
+      const visible = filter === 'all'
+        ? allPostsCache
+        : allPostsCache.filter(p => (p.metaCategory || p.folder) === filter);
+
+      if (visible.length === 0) {
+        listEl.innerHTML = '<div class="load-post-empty">No posts in this category.</div>';
+        return;
+      }
+      listEl.innerHTML = visible.map(p => {
+        const prettyName = p.name.replace(/\.html$/, '').replace(/-/g, ' ').replace(/\bamp\b/g, '&');
+        const effectiveCat = p.metaCategory || p.folder;
+        const label = POST_CATEGORY_LABEL[effectiveCat] || effectiveCat;
+        // JSON-stringify then strip quotes for embedding in onclick attrs.
+        const prettyArg = JSON.stringify(prettyName).replace(/"/g, '&quot;');
+        return `
+          <div class="load-post-item">
+            <div class="load-post-item-body" onclick="loadPostForEditing('${p.path}', '${p.sha}')">
+              <span class="load-post-item-name">${escapeHtmlText(prettyName)}</span>
+              <span class="load-post-badge">${escapeHtmlText(label)}</span>
+            </div>
+            <button class="load-post-delete" onclick="event.stopPropagation(); deletePost('${p.path}', ${prettyArg})" title="Delete post" aria-label="Delete post">&times;</button>
+          </div>`;
+      }).join('');
+    }
+
+    // Legacy name kept in case anything external still calls it; delegates
+    // to the new filter-based approach.
+    function loadPostList(category) { filterPostList(category); }
+
+    async function deletePost(filePath, prettyName) {
+      if (!confirm(`Delete "${prettyName}"?\n\nThis removes the post file from GitHub and cannot be undone.`)) return;
+
+      const status = document.getElementById('loadPostStatus');
+      let token = localStorage.getItem('github_token');
+      if (!token) {
+        token = prompt('Paste your GitHub token to delete this post:');
+        if (!token) return;
+        localStorage.setItem('github_token', token);
+      }
+
+      status.textContent = `Deleting "${prettyName}"...`;
+      status.className = 'status-msg loading';
+
+      try {
+        // Refresh the SHA right before DELETE to avoid 409 conflicts.
+        const getResp = await fetch(
+          `https://api.github.com/repos/${GITHUB_REPO}/contents/${filePath}?ref=${GITHUB_BRANCH}`,
+          { headers: { 'Authorization': `token ${token}` } }
+        );
+        if (!getResp.ok) {
+          const err = await getResp.json().catch(() => ({}));
+          throw new Error(err.message || `Could not find file (HTTP ${getResp.status})`);
+        }
+        const current = await getResp.json();
+
+        const delResp = await fetch(
+          `https://api.github.com/repos/${GITHUB_REPO}/contents/${filePath}`,
+          {
+            method: 'DELETE',
+            headers: { 'Authorization': `token ${token}`, 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              message: `Delete post: ${prettyName}`,
+              sha: current.sha,
+              branch: GITHUB_BRANCH
+            })
+          }
+        );
+
+        if (delResp.ok) {
+          status.textContent = `Deleted "${prettyName}".`;
+          status.className = 'status-msg success';
+          // Remove from cache and re-render the list with the same active filter.
+          allPostsCache = allPostsCache.filter(p => p.path !== filePath);
+          const activeTab = document.querySelector('.load-post-tab.active');
+          filterPostList(activeTab ? activeTab.dataset.category : 'all');
+        } else {
+          const err = await delResp.json().catch(() => ({}));
+          status.textContent = `Failed to delete: ${err.message || delResp.statusText}`;
+          status.className = 'status-msg error';
+        }
+      } catch (e) {
+        status.textContent = `Failed: ${e.message}`;
+        status.className = 'status-msg error';
+      }
+    }
+
+    // One-shot migration: scan every post in the cache; for any whose current
+    // folder doesn't match its meta category, create the file at the correct
+    // path and delete the old copy. Also updates legacy `content="wellness"`
+    // meta tags to `content="lifestyle"` so the file on disk matches the new
+    // slug space going forward.
+    async function migrateToCorrectFolders() {
+      const status = document.getElementById('loadPostStatus');
+      const mismatched = allPostsCache.filter(p =>
+        p.metaCategory && p.metaCategory !== p.folder
+      );
+      if (mismatched.length === 0) {
+        status.textContent = 'All posts are already in their correct folders — nothing to migrate.';
+        status.className = 'status-msg success';
+        return;
+      }
+      const summary = mismatched.map(p =>
+        `  • ${p.name.replace(/\.html$/, '')}: ${p.folder} → ${p.metaCategory}`
+      ).join('\n');
+      if (!confirm(`Move ${mismatched.length} post(s) to match their category?\n\n${summary}`)) return;
+
+      let token = localStorage.getItem('github_token');
+      if (!token) {
+        token = prompt('Paste your GitHub token to perform the migration:');
+        if (!token) return;
+        localStorage.setItem('github_token', token);
+      }
+      const headers = { 'Authorization': `token ${token}`, 'Content-Type': 'application/json' };
+
+      status.textContent = `Migrating ${mismatched.length} post(s)...`;
+      status.className = 'status-msg loading';
+      let moved = 0, failed = 0;
+      for (const p of mismatched) {
+        try {
+          // 1) Fetch current file content + SHA
+          const getResp = await fetch(
+            `https://api.github.com/repos/${GITHUB_REPO}/contents/${p.path}?ref=${GITHUB_BRANCH}`,
+            { headers: { 'Authorization': `token ${token}` }, cache: 'no-store' }
+          );
+          if (!getResp.ok) { failed++; continue; }
+          const getJson = await getResp.json();
+          let html = decodeURIComponent(escape(atob(getJson.content.replace(/\s/g, ''))));
+
+          // 2) Normalize the meta tag in-place so the file content matches
+          //    the new slug space (wellness → lifestyle).
+          html = html.replace(
+            /(<meta\s+name=["']category["']\s+content=["'])([^"']+)(["'][^>]*>)/i,
+            (_m, pre, val, post) => pre + normalizeCategorySlug(val) + post
+          );
+          const newContent = btoa(unescape(encodeURIComponent(html)));
+
+          // 3) PUT new file at the correct folder path
+          const newPath = `posts/${p.metaCategory}/${p.name}`;
+          const putResp = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/${newPath}`, {
+            method: 'PUT', headers,
+            body: JSON.stringify({
+              message: `Migrate to ${p.metaCategory}: ${p.name.replace(/\.html$/, '')}`,
+              content: newContent, branch: GITHUB_BRANCH
+            })
+          });
+          if (!putResp.ok) { failed++; continue; }
+
+          // 4) DELETE old file (use fresh SHA we just fetched)
+          await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/${p.path}`, {
+            method: 'DELETE', headers,
+            body: JSON.stringify({
+              message: `Remove old location after migration: ${p.name.replace(/\.html$/, '')}`,
+              sha: getJson.sha, branch: GITHUB_BRANCH
+            })
+          });
+
+          moved++;
+          status.textContent = `Migrating... ${moved}/${mismatched.length} done.`;
+        } catch (e) {
+          failed++;
+        }
+      }
+
+      status.textContent = failed === 0
+        ? `Migration complete — moved ${moved} post(s).`
+        : `Moved ${moved}, failed ${failed}. Check the list and retry if needed.`;
+      status.className = failed === 0 ? 'status-msg success' : 'status-msg error';
+
+      // Refresh the list with fresh data from the remote.
+      await fetchAllPostsList();
+      const activeTab = document.querySelector('.load-post-tab.active');
+      filterPostList(activeTab ? activeTab.dataset.category : 'all');
+    }
+
+    async function loadPostForEditing(filePath, sha) {
+      const status = document.getElementById('loadPostStatus');
+      status.textContent = 'Loading post...';
+      status.className = 'status-msg loading';
+      try {
+        const token = localStorage.getItem('github_token');
+        const headers = token ? { 'Authorization': `token ${token}` } : {};
+        const resp = await fetch(
+          `https://api.github.com/repos/${GITHUB_REPO}/contents/${filePath}?ref=${GITHUB_BRANCH}`,
+          { headers }
+        );
+        if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+        const data = await resp.json();
+        // GitHub's Contents API only inlines base64 content for files <= 1 MB.
+        // For larger files (e.g. posts with base64-embedded images) it returns
+        // encoding:"none" and an empty content field — we still get a valid
+        // SHA, but have to fetch the actual bytes from the raw URL.
+        let html;
+        if (data.encoding === 'base64' && data.content) {
+          html = decodeURIComponent(escape(atob(data.content.replace(/\s/g, ''))));
+        } else {
+          const rawResp = await fetch(
+            `https://raw.githubusercontent.com/${GITHUB_REPO}/${GITHUB_BRANCH}/${filePath}`,
+            { cache: 'no-store' }
+          );
+          if (!rawResp.ok) throw new Error(`Raw HTTP ${rawResp.status}`);
+          html = await rawResp.text();
+        }
+
+        const parsed = parsePostHtml(html);
+        populateEditorFromParsed(parsed);
+
+        editingFilePath = filePath;
+        editingFileSha = data.sha;
+        preservedDate = parsed.isoDate;
+
+        // Show the editing banner
+        document.getElementById('editingBannerPath').textContent = filePath;
+        document.getElementById('editingBanner').classList.add('visible');
+        document.getElementById('publishBtn').textContent = 'Save Changes';
+
+        status.textContent = '';
+        closeLoadPostModal();
+      } catch (e) {
+        status.textContent = `Failed: ${e.message}`;
+        status.className = 'status-msg error';
+      }
+    }
+
+    function exitEditMode() {
+      if (!confirm('Exit edit mode and start a new blank post? Any unsaved changes will be lost.')) return;
+      editingFilePath = null;
+      editingFileSha = null;
+      preservedDate = null;
+      document.getElementById('editingBanner').classList.remove('visible');
+      document.getElementById('publishBtn').textContent = 'Publish';
+      // Clear the canvas and meta fields so the user starts fresh
+      document.getElementById('editorCanvas').innerHTML = '';
+      document.getElementById('postTitle').value = '';
+      document.getElementById('postCategory').value = 'beauty';
+      headerImageUrl = '';
+      applyHeaderImage();
+    }
+
+    // ============================================================
+    // PARSE POST HTML → BLOCKS
+    // ============================================================
+    function parsePostHtml(html) {
+      const doc = new DOMParser().parseFromString(html, 'text/html');
+
+      const postHeader = doc.querySelector('.post-header');
+      const title = (postHeader?.querySelector('h1')?.textContent || '').trim();
+      const author = (doc.querySelector('.post-meta .author')?.textContent || 'Isabella Rivera').trim();
+      // Prefer the explicit meta tag (editor-generated) over the display text
+      const isoDate = doc.querySelector('meta[name="date"]')?.getAttribute('content') || '';
+      // Category: prefer meta tag, fall back to URL detection, then default.
+      // Normalizer handles the legacy 'wellness' → 'lifestyle' rename.
+      const metaCategory = doc.querySelector('meta[name="category"]')?.getAttribute('content') || '';
+      const category = normalizeCategorySlug(metaCategory);
+
+      // Header background image
+      const bgImage = postHeader?.style?.backgroundImage || '';
+      const headerImage = bgImage.replace(/^url\(['"]?/, '').replace(/['"]?\)$/, '') || '';
+
+      const contentEl = doc.querySelector('.post-content');
+      const blocks = [];
+      if (contentEl) {
+        for (const child of Array.from(contentEl.children)) {
+          const b = parseBlockFromElement(child);
+          if (b) blocks.push(b);
+        }
+      }
+
+      return { title, author, isoDate, category, headerImage, blocks };
+    }
+
+    function parseBlockFromElement(el) {
+      const tag = el.tagName.toLowerCase();
+
+      // Skip post-nav (auto-generated prev/next links)
+      if (el.classList.contains('post-nav')) return null;
+
+      // Image placeholders from Squarespace migration: no real image, just a label
+      if (el.classList.contains('post-image-placeholder')) {
+        return { type: 'image-placeholder', text: (el.textContent || '').trim() };
+      }
+
+      // Editor-generated image wrap: <div class="img-wrap align-X"><img>[<p>caption</p>]</div>
+      if (el.classList.contains('img-wrap')) {
+        const img = el.querySelector('img');
+        const cap = el.querySelector('p');
+        const alignCls = Array.from(el.classList).find(c => c.startsWith('align-'));
+        const widthStr = img && img.style && img.style.width ? img.style.width : '100%';
+        return {
+          type: 'image',
+          src: img ? img.getAttribute('src') : '',
+          align: alignCls ? alignCls.replace('align-', '') : 'center',
+          width: widthStr.replace('%', '') || '100',
+          caption: cap ? (cap.textContent || '').trim() : ''
+        };
+      }
+
+      // Editor-generated gallery: <div class="post-gallery" data-visible="N">
+      //   <img class="gallery-slide"> or <a class="gallery-slide-link"><img></a>
+      if (el.classList.contains('post-gallery')) {
+        const slides = [];
+        // Collect both bare <img> slides and <a>-wrapped slides
+        el.querySelectorAll('.gallery-slide, .gallery-slide-link').forEach(node => {
+          if (node.tagName === 'IMG') {
+            slides.push({ src: node.getAttribute('src'), link: '' });
+          } else if (node.tagName === 'A') {
+            const img = node.querySelector('img');
+            slides.push({
+              src: img ? img.getAttribute('src') : '',
+              link: node.getAttribute('href') || ''
+            });
+          }
+        });
+        return {
+          type: 'gallery',
+          visible: el.dataset.visible || '1',
+          slides
+        };
+      }
+
+      // Editor-generated hero: <div class="post-hero [ratio-X-Y]"><img.hero-image><div.hero-text>…</div></div>
+      if (el.classList.contains('post-hero')) {
+        const heroImg = el.querySelector('.hero-image');
+        const textEl = el.querySelector('.hero-text');
+        const headingEl = textEl ? (textEl.querySelector('h2') || textEl.querySelector('h3')) : null;
+        const bodyEl = textEl ? textEl.querySelector('p') : null;
+        const ratioCls = Array.from(el.classList).find(c => c.startsWith('ratio-'));
+        return {
+          type: 'hero',
+          image: heroImg && heroImg.tagName === 'IMG' ? heroImg.getAttribute('src') : '',
+          headingTag: headingEl ? headingEl.tagName.toLowerCase() : 'h2',
+          headingHtml: headingEl ? headingEl.innerHTML : '',
+          bodyHtml: bodyEl ? bodyEl.innerHTML : '',
+          ratio: ratioCls ? ratioCls.replace('ratio-', '') : '50-50'
+        };
+      }
+
+      // Standard text / heading / list / blockquote blocks
+      if (['p', 'h2', 'h3', 'blockquote', 'ul', 'ol'].includes(tag)) {
+        return { type: tag, html: el.innerHTML };
+      }
+
+      // Gallery caption emitted by generatePostHTML as a <p.gallery-caption>
+      if (tag === 'p' && el.classList.contains('gallery-caption')) {
+        return null; // swallowed — we don't round-trip captions precisely yet
+      }
+
+      // Unknown element — wrap as a paragraph so at least the content survives
+      return { type: 'p', html: el.outerHTML };
+    }
+
+    // ============================================================
+    // POPULATE CANVAS FROM PARSED BLOCKS
+    // ============================================================
+    function populateEditorFromParsed(parsed) {
+      // Meta fields
+      document.getElementById('postTitle').value = parsed.title || '';
+      document.getElementById('postAuthor').value = parsed.author || 'Isabella Rivera';
+      // Only set category if it matches one of the dropdown options
+      const catSelect = document.getElementById('postCategory');
+      const validCats = Array.from(catSelect.options).map(o => o.value);
+      if (validCats.includes(parsed.category)) {
+        catSelect.value = parsed.category;
+      }
+
+      // Header image
+      headerImageUrl = parsed.headerImage || '';
+      applyHeaderImage();
+
+      // Clear canvas and block counter
+      const canvas = document.getElementById('editorCanvas');
+      canvas.innerHTML = '';
+      blockCounter = 0;
+
+      parsed.blocks.forEach(pb => {
+        if (['p', 'h2', 'h3', 'blockquote', 'ul', 'ol'].includes(pb.type)) {
+          const block = addBlock(pb.type);
+          const editable = block.querySelector('[contenteditable]');
+          if (editable) editable.innerHTML = pb.html || '';
+        } else if (pb.type === 'image-placeholder') {
+          // Legacy Squarespace placeholder — insert as a text block with a note.
+          // User can replace with a real image block later.
+          const block = addBlock('p');
+          const editable = block.querySelector('[contenteditable]');
+          if (editable) editable.innerHTML = `<em>[Image placeholder: ${escapeHtmlText(pb.text)}]</em>`;
+        } else if (pb.type === 'image') {
+          const block = document.createElement('div');
+          block.className = 'content-block image-block';
+          block.dataset.blockType = 'image';
+          block.dataset.blockId = ++blockCounter;
+          block.dataset.width = pb.width || '100';
+          block.dataset.align = pb.align || 'center';
+          block.innerHTML = controlsHTML() + `
+            <div class="img-container" style="width:${pb.width || '100'}%;">
+              <img src="${pb.src}" alt="Blog image">
+            </div>
+            <div class="image-toolbar">
+              <label>Width</label>
+              <input type="range" min="20" max="100" value="${pb.width || '100'}" oninput="updateImageWidth(this)">
+              <span class="width-label">${pb.width || '100'}%</span>
+              <div class="align-buttons">
+                <button class="${pb.align === 'left' ? 'active' : ''}" onclick="setImageAlign(this, 'left')">L</button>
+                <button class="${(!pb.align || pb.align === 'center') ? 'active' : ''}" onclick="setImageAlign(this, 'center')">C</button>
+                <button class="${pb.align === 'right' ? 'active' : ''}" onclick="setImageAlign(this, 'right')">R</button>
+              </div>
+            </div>
+            <div class="caption" contenteditable="true">${pb.caption || 'Add caption'}</div>
+          `;
+          canvas.appendChild(block);
+          applyImageAlignment(block);
+        } else if (pb.type === 'gallery') {
+          const block = addBlock('gallery');
+          const gallery = block.querySelector('.post-gallery');
+          const firstNav = gallery.querySelector('.gallery-nav');
+          // Set visible count
+          gallery.dataset.visible = pb.visible || '1';
+          const visSelect = block.querySelector('.gallery-editor-controls select');
+          if (visSelect) visSelect.value = pb.visible || '1';
+          // Add slides with per-image links
+          (pb.slides || []).forEach(slide => {
+            const img = document.createElement('img');
+            img.className = 'gallery-slide';
+            img.src = slide.src || '';
+            img.alt = 'Gallery image';
+            img.dataset.link = slide.link || '';
+            gallery.insertBefore(img, firstNav);
+          });
+          gallery.dataset.slide = '0';
+          refreshSlideshow(block);
+        } else if (pb.type === 'hero') {
+          const block = addBlock('hero');
+          if (pb.ratio && pb.ratio !== '50-50') {
+            block.classList.add(`ratio-${pb.ratio}`);
+            const sel = block.querySelector('.hero-options select');
+            if (sel) sel.value = pb.ratio;
+          }
+          if (pb.image) {
+            const slot = block.querySelector('.hero-image-slot');
+            const existing = slot.querySelector('img');
+            if (existing) existing.remove();
+            const img = document.createElement('img');
+            img.src = pb.image;
+            img.alt = 'Hero image';
+            slot.insertBefore(img, slot.firstChild);
+          }
+          const heroText = block.querySelector('.hero-text');
+          if (heroText) {
+            const h = heroText.querySelector('h2, h3');
+            if (h && pb.headingHtml) h.innerHTML = pb.headingHtml;
+            const p = heroText.querySelector('p');
+            if (p && pb.bodyHtml) p.innerHTML = pb.bodyHtml;
+          }
+        }
+      });
+    }
+
+    // Small HTML-escape helper used by the load list and placeholder notes.
+    function escapeHtmlText(s) {
+      return String(s == null ? '' : s)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    // ===== KEYBOARD SHORTCUTS =====
+    document.addEventListener('keydown', (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'b') { e.preventDefault(); formatCmd('bold'); }
+      if ((e.metaKey || e.ctrlKey) && e.key === 'i') { e.preventDefault(); formatCmd('italic'); }
+      if ((e.metaKey || e.ctrlKey) && e.key === 'u') { e.preventDefault(); formatCmd('underline'); }
+    });
+  </script>
+</body>
+</html>
