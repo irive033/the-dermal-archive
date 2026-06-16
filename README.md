@@ -45,17 +45,12 @@ token is stored only in your browser (localStorage) and is never committed.
 **Workflow:** edit in the browser → **Publish** → it commits to `main` → Vercel
 rebuilds (~30s).
 
-## Adding a Routine post — one manual step
+## Routine posts — fully automatic
 
-The blog editor saves the post file, but the **Routines page grid** and the shop's
-**"Clear Skin Routines" carousel** are static lists (the current 5 posts). After
-publishing a new post, add a matching card in two places:
-
-- `routines.html` → the `<div class="blog-grid">` block
-- `index.html` → the `<div class="blog-carousel">` block
-
-(Each card needs the post's title, date, `posts/beauty/<slug>.html` link, and a
-`images/uploads/...` thumbnail.)
+Just use the blog editor. On **Publish** (and on delete) it automatically regenerates
+the **Routines page grid** (`routines.html`) and the shop's **"Clear Skin Routines"
+carousel** (`index.html`) from the `posts/beauty/` folder — newest-first, with each
+post's title, date, and header-image thumbnail. No manual card editing needed.
 
 ---
 
