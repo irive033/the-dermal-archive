@@ -1,0 +1,2667 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Skin Safe Product List — The Dermal Archive</title>
+  <style>
+  /* ----------------------------------------------------------------
+     Inlined from the Isabella Sofia stylesheet (originally css/style.css)
+     so this page is fully self-contained and can be developed as its own
+     standalone site with no external local dependencies.
+     ---------------------------------------------------------------- */
+/* ============================================
+   Isabella Sofia - Main Stylesheet
+   Fonts: Minerva Modern (headings), Adobe Garamond Pro (body/nav)
+   ============================================ */
+
+/* --- Reset & Base --- */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'adobe-garamond-pro', 'Garamond', 'Georgia', serif;
+  font-size: 16px;
+  line-height: 1.6;
+  color: #000;
+  background-color: #DAE1E4;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+ul, ol {
+  list-style: none;
+}
+
+/* --- Typography --- */
+h1, h2, h3, h4 {
+  font-family: 'minerva-modern', 'Didot', 'Georgia', serif;
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  line-height: 1.3;
+}
+
+h1 {
+  font-size: 3rem;
+}
+
+h2 {
+  font-size: 2.8rem;
+}
+
+h3 {
+  font-size: 1.8rem;
+}
+
+h4 {
+  font-size: 1.4rem;
+}
+
+p {
+  font-family: 'adobe-garamond-pro', 'Garamond', 'Georgia', serif;
+  font-size: 1.1rem;
+  line-height: 1.8;
+  color: #000;
+}
+
+/* --- Layout --- */
+.site-wrapper {
+  max-width: 1500px;
+  margin: 0 auto;
+}
+
+.container {
+  max-width: 1500px;
+  margin: 0 auto;
+  padding: 0 4vw;
+}
+
+.section {
+  width: 100%;
+  position: relative;
+}
+
+.section-full {
+  padding: 80px 4vw;
+}
+
+/* --- Header (brand left, nav right, warm minimal) --- */
+.site-header {
+  background: #f4f2ec;
+  padding: 30px 5vw;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  border-bottom: 1px solid #e6e1d6;
+}
+
+.header-inner {
+  max-width: 1500px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.site-brand {
+  font-family: 'Cormorant Garamond', 'Didot', 'Georgia', serif;
+  font-size: 1.6rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #2a2621;
+  white-space: nowrap;
+}
+
+.main-nav {
+  display: flex;
+  align-items: center;
+  gap: 2.75rem;
+}
+
+.main-nav a {
+  font-family: 'EB Garamond', 'Garamond', 'Georgia', serif;
+  font-size: 0.8rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #6b6458;
+  transition: color 0.2s;
+  white-space: nowrap;
+}
+
+.main-nav a:hover {
+  color: #2a2621;
+}
+
+.main-nav a.active {
+  color: #2a2621;
+  border-bottom: 1px solid #2a2621;
+  padding-bottom: 2px;
+}
+
+/* --- Hero Section --- */
+.hero {
+  width: 100%;
+  height: 70vh;
+  min-height: 500px;
+  position: relative;
+  overflow: hidden;
+  background-color: #ABA8A6;
+}
+
+.hero img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.hero-placeholder {
+  width: 100%;
+  height: 100%;
+  background-color: #ABA8A6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 1.2rem;
+  font-style: italic;
+}
+
+/* --- Tagline Section --- */
+.tagline-section {
+  background: #fff;
+  padding: 80px 4vw;
+  text-align: center;
+}
+
+.tagline-section h3 {
+  font-size: 1.8rem;
+  margin-bottom: 20px;
+  color: #000;
+}
+
+.tagline-section h2 {
+  font-size: 2.8rem;
+  color: #000;
+}
+
+/* --- Featured Post (Dark BG) --- */
+.featured-post {
+  background: #000;
+  color: #fff;
+  position: relative;
+  min-height: 450px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  overflow: hidden;
+}
+
+.featured-post .bg-image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.5;
+}
+
+.featured-post .content-overlay {
+  position: relative;
+  z-index: 2;
+  padding: 60px 4vw;
+}
+
+.featured-post h3 {
+  color: #fff;
+  margin-bottom: 25px;
+}
+
+/* --- Buttons --- */
+.btn {
+  display: inline-block;
+  font-family: 'adobe-garamond-pro', 'Garamond', 'Georgia', serif;
+  font-size: 0.95rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 14px 32px;
+  border: 1px solid currentColor;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  transition: background 0.3s, color 0.3s;
+}
+
+.btn:hover {
+  background: #000;
+  color: #fff;
+  border-color: #000;
+}
+
+.btn-white {
+  color: #fff;
+  border-color: #fff;
+}
+
+.btn-white:hover {
+  background: #fff;
+  color: #000;
+}
+
+/* --- Blog Preview Cards (From the Blog) --- */
+.blog-preview-section {
+  background: #fff;
+  padding: 80px 4vw;
+}
+
+.section-label {
+  font-family: 'adobe-garamond-pro', 'Garamond', 'Georgia', serif;
+  font-size: 0.9rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #666;
+  margin-bottom: 40px;
+  text-align: center;
+}
+
+.blog-preview-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 40px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.blog-card {
+  text-align: left;
+}
+
+.blog-card h2 {
+  font-size: 2rem;
+  margin-bottom: 15px;
+  line-height: 1.2;
+}
+
+.blog-card p {
+  font-size: 1.2rem;
+  color: #444;
+  margin-bottom: 20px;
+  line-height: 1.6;
+}
+
+.blog-card .read-more {
+  font-family: 'adobe-garamond-pro', 'Garamond', 'Georgia', serif;
+  font-size: 0.85rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  border-bottom: 1px solid #000;
+  padding-bottom: 2px;
+}
+
+/* --- Wellness / Sustainability Section --- */
+.wellness-section {
+  background: #fff;
+  padding: 100px 4vw;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: start;
+}
+
+.wellness-image {
+  width: 100%;
+  aspect-ratio: 3/4;
+  object-fit: cover;
+  background-color: #ABA8A6;
+}
+
+.wellness-image-placeholder {
+  width: 100%;
+  aspect-ratio: 3/4;
+  background-color: #ABA8A6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-style: italic;
+}
+
+.wellness-content h3 {
+  font-size: 1.6rem;
+  margin-bottom: 10px;
+}
+
+.wellness-content h2 {
+  font-size: 2.4rem;
+  margin-bottom: 25px;
+}
+
+.wellness-content .definition {
+  font-style: italic;
+  font-size: 1rem;
+  margin-bottom: 15px;
+  color: #444;
+}
+
+.wellness-content .definition .word-type {
+  display: block;
+  font-weight: 600;
+  font-style: italic;
+  margin-bottom: 5px;
+}
+
+.wellness-content p {
+  margin-bottom: 30px;
+}
+
+/* --- Blog Summary Carousel --- */
+.blog-carousel-section {
+  padding: 80px 4vw;
+  background: #DAE1E4;
+}
+
+.blog-carousel-section.white-bg {
+  background: #fff;
+}
+
+.blog-carousel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.blog-carousel-header h2 {
+  font-size: 2rem;
+}
+
+.carousel-nav-label {
+  font-family: 'adobe-garamond-pro', 'Garamond', 'Georgia', serif;
+  font-size: 0.85rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #666;
+}
+
+.blog-carousel {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 20px;
+  overflow-x: auto;
+}
+
+.carousel-item {
+  min-width: 200px;
+}
+
+.carousel-item img {
+  width: 100%;
+  aspect-ratio: 3/4;
+  object-fit: cover;
+  margin-bottom: 10px;
+}
+
+.carousel-item-placeholder {
+  width: 100%;
+  aspect-ratio: 3/4;
+  background-color: #c5cacd;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 10px;
+  font-size: 0.8rem;
+  color: #666;
+  text-align: center;
+  padding: 10px;
+}
+
+.carousel-item .date {
+  font-size: 0.8rem;
+  color: #888;
+  margin-bottom: 5px;
+}
+
+.carousel-item h4 {
+  font-size: 1rem;
+  text-transform: none;
+  font-family: 'adobe-garamond-pro', 'Garamond', 'Georgia', serif;
+  font-weight: 400;
+  letter-spacing: 0;
+}
+
+/* --- Newsletter --- */
+.newsletter-section {
+  padding: 60px 4vw;
+  text-align: center;
+  background: #DAE1E4;
+}
+
+.newsletter-section h3 {
+  font-size: 1.8rem;
+  margin-bottom: 25px;
+  text-transform: none;
+}
+
+.newsletter-form {
+  display: flex;
+  gap: 0;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.newsletter-form input[type="email"] {
+  flex: 1;
+  padding: 12px 16px;
+  border: 1px solid #000;
+  background: transparent;
+  font-family: 'adobe-garamond-pro', 'Garamond', 'Georgia', serif;
+  font-size: 1rem;
+  outline: none;
+}
+
+.newsletter-form button {
+  padding: 12px 24px;
+  background: #000;
+  color: #fff;
+  border: 1px solid #000;
+  font-family: 'adobe-garamond-pro', 'Garamond', 'Georgia', serif;
+  font-size: 0.85rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: opacity 0.3s;
+}
+
+.newsletter-form button:hover {
+  opacity: 0.8;
+}
+
+/* --- Blog Post Detail --- */
+.post-header {
+  background: #DAE1E4;
+  padding: 80px 4vw 60px;
+  text-align: center;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+}
+
+.post-header.has-header-image {
+  padding: 100px 4vw 80px;
+  color: #fff;
+}
+
+.post-header.has-header-image::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+}
+
+.post-header.has-header-image > * {
+  position: relative;
+  z-index: 1;
+}
+
+.post-header.has-header-image .post-meta {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.post-header h1 {
+  font-size: 2.8rem;
+  margin-bottom: 15px;
+}
+
+.post-meta {
+  font-family: 'adobe-garamond-pro', 'Garamond', 'Georgia', serif;
+  font-size: 0.95rem;
+  color: #555;
+  letter-spacing: 0.05em;
+}
+
+.post-meta .author {
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: 0.85rem;
+}
+
+.post-meta .date {
+  margin-left: 10px;
+}
+
+.post-body {
+  background: #fff;
+  padding: 60px 4vw;
+}
+
+.post-content {
+  max-width: 750px;
+  margin: 0 auto;
+}
+
+.post-content p {
+  font-size: 1.15rem;
+  line-height: 1.9;
+  margin-bottom: 25px;
+  color: #222;
+}
+
+.post-content h2 {
+  font-size: 2rem;
+  margin: 50px 0 20px;
+  text-transform: none;
+}
+
+.post-content h3 {
+  font-size: 1.5rem;
+  margin: 40px 0 15px;
+  text-transform: none;
+}
+
+.post-content img {
+  width: 100%;
+  margin: 30px 0;
+}
+
+.post-content ul, .post-content ol {
+  padding-left: 25px;
+  margin-bottom: 25px;
+}
+
+.post-content li {
+  font-size: 1.1rem;
+  line-height: 1.8;
+  margin-bottom: 8px;
+  list-style: disc;
+}
+
+.post-content ol li {
+  list-style: decimal;
+}
+
+.post-content blockquote {
+  border-left: 3px solid #000;
+  padding-left: 25px;
+  margin: 30px 0;
+  font-style: italic;
+  color: #444;
+}
+
+.post-content a {
+  border-bottom: 1px solid #000;
+  transition: opacity 0.3s;
+}
+
+.post-content a:hover {
+  opacity: 0.6;
+}
+
+/* --- Post Gallery (slideshow — 1 image at a time, left/right chevrons) --- */
+/* Intentionally NOT scoped to .post-content so the blog editor preview,
+   which imports this stylesheet, renders galleries identically. */
+.post-gallery {
+  position: relative;
+  margin: 30px 0;
+  width: 100%;
+  overflow: hidden;
+  min-height: 450px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.post-gallery .gallery-slide {
+  display: none;
+  width: 100%;
+  max-height: 600px;
+  object-fit: cover;
+  margin: 0;
+}
+
+.post-gallery .gallery-slide.active {
+  display: block;
+}
+
+/* Multi-image: 2–5 images visible at once in a flex row */
+.post-gallery[data-visible="2"],
+.post-gallery[data-visible="3"],
+.post-gallery[data-visible="4"],
+.post-gallery[data-visible="5"] {
+  gap: 6px;
+  align-items: stretch;
+  min-height: 320px;
+}
+
+.post-gallery[data-visible="2"] .gallery-slide.active,
+.post-gallery[data-visible="3"] .gallery-slide.active,
+.post-gallery[data-visible="4"] .gallery-slide.active,
+.post-gallery[data-visible="5"] .gallery-slide.active {
+  flex: 1 1 0;
+  min-width: 0;
+  width: auto;
+  max-height: none;
+  height: 350px;
+}
+
+/* Linked slides: <a> wrapper should behave like the slide itself */
+.post-gallery a.gallery-slide-link {
+  display: none;
+  flex: 1 1 0;
+  min-width: 0;
+}
+.post-gallery a.gallery-slide-link.active {
+  display: block;
+}
+.post-gallery a.gallery-slide-link img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.post-gallery .gallery-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 44px;
+  height: 44px;
+  background: none;
+  color: rgba(255, 255, 255, 0.9);
+  border: none;
+  font-size: 0;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 3;
+  transition: color 0.2s;
+  padding: 0;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+}
+
+/* Thin chevron arrows via CSS borders */
+.post-gallery .gallery-nav::after {
+  content: '';
+  display: block;
+  width: 14px;
+  height: 14px;
+  border-top: 2px solid currentColor;
+  border-right: 2px solid currentColor;
+}
+
+.post-gallery .gallery-prev::after {
+  transform: rotate(-135deg);
+  margin-left: 4px;
+}
+
+.post-gallery .gallery-next::after {
+  transform: rotate(45deg);
+  margin-right: 4px;
+}
+
+.post-gallery .gallery-nav:hover {
+  color: #fff;
+}
+
+.post-gallery .gallery-prev { left: 15px; }
+.post-gallery .gallery-next { right: 15px; }
+
+.post-gallery .gallery-counter {
+  position: absolute;
+  bottom: 15px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  padding: 5px 14px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  letter-spacing: 0.05em;
+  z-index: 3;
+}
+
+.post-content .gallery-caption {
+  font-size: 0.85rem;
+  color: #888;
+  font-style: italic;
+  text-align: center;
+  margin-bottom: 30px;
+}
+.post-content .post-gallery + .gallery-caption {
+  margin-top: -20px;
+}
+
+/* --- Post Image Hero (image left, text right) --- */
+.post-content .post-hero {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  align-items: center;
+  margin: 40px 0;
+}
+
+.post-content .post-hero.ratio-60-40 { grid-template-columns: 3fr 2fr; }
+.post-content .post-hero.ratio-40-60 { grid-template-columns: 2fr 3fr; }
+
+.post-content .post-hero .hero-image {
+  width: 100%;
+  height: 400px;
+  object-fit: cover;
+  margin: 0;
+}
+
+.post-content .post-hero .hero-text h2,
+.post-content .post-hero .hero-text h3 {
+  margin-top: 0;
+}
+
+.post-content .post-hero .hero-text p {
+  margin-bottom: 15px;
+}
+
+/* --- Image alignment for standalone images --- */
+.post-content .img-wrap {
+  margin: 30px 0;
+}
+.post-content .img-wrap.align-left { text-align: left; }
+.post-content .img-wrap.align-center { text-align: center; }
+.post-content .img-wrap.align-right { text-align: right; }
+.post-content .img-wrap img { display: inline-block; margin: 0; }
+
+@media (max-width: 768px) {
+  .post-content .post-hero,
+  .post-content .post-hero.ratio-60-40,
+  .post-content .post-hero.ratio-40-60 {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  .post-content .post-hero .hero-image {
+    height: 280px;
+  }
+  .post-gallery {
+    min-height: 320px;
+  }
+  .post-gallery .gallery-slide {
+    max-height: 420px;
+  }
+  .post-gallery .gallery-nav {
+    width: 36px;
+    height: 36px;
+  }
+  .post-gallery .gallery-nav::after {
+    width: 11px;
+    height: 11px;
+  }
+  .post-gallery .gallery-prev { left: 10px; }
+  .post-gallery .gallery-next { right: 10px; }
+}
+
+.post-image-placeholder {
+  width: 100%;
+  aspect-ratio: 16/9;
+  background: #c5cacd;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #888;
+  font-style: italic;
+  margin: 30px 0;
+  font-size: 0.9rem;
+}
+
+.post-nav {
+  display: flex;
+  justify-content: space-between;
+  max-width: 750px;
+  margin: 0 auto;
+  padding: 40px 0;
+  border-top: 1px solid #eee;
+}
+
+.post-nav a {
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  border-bottom: 1px solid #000;
+}
+
+/* --- Footer --- */
+.site-footer {
+  background: #DAE1E4;
+  padding: 20px 4vw 40px;
+  text-align: center;
+  font-size: 0.85rem;
+  color: #666;
+}
+
+/* =========================================
+   PAGE-SPECIFIC STYLES
+   ========================================= */
+
+/* --- Blog Listing Pages (Style, Beauty, Wellness) --- */
+/* Editable 2-column page header above the Skin Safe Product List */
+.custom-page-header {
+  background: #fff;
+  padding: 100px 6vw 80px;
+}
+
+/* Keeps the paragraph at the top of its column (doesn't stretch to match
+   the h1 height), so the badge directly below sits right under the text. */
+.custom-page-header-body-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.vetted-badge {
+  font-family: inherit;
+  font-size: 0.82rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #6b7752;
+}
+.vetted-badge a {
+  color: inherit;
+  text-decoration: none;
+  transition: opacity 0.15s;
+}
+.vetted-badge a:hover {
+  opacity: 0.7;
+}
+
+.custom-page-header-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.4fr;
+  gap: 80px;
+  max-width: 1300px;
+  margin: 0 auto;
+  align-items: start;
+}
+
+.custom-page-header-heading h1 {
+  font-family: 'Cormorant Garamond', 'Didot', 'Georgia', serif;
+  font-size: 3.2rem;
+  font-weight: 300;
+  line-height: 1.05;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  margin: 0;
+  color: #000;
+}
+
+.custom-page-header-body {
+  font-family: inherit;
+}
+
+.custom-page-header-body p {
+  font-size: 1.15rem;
+  line-height: 1.7;
+  color: #222;
+  margin: 0 0 16px;
+}
+
+.custom-page-header-body p:last-child {
+  margin-bottom: 0;
+}
+
+.custom-page-header-body a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+@media (max-width: 768px) {
+  .custom-page-header {
+    padding: 60px 6vw 40px;
+  }
+  .custom-page-header-grid {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+  .custom-page-header-heading h1 {
+    font-size: 2.4rem;
+  }
+  .vetted-badge {
+    font-size: 0.72rem;
+  }
+}
+
+/* Compact variant of page-hero for use as a section title below the custom header */
+.page-hero.page-hero-compact {
+  min-height: auto;
+  padding: 50px 4vw 30px;
+  background: #DAE1E4;
+}
+.page-hero.page-hero-compact h2 {
+  font-family: 'Cormorant Garamond', 'Didot', 'Georgia', serif;
+  font-size: 2rem;
+  font-weight: 300;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin: 0;
+  color: #000;
+}
+
+.page-hero {
+  background: #ABA8A6;
+  padding: 80px 4vw;
+  text-align: center;
+  min-height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.page-hero h1 {
+  color: #000;
+  font-size: 3rem;
+}
+
+.blog-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 40px;
+  padding: 60px 4vw;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.blog-grid-item {
+  background: #fff;
+  overflow: hidden;
+}
+
+.blog-grid-item .thumb {
+  width: 100%;
+  aspect-ratio: 4/3;
+  background: #c5cacd;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #888;
+  font-style: italic;
+}
+
+.blog-grid-item .thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.blog-grid-item .post-info {
+  padding: 25px;
+}
+
+.blog-grid-item h3 {
+  font-size: 1.4rem;
+  margin-bottom: 8px;
+  text-transform: none;
+  font-family: 'minerva-modern', 'Didot', 'Georgia', serif;
+}
+
+.blog-grid-item .meta {
+  font-size: 0.85rem;
+  color: #888;
+  margin-bottom: 12px;
+}
+
+.blog-grid-item p {
+  font-size: 1rem;
+  color: #555;
+  margin-bottom: 15px;
+}
+
+/* --- Product Grid (Skin Safe Product List) --- */
+.product-intro {
+  background: #fff;
+  padding: 60px 4vw;
+  text-align: center;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.product-intro p {
+  font-size: 1.1rem;
+  color: #444;
+}
+
+.category-nav {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 15px;
+  padding: 30px 4vw;
+  background: #fff;
+}
+
+.category-nav a {
+  font-size: 0.9rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 8px 18px;
+  border: 1px solid #ddd;
+  transition: all 0.3s;
+}
+
+.category-nav a:hover,
+.category-nav a.active {
+  background: #000;
+  color: #fff;
+  border-color: #000;
+}
+
+.category-hero {
+  background: #fff;
+  padding: 30px 20px 30px;
+  text-align: center;
+  display: none;
+  /* Offset for the 97px sticky site-header so scrollIntoView lands below it */
+  scroll-margin-top: 110px;
+}
+
+.category-hero.visible {
+  display: block;
+}
+
+.subcategory-nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 10px;
+}
+
+.subcategory-nav a {
+  padding: 4px 22px;
+  font-size: 0.92rem;
+  color: #555;
+  cursor: pointer;
+  text-decoration: none;
+  transition: color 0.2s;
+  position: relative;
+  white-space: nowrap;
+}
+
+.subcategory-nav a:hover {
+  color: #000;
+}
+
+.subcategory-nav a.active {
+  color: #000;
+  font-weight: 500;
+}
+
+.subcategory-nav a:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  right: -1px;
+  top: 25%;
+  bottom: 25%;
+  width: 1px;
+  background: #bbb;
+}
+
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 30px;
+  padding: 40px 4vw 80px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.product-card {
+  background: #fff;
+  text-align: center;
+  overflow: hidden;
+}
+
+.product-card .product-image {
+  width: 100%;
+  aspect-ratio: 1;
+  background: #f0eded;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #aaa;
+  font-style: italic;
+  font-size: 0.9rem;
+  overflow: hidden;
+}
+
+.product-card .product-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.product-card .product-info {
+  padding: 20px 15px;
+}
+
+.product-card h4 {
+  font-size: 1rem;
+  text-transform: none;
+  font-family: 'adobe-garamond-pro', 'Garamond', 'Georgia', serif;
+  font-weight: 400;
+  letter-spacing: 0;
+  margin-bottom: 6px;
+}
+.product-card h4 .product-name-link {
+  color: inherit;
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color .2s ease;
+}
+.product-card h4 .product-name-link:hover {
+  border-bottom-color: rgba(0, 0, 0, 0.45);
+}
+
+.product-brand-label {
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: #555;
+  margin-bottom: 4px;
+}
+
+/* Hide draft products from the live shop page.
+   Toggled via the "Live/Hidden" switch in the product editor. */
+.product-card[data-hidden="true"] { display: none !important; }
+
+.product-category-label {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: #555;
+  margin-bottom: 6px;
+}
+
+.product-card .price {
+  font-size: 0.95rem;
+  color: #666;
+}
+
+.product-shop-now {
+  display: inline-block;
+  margin-top: 14px;
+  padding: 8px 22px;
+  font-size: 0.72rem;
+  font-family: inherit;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: #000;
+  background: transparent;
+  border: 1px solid #000;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+
+.product-shop-now:hover {
+  background: #000;
+  color: #fff;
+}
+
+/* --- About Page --- */
+.about-section {
+  background: #fff;
+  padding: 80px 4vw;
+}
+
+.about-content {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.about-content p {
+  font-size: 1.15rem;
+  line-height: 1.9;
+  margin-bottom: 25px;
+}
+
+.about-content h2 {
+  margin-bottom: 30px;
+}
+
+.about-content h3 {
+  margin: 40px 0 15px;
+  font-size: 1.5rem;
+}
+
+.criteria-section {
+  background: #f5f5f5;
+  padding: 60px 4vw;
+}
+
+.criteria-grid {
+  max-width: 900px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+}
+
+.criteria-item h4 {
+  font-size: 1.2rem;
+  margin-bottom: 12px;
+  text-transform: uppercase;
+  font-family: 'minerva-modern', 'Didot', 'Georgia', serif;
+}
+
+.criteria-item ul {
+  list-style: disc;
+  padding-left: 20px;
+}
+
+.criteria-item li {
+  font-size: 1rem;
+  line-height: 1.7;
+  color: #333;
+  margin-bottom: 5px;
+}
+
+/* --- Contact Page --- */
+.contact-section {
+  background: #fff;
+  padding: 80px 4vw;
+}
+
+.contact-grid {
+  max-width: 1000px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: start;
+}
+
+.contact-info h2 {
+  margin-bottom: 20px;
+}
+
+.contact-info p {
+  font-size: 1.1rem;
+  color: #555;
+}
+
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.contact-form label {
+  font-family: 'adobe-garamond-pro', 'Garamond', 'Georgia', serif;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #333;
+}
+
+.contact-form input,
+.contact-form textarea {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid #ccc;
+  font-family: 'adobe-garamond-pro', 'Garamond', 'Georgia', serif;
+  font-size: 1rem;
+  background: transparent;
+  outline: none;
+  transition: border-color 0.3s;
+}
+
+.contact-form input:focus,
+.contact-form textarea:focus {
+  border-color: #000;
+}
+
+.contact-form textarea {
+  min-height: 150px;
+  resize: vertical;
+}
+
+.contact-form .form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* --- Utility --- */
+.text-center {
+  text-align: center;
+}
+
+.mt-40 {
+  margin-top: 40px;
+}
+
+.mb-40 {
+  margin-bottom: 40px;
+}
+
+/* =========================================
+   RESPONSIVE
+   ========================================= */
+@media (max-width: 1024px) {
+  .blog-carousel {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .site-header {
+    padding: 22px 6vw;
+  }
+
+  .site-brand {
+    font-size: 1.1rem;
+    letter-spacing: 0.12em;
+  }
+
+  .main-nav {
+    gap: 1.4rem;
+  }
+
+  .main-nav a {
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+  }
+
+  h1 { font-size: 2rem; }
+  h2 { font-size: 1.8rem; }
+  h3 { font-size: 1.3rem; }
+
+  .tagline-section h2 {
+    font-size: 1.8rem;
+  }
+
+  .blog-preview-grid {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  .wellness-section {
+    grid-template-columns: 1fr;
+  }
+
+  .blog-carousel {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .blog-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .criteria-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .contact-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .product-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .blog-carousel {
+    grid-template-columns: 1fr;
+  }
+
+  .product-grid {
+    grid-template-columns: 1fr;
+  }
+}
+  </style>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,400&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap');
+    body { font-family: 'EB Garamond', 'Garamond', 'Georgia', serif; }
+    h1, h2, h3, h4 { font-family: 'Cormorant Garamond', 'Didot', 'Georgia', serif; }
+  </style>
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="header-inner">
+      <a href="index.html" class="site-brand">The Dermal Archive</a>
+      <nav class="main-nav">
+        <a href="routines.html">Routines</a>
+        <a href="about.html">About</a>
+        <a href="contact.html">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- Editable custom page header (managed via product-editor.html) -->
+    <!-- Editable custom page header (managed via product-editor.html) -->
+    <!-- Editable custom page header (managed via product-editor.html) -->
+    <section class="custom-page-header" id="customPageHeader">
+      <div class="custom-page-header-grid">
+        <div class="custom-page-header-heading">
+          <h1>Welcome to Your Clear Skin Sanctuary</h1>
+        </div>
+        <div class="custom-page-header-body-wrap">
+          <div class="custom-page-header-body">
+            <p>Explore our curated collection of acne-safe, noncomedogenic products.&nbsp;Whether you're looking for skincare essentials, bodycare, makeup, hair products, or skincare tools, every item in this lineup supports clear, healthy skin.</p>
+          </div>
+          <!-- Static badge — preserved through page-header edits. -->
+          <div class="vetted-badge">
+            <a href="https://acneclinicnyc.com/pore-clogging-ingredients/" target="_blank" rel="noopener">Vetted with the Acne Clinic NYC Ingredient Checker</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="page-hero page-hero-compact">
+      <h2>Skin Safe Product List</h2>
+    </section>
+
+    <nav class="category-nav">
+      <a href="#skincare" class="active" onclick="filterProducts('all', this)">All</a>
+      <a href="#skincare" onclick="filterProducts('skincare', this)">Skincare</a>
+      <a href="#body" onclick="filterProducts('body', this)">Body</a>
+      <a href="#makeup" onclick="filterProducts('makeup', this)">Makeup</a>
+      <a href="#hair" onclick="filterProducts('hair', this)">Hair</a>
+      <a href="#tools" onclick="filterProducts('tools', this)">Tools &amp; Technology</a>
+      <a href="#fragrance" onclick="filterProducts('fragrance', this)">Fragrance</a>
+    </nav>
+
+    <!-- Subcategory filter: appears when a specific category is selected -->
+    <section class="category-hero" id="categoryHero">
+      <nav class="subcategory-nav" id="subcategoryNav"></nav>
+    </section>
+
+    <section style="background:#fff;">
+      <div class="product-grid" id="productGrid">
+        <div class="product-card" data-category="skincare" data-brand="AESTURA" data-source-url="https://www.sephora.com/product/P515487">
+          <div class="product-image"><img src="https://www.sephora.com/productimages/sku/s2844983-main-zoom.jpg?imwidth=1224" alt="ATOBARRIER365 Gentle pH-Balancing Foaming Cleanser"></div>
+          <div class="product-info">
+            <div class="product-brand-label">AESTURA</div>
+            <h4>ATOBARRIER365 Gentle pH-Balancing Foaming Cleanser</h4>
+            <div class="product-category-label">Skincare</div>
+            <div class="price">21.00</div>
+            <a class="product-shop-now" href="https://www.sephora.com/product/P515487" target="_blank" rel="noopener">Shop Now</a>
+          </div>
+        </div>
+        <div class="product-card" data-category="skincare" data-subcategory="Mists &amp; Sprays" data-brand="AESTURA" data-source-url="https://www.sephora.com/product/P515504" data-hidden="true">
+          <div class="product-image"><img src="https://www.sephora.com/productimages/sku/s2844975-main-zoom.jpg?imwidth=1224" alt="ATOBARRIER365 Hydrating Milky Cream Mist"></div>
+          <div class="product-info">
+            <div class="product-brand-label">AESTURA</div>
+            <h4>ATOBARRIER365 Hydrating Milky Cream Mist</h4>
+            <div class="product-category-label">Skincare</div>
+            <div class="price">24.00</div>
+            <a class="product-shop-now" href="https://www.sephora.com/product/P515504" target="_blank" rel="noopener">Shop Now</a>
+          </div>
+        </div>
+        <div class="product-card" data-category="makeup" data-subcategory="Foundation" data-brand="Armani" data-source-url="https://www.sephora.com/product/P519887">
+          <div class="product-image"><img src="https://www.sephora.com/productimages/sku/s2926731-main-zoom.jpg?imwidth=3000" alt="Beauty Luminous Silk Natural Glow Blurring Liquid Foundation"></div>
+          <div class="product-info">
+            <div class="product-brand-label">Armani</div>
+            <h4>Beauty Luminous Silk Natural Glow Blurring Liquid Foundation</h4>
+            <div class="product-category-label">Makeup</div>
+            <div class="price">69.00</div>
+            <a class="product-shop-now" href="https://www.sephora.com/product/P519887" target="_blank" rel="noopener">Shop Now</a>
+          </div>
+        </div>
+        <div class="product-card" data-category="makeup" data-subcategory="Foundation" data-brand="bareMinerals" data-source-url="https://www.google.com/aclk?sa=L&amp;ai=DChsSEwi0kcj5p_GTAxVzQH8AHeETL6YYACICCAEQDhoCb2E&amp;co=1&amp;gclid=CjwKCAjw7vzOBhBxEiwAc7WNr2TnJpnazoxOkXWBsK5c0RemLBf17d2vPFjqglJzUb06-rOxrRFzxhoCLOUQAvD_BwE&amp;cid=CAAS3QHkaD2JwLt8jf_zeAw-OmMnsCSwmzpha4NDiecXNhgMvNYO9vouKkEbDxfulleI8vbP0qLRlQIxA_i7hwTxcuGWcI6WvloM1G9xuEgQbW5xw7ZFpTUTdwy4D9uj0l11quLKFYBD-eVZ_HxzpQXAuoNkAJZgbYis_TfpHGbzXjPSQR-bPDogC6MKb3-dF210viPGS_IPI3ISPiRzYLf7M9Da-xfJuaUMwsJg5DTOrg2jFGzeAYZg5-nqU8ogCaq4rqKTrbPQSy5tn9ve877uc9kdH0UeratOVk4lhjKdKA&amp;cce=1&amp;sig=AOD64_0hWg1ahlJvm1fegA0Y-gCmrrFd0w&amp;q&amp;adurl&amp;ved=2ahUKEwjv5MH5p_GTAxUnNt4AHVTcBzUQ0Qx6BAgYEAE" data-hidden="true">
+          <div class="product-image"><img src="https://media.ulta.com/i/ulta/2619845?w=1080&amp;h=1080&amp;fmt=auto" alt="BAREPRO Liquid Foundation"></div>
+          <div class="product-info">
+            <div class="product-brand-label">bareMinerals</div>
+            <h4>BAREPRO Liquid Foundation</h4>
+            <div class="product-category-label">Makeup</div>
+            <div class="price">40.00</div>
+            <a class="product-shop-now" href="https://www.google.com/aclk?sa=L&amp;ai=DChsSEwi0kcj5p_GTAxVzQH8AHeETL6YYACICCAEQDhoCb2E&amp;co=1&amp;gclid=CjwKCAjw7vzOBhBxEiwAc7WNr2TnJpnazoxOkXWBsK5c0RemLBf17d2vPFjqglJzUb06-rOxrRFzxhoCLOUQAvD_BwE&amp;cid=CAAS3QHkaD2JwLt8jf_zeAw-OmMnsCSwmzpha4NDiecXNhgMvNYO9vouKkEbDxfulleI8vbP0qLRlQIxA_i7hwTxcuGWcI6WvloM1G9xuEgQbW5xw7ZFpTUTdwy4D9uj0l11quLKFYBD-eVZ_HxzpQXAuoNkAJZgbYis_TfpHGbzXjPSQR-bPDogC6MKb3-dF210viPGS_IPI3ISPiRzYLf7M9Da-xfJuaUMwsJg5DTOrg2jFGzeAYZg5-nqU8ogCaq4rqKTrbPQSy5tn9ve877uc9kdH0UeratOVk4lhjKdKA&amp;cce=1&amp;sig=AOD64_0hWg1ahlJvm1fegA0Y-gCmrrFd0w&amp;q&amp;adurl&amp;ved=2ahUKEwjv5MH5p_GTAxUnNt4AHVTcBzUQ0Qx6BAgYEAE" target="_blank" rel="noopener">Shop Now</a>
+          </div>
+        </div>
+        <div class="product-card" data-category="skincare" data-subcategory="Sunscreen" data-brand="Beauty of Joseon" data-source-url="https://www.sephora.com/product/P517678">
+          <div class="product-image"><img src="https://www.sephora.com/productimages/sku/s2893485-main-zoom.jpg?imwidth=1224" alt="Day Dew Sunscreen Lightweight SPF 50"></div>
+          <div class="product-info">
+            <div class="product-brand-label">Beauty of Joseon</div>
+            <h4>Day Dew Sunscreen Lightweight SPF 50</h4>
+            <div class="product-category-label">Skincare</div>
+            <div class="price">18.00</div>
+            <a class="product-shop-now" href="https://www.sephora.com/product/P517678" target="_blank" rel="noopener">Shop Now</a>
+          </div>
+        </div>
+        <div class="product-card" data-category="skincare" data-subcategory="Sunscreen" data-brand="Beauty of Joseon" data-source-url="https://www.sephora.com/product/P520134" data-hidden="true">
+          <div class="product-image"><img src="https://www.sephora.com/productimages/sku/s2946002-main-zoom.jpg?imwidth=1224" alt="Dayscreen 2-in-1 SPF 30 Moisturizer"></div>
+          <div class="product-info">
+            <div class="product-brand-label">Beauty of Joseon</div>
+            <h4>Dayscreen 2-in-1 SPF 30 Moisturizer</h4>
+            <div class="product-category-label">Skincare</div>
+            <div class="price">20.00</div>
+            <a class="product-shop-now" href="https://www.sephora.com/product/P520134" target="_blank" rel="noopener">Shop Now</a>
+          </div>
+        </div>
+        <div class="product-card" data-category="makeup" data-subcategory="Blush" data-brand="ciele" data-source-url="https://www.sephora.com/product/P507753">
+          <div class="product-image"><img src="https://www.sephora.com/productimages/sku/s2867935-main-zoom.jpg?imwidth=3000" alt="blush &amp; PROTECT SPF 50+ liquid blush"></div>
+          <div class="product-info">
+            <div class="product-brand-label">ciele</div>
+            <h4>blush &amp; PROTECT SPF 50+ liquid blush</h4>
+            <div class="product-category-label">Makeup</div>
+            <div class="price">34.00</div>
+            <a class="product-shop-now" href="https://www.sephora.com/product/P507753" target="_blank" rel="noopener">Shop Now</a>
+          </div>
+        </div>
+        <div class="product-card" data-category="makeup" data-subcategory="Bronzer" data-brand="ciele" data-source-url="https://www.sephora.com/product/ciele-bronze-and-protect-spf-50-bronzing-concentrate-P512270?skuId=2768679&amp;icid2=products%20grid:p512270:product" data-hidden="true">
+          <div class="product-image"><img src="https://www.sephora.com/productimages/sku/s2768679-main-zoom.jpg?imwidth=3000" alt="bronze &amp; PROTECT SPF 50+ bronzing concentrate"></div>
+          <div class="product-info">
+            <div class="product-brand-label">ciele</div>
+            <h4>bronze &amp; PROTECT SPF 50+ bronzing concentrate</h4>
+            <div class="product-category-label">Makeup</div>
+            <div class="price">36.00</div>
+            <a class="product-shop-now" href="https://www.sephora.com/product/ciele-bronze-and-protect-spf-50-bronzing-concentrate-P512270?skuId=2768679&amp;icid2=products%20grid:p512270:product" target="_blank" rel="noopener">Shop Now</a>
+          </div>
+        </div>
+        <div class="product-card" data-category="makeup" data-subcategory="Concealer" data-brand="ciele" data-source-url="https://www.sephora.com/product/ciele-conceal-protect-spf-50-spot-concealer-for-dark-spots-P513587?skuId=2794790&amp;icid2=products%20grid:p513587:product">
+          <div class="product-image"><img src="https://www.sephora.com/productimages/sku/s2794733-main-zoom.jpg?imwidth=3000" alt="conceal &amp; PROTECT SPF 50+ spot concealer"></div>
+          <div class="product-info">
+            <div class="product-brand-label">ciele</div>
+            <h4>conceal &amp; PROTECT SPF 50+ spot concealer</h4>
+            <div class="product-category-label">Makeup</div>
+            <div class="price">36.00</div>
+            <a class="product-shop-now" href="https://www.sephora.com/product/ciele-conceal-protect-spf-50-spot-concealer-for-dark-spots-P513587?skuId=2794790&amp;icid2=products%20grid:p513587:product" target="_blank" rel="noopener">Shop Now</a>
+          </div>
+        </div>
+        <div class="product-card" data-category="makeup" data-subcategory="Setting Powder" data-brand="ciele" data-source-url="https://www.sephora.com/product/filter-protect-spf-30-finishing-setting-powder-P507750?skuId=2708428&amp;icid2=products%20grid:p507750:product">
+          <div class="product-image"><img src="https://www.sephora.com/productimages/sku/s2708428-main-zoom.jpg?imwidth=3000" alt="filter &amp; PROTECT SPF 30+ blurring finishing and setting powder"></div>
+          <div class="product-info">
+            <div class="product-brand-label">ciele</div>
+            <h4>filter &amp; PROTECT SPF 30+ blurring finishing and setting powder</h4>
+            <div class="product-category-label">Makeup</div>
+            <div class="price">38.00</div>
+            <a class="product-shop-now" href="https://www.sephora.com/product/filter-protect-spf-30-finishing-setting-powder-P507750?skuId=2708428&amp;icid2=products%20grid:p507750:product" target="_blank" rel="noopener">Shop Now</a>
+          </div>
+        </div>
+        <div class="product-card" data-category="makeup" data-subcategory="Blushes" data-brand="Ciele" data-source-url="https://www.sephora.com/product/P517325">
+          <div class="product-image"><img src="https://www.sephora.com/productimages/sku/s2867968-main-zoom.jpg?imwidth=3000" alt="flush &amp; PROTECT SPF 45+ powder blush"></div>
+          <div class="product-info">
+            <div class="product-brand-label">Ciele</div>
+            <h4>flush &amp; PROTECT SPF 45+ powder blush</h4>
+            <div class="product-category-label">Makeup</div>
+            <div class="price">34.00</div>
+            <a class="product-shop-now" href="https://www.sephora.com/product/P517325" target="_blank" rel="noopener">Shop Now</a>
+          </div>
+        </div>
+        <div class="product-card" data-category="tools" data-subcategory="Makeup Brushes" data-brand="ciele" data-source-url="https://www.sephora.com/product/the-flush-brush-P517327?skuId=2897171&amp;icid2=products%20grid:p517327:product">
+          <div class="product-image"><img src="https://www.sephora.com/productimages/sku/s2897171-main-zoom.jpg?imwidth=3000" alt="The Flush Blush Brush"></div>
+          <div class="product-info">
+            <div class="product-brand-label">ciele</div>
+            <h4>The Flush Blush Brush</h4>
+            <div class="product-category-label">Tools &amp; Technology</div>
+            <div class="price">32.00</div>
+            <a class="product-shop-now" href="https://www.sephora.com/product/the-flush-brush-P517327?skuId=2897171&amp;icid2=products%20grid:p517327:product" target="_blank" rel="noopener">Shop Now</a>
+          </div>
+        </div>
+        <div class="product-card" data-category="makeup" data-subcategory="Foundation" data-brand="ciele" data-source-url="https://www.sephora.com/product/tint-protect-medium-coverage-serum-foundation-spf-50-P507751?skuId=2708261">
+          <div class="product-image"><img src="https://www.sephora.com/productimages/sku/s2708261-main-zoom.jpg?imwidth=3000" alt="tint &amp; PROTECT medium coverage serum foundation with SPF 50+"></div>
+          <div class="product-info">
+            <div class="product-brand-label">ciele</div>
+            <h4>tint &amp; PROTECT medium coverage serum foundation with SPF 50+</h4>
+            <div class="product-category-label">Makeup</div>
+            <div class="price">44.00</div>
+            <a class="product-shop-now" href="https://www.sephora.com/product/tint-protect-medium-coverage-serum-foundation-spf-50-P507751?skuId=2708261" target="_blank" rel="noopener">Shop Now</a>
+          </div>
+        </div>
+        <div class="product-card" data-category="hair" data-subcategory="Styling" data-brand="Color Wow" data-source-url="https://www.sephora.com/product/color-wow-dream-coat-supernatural-treatment-spray-for-frizzy-hair-P469065?skuId=2437267&amp;icid2=products%20grid:p469065:product">
+          <div class="product-image"><img src="https://www.sephora.com/productimages/sku/s2437267-main-zoom.jpg?imwidth=1224" alt="Dream Coat Supernatural Treatment Spray"></div>
+          <div class="product-info">
+            <div class="product-brand-label">Color Wow</div>
+            <h4>Dream Coat Supernatural Treatment Spray</h4>
+            <div class="product-category-label">Hair</div>
+            <div class="price">30.00</div>
+            <a class="product-shop-now" href="https://www.sephora.com/product/color-wow-dream-coat-supernatural-treatment-spray-for-frizzy-hair-P469065?skuId=2437267&amp;icid2=products%20grid:p469065:product" target="_blank" rel="noopener">Shop Now</a>
+          </div>
+        </div>
+        <div class="product-card" data-category="hair" data-subcategory="Shampoo" data-brand="Crown Affair" data-source-url="https://www.sephora.com/product/the-cleansing-scalp-scrub-shampoo-P500779?skuId=2593440&amp;icid2=products%20grid:p500779:product">
+          <div class="product-image"><img src="https://www.sephora.com/productimages/sku/s2593440-main-zoom.jpg?imwidth=1224" alt="The Cleansing Scrub"></div>
+          <div class="product-info">
+            <div class="product-brand-label">Crown Affair</div>
+            <h4>The Cleansing Scrub</h4>
+            <div class="product-category-label">Hair</div>
+            <div class="price">54.00</div>
+            <a class="product-shop-now" href="https://www.sephora.com/product/the-cleansing-scalp-scrub-shampoo-P500779?skuId=2593440&amp;icid2=products%20grid:p500779:product" target="_blank" rel="noopener">Shop Now</a>
+          </div>
+        </div>
+        <div class="product-card" data-category="makeup" data-subcategory="Setting Spray" data-brand="Danessa Myricks" data-source-url="https://www.sephora.com/product/P516894" data-hidden="true">
+          <div class="product-image"><img src="https://www.sephora.com/productimages/sku/s2892396-main-zoom.jpg?imwidth=3000" alt="Beauty Yummy Skin Liquid Blurring Balm Mattifying Setting Spray"></div>
+          <div class="product-info">
+            <div class="product-brand-label">Danessa Myricks</div>
+            <h4>Beauty Yummy Skin Liquid Blurring Balm Mattifying Setting Spray</h4>
+            <div class="product-category-label">Makeup</div>
+            <div class="price">36.00</div>
+            <a class="product-shop-now" href="https://www.sephora.com/product/P516894" target="_blank" rel="noopener">Shop Now</a>
+          </div>
+        </div>
+        <div class="product-card" data-category="skincare" data-subcategory="Cleanser" data-brand="Dieux" data-source-url="https://www.sephora.com/product/dieux-baptism-gentle-foaming-facial-gel-cleanser-with-glycerin-P513539?skuId=2798940&amp;icid2=products%20grid:p513539:product" data-hidden="true">
+          <div class="product-image"><img src="https://www.sephora.com/productimages/sku/s2798940-main-zoom.jpg?imwidth=1224" alt="Baptism Foaming Cleanser"></div>
+          <div class="product-info">
+            <div class="product-brand-label">Dieux</div>
+            <h4>Baptism Foaming Cleanser</h4>
+            <div class="product-category-label">Skincare</div>
+            <div class="price">34.00</div>
+            <a class="product-shop-now" href="https://www.sephora.com/product/dieux-baptism-gentle-foaming-facial-gel-cleanser-with-glycerin-P513539?skuId=2798940&amp;icid2=products%20grid:p513539:product" target="_blank" rel="noopener">Shop Now</a>
+          </div>
+        </div>
+        <div class="product-card" data-category="skincare" data-subcategory="Masks" data-brand="Dieux" data-source-url="https://www.sephora.com/product/P510284">
+          <div class="product-image"><img src="https://www.sephora.com/productimages/sku/s2767119-main-zoom.jpg?imwidth=1224" alt="Forever Eye Mask Reusable 100% Silicone Patches"></div>
+          <div class="product-info">
+            <div class="product-brand-label">Dieux</div>
+            <h4>Forever Eye Mask Reusable 100% Silicone Patches</h4>
+            <div class="product-category-label">Skincare</div>
+            <div class="price">25.00</div>
+            <a class="product-shop-now" href="https://www.sephora.com/product/P510284" target="_blank" rel="noopener">Shop Now</a>
+          </div>
+        </div>
+        <div class="product-card" data-category="skincare" data-subcategory="Moisturizer" data-brand="Dieux" data-source-url="https://www.sephora.com/product/P510288">
+          <div class="product-image"><img src="https://www.sephora.com/productimages/sku/s2767150-main-zoom.jpg?imwidth=1224" alt="Instant Angel Moisturizer"></div>
+          <div class="product-info">
+            <div class="product-brand-label">Dieux</div>
+            <h4>Instant Angel Moisturizer</h4>
+            <div class="product-category-label">Skincare</div>
+            <div class="price">45.00</div>
+            <a class="product-shop-now" href="https://www.sephora.com/product/P510288" target="_blank" rel="noopener">Shop Now</a>
+          </div>
+        </div>
+        <div class="product-card" data-category="makeup" data-subcategory="Highlighter" data-brand="Dior" data-source-url="https://www.sephora.com/product/P517565" data-hidden="true">
+          <div class="product-image"><img src="https://www.sephora.com/productimages/sku/s2882603-main-zoom.jpg?imwidth=3000" alt="Backstage Glow Maximizer Face Palette"></div>
+          <div class="product-info">
+            <div class="product-brand-label">Dior</div>
+            <h4>Backstage Glow Maximizer Face Palette</h4>
+            <div class="product-category-label">Makeup</div>
+            <div class="price">54.00</div>
+            <a class="product-shop-now" href="https://www.sephora.com/product/P517565" target="_blank" rel="noopener">Shop Now</a>
+          </div>
+        </div>
+        <div class="product-card" data-category="skincare" data-subcategory="Lip Care" data-brand="Dr. Idriss" data-source-url="https://www.sephora.com/product/P515374">
+          <div class="product-image"><img src="https://www.sephora.com/productimages/sku/s2835585-main-zoom.jpg?imwidth=1224" alt="Barrier Baste Exfoliating AHA Lip Treatment"></div>
+          <div class="product-info">
+            <div class="product-brand-label">Dr. Idriss</div>
+            <h4>Barrier Baste Exfoliating AHA Lip Treatment</h4>
+            <div class="product-category-label">Skincare</div>
+            <div class="price">24.00</div>
+            <a class="product-shop-now" href="https://www.sephora.com/product/P515374" target="_blank" rel="noopener">Shop Now</a>
+          </div>
+        </div>
+        <div class="product-card" data-category="skincare" data-subcategory="Moisturizers" data-brand="Dr. Idriss" data-source-url="https://www.sephora.com/product/P524908">
+          <div class="product-image"><img src="https://www.sephora.com/productimages/sku/s2981199-main-zoom.jpg?imwidth=1224" alt="Major Fade Active Seal Dark Spot Vitamin C and Peptide Gel Moisturizer"></div>
+          <div class="product-info">
+            <div class="product-brand-label">Dr. Idriss</div>
+            <h4>Major Fade Active Seal Dark Spot Vitamin C and Peptide Gel Moisturizer</h4>
+            <div class="product-category-label">Skincare</div>
+            <div class="price">58.00</div>
+            <a class="product-shop-now" href="https://www.sephora.com/product/P524908" target="_blank" rel="noopener">Shop Now</a>
+          </div>
+        </div>
+        <div class="product-card" data-category="skincare" data-subcategory="Masks" data-brand="Dr. Idriss" data-source-url="https://www.sephora.com/product/P510556">
+          <div class="product-image"><img src="https://www.sephora.com/productimages/sku/s2647543-main-zoom.jpg?imwidth=1224" alt="Major Fade Dark Spot AHA Face Mask"></div>
+          <div class="product-info">
+            <div class="product-brand-label">Dr. Idriss</div>
+            <h4>Major Fade Dark Spot AHA Face Mask</h4>
+            <div class="product-category-label">Skincare</div>
+            <div class="price">48.00</div>
+            <a class="product-shop-now" href="https://www.sephora.com/product/P510556" target="_blank" rel="noopener">Shop Now</a>
+          </div>
+        </div>
+        <div class="product-card" data-category="skincare" data-subcategory="Cleansers" data-brand="Dr. Idriss" data-source-url="https://www.sephora.com/product/P511460">
+          <div class="product-image"><img src="https://www.sephora.com/productimages/sku/s2647584-main-zoom.jpg?imwidth=1224" alt="Soft Wash Jelly Cleanser"></div>
+          <div class="product-info">
+            <div class="product-brand-label">Dr. Idriss</div>
+            <h4>Soft Wash Jelly Cleanser</h4>
+            <div class="product-category-label">Skincare</div>
+            <div class="price">30.00</div>
+            <a class="product-shop-now" href="https://www.sephora.com/product/P511460" target="_blank" rel="noopener">Shop Now</a>
+          </div>
+        </div>
+        <div class="product-card" data-category="skincare" data-subcategory="Moisturizers" data-brand="Dr. Idriss" data-source-url="https://www.sephora.com/product/P510566">
+          <div class="product-image"><img src="https://www.sephora.com/productimages/sku/s2647576-main-zoom.jpg?imwidth=1224" alt="The Depuffer Redness Reducing + Depuffing Roll-On Serum"></div>
+          <div class="product-info">
+            <div class="product-brand-label">Dr. Idriss</div>
+            <h4>The Depuffer Redness Reducing + Depuffing Roll-On Serum</h4>
+            <div class="product-category-label">Skincare</div>
+            <div class="price">38.00</div>
+            <a class="product-shop-now" href="https://www.sephora.com/product/P510566" target="_blank" rel="noopener">Shop Now</a>
+          </div>
+        </div>
+        <div class="product-card" data-category="skincare" data-subcategory="Sunscreen" data-brand="Dr. Jart+" data-source-url="https://www.sephora.com/product/P457522">
+          <div class="product-image"><img src="https://www.sephora.com/productimages/sku/s2344604-main-zoom.jpg?imwidth=1224" alt="Every Sun Day SPF 50+"></div>
+          <div class="product-info">
+            <div class="product-brand-label">Dr. Jart+</div>
+            <h4>Every Sun Day SPF 50+</h4>
+            <div class="product-category-label">Skincare</div>
+            <div class="price">45.00</div>
+            <a class="product-shop-now" href="https://www.sephora.com/product/P457522" target="_blank" rel="noopener">Shop Now</a>
+          </div>
+        </div>
+        <div class="product-card" data-category="makeup" data-subcategory="Foundation" data-brand="e.l.f." data-source-url="https://www.ulta.com/p/soft-glam-satin-foundation-pimprod2046118?sku=2624381&amp;cmpid=PS_Non!google!Product_Listing_Ads&amp;cagpspn=pla&amp;CATCI=aud-370516521359:pla-1898473638669&amp;CAAGID=18002902230&amp;CAWELAID=330000200003216214&amp;CATARGETID=330000200002825550&amp;CADevice=c&amp;gad_source=1&amp;gad_campaignid=232907070&amp;gbraid=0AAAAAD9rLH7x7uq2lLLc3ODp9oQspEgRw&amp;gclid=CjwKCAjw7vzOBhBxEiwAc7WNr_0U4XJZUW07YtYY9nkbTQXDE8Vn6rXM9pe7NkAI9V_3QN4sFQH2dhoCd0AQAvD_BwE" data-hidden="true">
+          <div class="product-image"><img src="https://media.ulta.com/i/ulta/2624381?w=1080&amp;h=1080&amp;fmt=auto" alt="Soft Glam Satin Foundation"></div>
+          <div class="product-info">
+            <div class="product-brand-label">e.l.f.</div>
+            <h4>Soft Glam Satin Foundation</h4>
+            <div class="product-category-label">Makeup</div>
+            <div class="price">9.00</div>
+            <a class="product-shop-now" href="https://www.ulta.com/p/soft-glam-satin-foundation-pimprod2046118?sku=2624381&amp;cmpid=PS_Non!google!Product_Listing_Ads&amp;cagpspn=pla&amp;CATCI=aud-370516521359:pla-1898473638669&amp;CAAGID=18002902230&amp;CAWELAID=330000200003216214&amp;CATARGETID=330000200002825550&amp;CADevice=c&amp;gad_source=1&amp;gad_campaignid=232907070&amp;gbraid=0AAAAAD9rLH7x7uq2lLLc3ODp9oQspEgRw&amp;gclid=CjwKCAjw7vzOBhBxEiwAc7WNr_0U4XJZUW07YtYY9nkbTQXDE8Vn6rXM9pe7NkAI9V_3QN4sFQH2dhoCd0AQAvD_BwE" target="_blank" rel="noopener">Shop Now</a>
+          </div>
+        </div>
+        <div class="product-card" data-category="fragrance" data-subcategory="Perfume" data-brand="Ellis Brooklyn" data-source-url="https://www.sephora.com/product/P511416">
+          <div class="product-image"><img src="https://www.sephora.com/productimages/sku/s2761609-main-zoom.jpg?imwidth=3000" alt="MIAMI NECTAR Eau de Parfum with Coconut and Pink Pineapple"></div>
+          <div class="product-info">
+            <div class="product-brand-label">Ellis Brooklyn</div>
+            <h4>MIAMI NECTAR Eau de Parfum with Coconut and Pink Pineapple</h4>
+            <div class="product-category-label">Fragrance</div>
+            <div class="price">115.00</div>
+            <a class="product-shop-now" href="https://www.sephora.com/product/P511416" target="_blank" rel="noopener">Shop Now</a>
+          </div>
+        </div>
+        <div class="product-card" data-category="makeup" data-subcategory="Blush" data-brand="Glossier" data-source-url="https://www.sephora.com/product/P518494?skuId=2902575" data-hidden="true">
+          <div class="product-image"><img src="https://www.sephora.com/productimages/sku/s2902575-main-zoom.jpg?imwidth=3000" alt="Cloud Paint Plush Blush"></div>
+          <div class="product-info">
+            <div class="product-brand-label">Glossier</div>
+            <h4>Cloud Paint Plush Blush</h4>
+            <div class="product-category-label">Makeup</div>
+            <div class="price">26.00</div>
+            <a class="product-shop-now" href="https://www.sephora.com/product/P518494?skuId=2902575" target="_blank" rel="noopener">Shop Now</a>
+          </div>
+        </div>
+        <div class="product-card" data-category="makeup" data-subcategory="Highlighters" data-brand="HAUS LABS" data-source-url="https://www.sephora.com/product/P500314">
+          <div class="product-image"><img src="https://www.sephora.com/productimages/sku/s2572626-main-zoom.jpg?imwidth=3000" alt="Bio-Radiant Gel-Powder Illuminating Highlighter"></div>
+          <div class="product-info">
+            <div class="product-brand-label">HAUS LABS</div>
+            <h4>Bio-Radiant Gel-Powder Illuminating Highlighter</h4>
+            <div class="product-category-label">Makeup</div>
+            <div class="price">40.00</div>
+            <a class="product-shop-now" href="https://www.sephora.com/product/P500314" target="_blank" rel="noopener">Shop Now</a>
+          </div>
+        </div>
+        <div class="product-card" data-category="makeup" data-subcategory="Blush" data-brand="HUDA BEAUTY" data-source-url="https://www.sephora.com/product/P510756" data-hidden="true">
+          <div class="product-image"><img src="https://www.sephora.com/productimages/sku/s2828911-main-zoom.jpg?imwidth=3000" alt="Blush Filter Soft Glow Liquid Blush"></div>
+          <div class="product-info">
+            <div class="product-brand-label">HUDA BEAUTY</div>
+            <h4>Blush Filter Soft Glow Liquid Blush</h4>
+            <div class="product-category-label">Makeup</div>
+            <div class="price">25.00</div>
+            <a class="product-shop-now" href="https://www.sephora.com/product/P510756" target="_blank" rel="noopener">Shop Now</a>
+          </div>
+        </div>
+        <div class="product-card" data-category="makeup" data-subcategory="Setting Spray" data-brand="HUDA BEAUTY" data-source-url="https://www.sephora.com/product/huda-beauty-easy-bake-blurring-setting-spray-with-16-hour-wear-P515553?skuId=2870574&amp;icid2=products%20grid:p515553:product">
+          <div class="product-image"><img src="https://www.sephora.com/productimages/sku/s2870574-main-zoom.jpg?imwidth=3000" alt="Easy Bake Blurring Setting Spray with 16-Hour Wear"></div>
+          <div class="product-info">
+            <div class="product-brand-label">HUDA BEAUTY</div>
+            <h4>Easy Bake Blurring Setting Spray with 16-Hour Wear</h4>
+            <div class="product-category-label">Makeup</div>
+            <div class="price">31.00</div>
+            <a class="product-shop-now" href="https://www.sephora.com/product/huda-beauty-easy-bake-blurring-setting-spray-with-16-hour-wear-P515553?skuId=2870574&amp;icid2=products%20grid:p515553:product" target="_blank" rel="noopener">Shop Now</a>
+          </div>
+        </div>
+        <div class="product-card" data-category="skincare" data-subcategory="Sunscreen" data-brand="innisfree" data-source-url="https://www.sephora.com/product/P510354">
+          <div class="product-image"><img src="https://www.sephora.com/productimages/sku/s2742443-main-zoom.jpg?imwidth=1224" alt="Daily UV Defense Mineral Sunscreen"></div>
+          <div class="product-info">
+            <div class="product-brand-label">innisfree</div>
+            <h4>Daily UV Defense Mineral Sunscreen</h4>
+            <div class="product-category-label">Skincare</div>
+            <div class="price">22.00</div>
+            <a class="product-shop-now" href="https://www.sephora.com/product/P510354" target="_blank" rel="noopener">Shop Now</a>
+          </div>
+        </div>
+        <div class="product-card" data-category="skincare" data-subcategory="Moisturizer" data-brand="innisfree" data-source-url="https://www.sephora.com/product/P503891" data-hidden="true">
+          <div class="product-image"><img src="https://www.sephora.com/productimages/sku/s2740520-main-zoom.jpg?imwidth=1224" alt="Green Tea Hyaluronic Acid Hydrating Cream"></div>
+          <div class="product-info">
+            <div class="product-brand-label">innisfree</div>
+            <h4>Green Tea Hyaluronic Acid Hydrating Cream</h4>
+            <div class="product-category-label">Skincare</div>
+            <div class="price">30.00</div>
+            <a class="product-shop-now" href="https://www.sephora.com/product/P503891" target="_blank" rel="noopener">Shop Now</a>
+          </div>
+        </div>
+        <div class="product-card" data-category="skincare" data-subcategory="Sunscreen" data-brand="iUNIK" data-source-url="https://www.iunik.com/products/centella-calming-daily-sunscreen?variant=51396829020433&amp;country=US&amp;currency=USD&amp;utm_medium=product_sync&amp;utm_source=google&amp;utm_content=sag_organic&amp;utm_campaign=sag_organic&amp;srsltid=AfmBOoreqRUjzX2Bhy45x5aSP-uaG3A40KhAel_cLxvz8RS9AxYFjAtHq1E" data-hidden="true">
+          <div class="product-image"><img src="https://www.iunik.com/cdn/shop/files/202502Centella_Teatreeupdated_21.jpg?v=1743995335" alt="Centella Calming Sunscreen"></div>
+          <div class="product-info">
+            <div class="product-brand-label">iUNIK</div>
+            <h4>Centella Calming Sunscreen</h4>
+            <div class="product-category-label">Skincare</div>
+            <div class="price">17.00</div>
+            <a class="product-shop-now" href="https://www.iunik.com/products/centella-calming-daily-sunscreen?variant=51396829020433&amp;country=US&amp;currency=USD&amp;utm_medium=product_sync&amp;utm_source=google&amp;utm_content=sag_organic&amp;utm_campaign=sag_organic&amp;srsltid=AfmBOoreqRUjzX2Bhy45x5aSP-uaG3A40KhAel_cLxvz8RS9AxYFjAtHq1E" target="_blank" rel="noopener">Shop Now</a>
+          </div>
+        </div>
+        <div class="product-card" data-category="hair" data-subcategory="Conditioner" data-brand="Living Proof" data-source-url="https://www.sephora.com/product/living-proof-full-volumizing-conditioner-P515783?skuId=2841872&amp;icid2=products%20grid:p515783:product">
+          <div class="product-image"><img src="https://www.sephora.com/productimages/sku/s2841872-main-zoom.jpg?imwidth=1224" alt="Full Volumizing Conditioner"></div>
+          <div class="product-info">
+            <div class="product-brand-label">Living Proof</div>
+            <h4>Full Volumizing Conditioner</h4>
+            <div class="product-category-label">Hair</div>
+            <div class="price">36.00</div>
+            <a class="product-shop-now" href="https://www.sephora.com/product/living-proof-full-volumizing-conditioner-P515783?skuId=2841872&amp;icid2=products%20grid:p515783:product" target="_blank" rel="noopener">Shop Now</a>
+          </div>
+        </div>
+        <div class="product-card" data-category="hair" data-subcategory="Shampoo" data-brand="Living Proof" data-source-url="https://www.sephora.com/product/living-proof-full-volumizing-shampoo-P515798?skuId=2841773&amp;icid2=products%20grid:p515798:product">
+          <div class="product-image"><img src="https://www.sephora.com/productimages/sku/s2841773-main-zoom.jpg?imwidth=1224" alt="Full Volumizing Shampoo"></div>
+          <div class="product-info">
+            <div class="product-brand-label">Living Proof</div>
+            <h4>Full Volumizing Shampoo</h4>
+            <div class="product-category-label">Hair</div>
+            <div class="price">36.00</div>
+            <a class="product-shop-now" href="https://www.sephora.com/product/living-proof-full-volumizing-shampoo-P515798?skuId=2841773&amp;icid2=products%20grid:p515798:product" target="_blank" rel="noopener">Shop Now</a>
+          </div>
+        </div>
+        <div class="product-card" data-category="hair" data-subcategory="Styling" data-brand="Living Proof" data-source-url="https://www.sephora.com/product/perfect-hair-day-phd-dry-shampoo-P399330?skuId=2635373&amp;icid2=products%20grid:p399330:product">
+          <div class="product-image"><img src="https://www.sephora.com/productimages/sku/s2635373-main-zoom.jpg?imwidth=1224" alt="PhD Dry Shampoo"></div>
+          <div class="product-info">
+            <div class="product-brand-label">Living Proof</div>
+            <h4>PhD Dry Shampoo</h4>
+            <div class="product-category-label">Hair</div>
+            <div class="price">33.00</div>
+            <a class="product-shop-now" href="https://www.sephora.com/product/perfect-hair-day-phd-dry-shampoo-P399330?skuId=2635373&amp;icid2=products%20grid:p399330:product" target="_blank" rel="noopener">Shop Now</a>
+          </div>
+        </div>
+        <div class="product-card" data-category="hair" data-subcategory="Shampoo" data-brand="Living Proof" data-source-url="https://www.sephora.com/product/living-proof-perfect-hair-day-phd-hydrating-shampoo-P515791?skuId=2841856&amp;icid2=products%20grid:p515791:product">
+          <div class="product-image"><img src="https://www.sephora.com/productimages/sku/s2841856-main-zoom.jpg?imwidth=1224" alt="PhD Shampoo"></div>
+          <div class="product-info">
+            <div class="product-brand-label">Living Proof</div>
+            <h4>PhD Shampoo</h4>
+            <div class="product-category-label">Hair</div>
+            <div class="price">36.00</div>
+            <a class="product-shop-now" href="https://www.sephora.com/product/living-proof-perfect-hair-day-phd-hydrating-shampoo-P515791?skuId=2841856&amp;icid2=products%20grid:p515791:product" target="_blank" rel="noopener">Shop Now</a>
+          </div>
+        </div>
+        <div class="product-card" data-category="tools" data-subcategory="Makeup Brushes" data-brand="m.ph by Mary Phillips" data-source-url="https://www.sephora.com/product/mph-mary-phillips-the-cream-blush-brush-P518752?skuId=2884732&amp;icid2=products%20grid:p518752:product">
+          <div class="product-image"><img src="https://www.sephora.com/productimages/sku/s2884732-main-zoom.jpg?imwidth=3000" alt="The Cream Blush Brush"></div>
+          <div class="product-info">
+            <div class="product-brand-label">m.ph by Mary Phillips</div>
+            <h4>The Cream Blush Brush</h4>
+            <div class="product-category-label">Tools &amp; Technology</div>
+            <div class="price">36.00</div>
+            <a class="product-shop-now" href="https://www.sephora.com/product/mph-mary-phillips-the-cream-blush-brush-P518752?skuId=2884732&amp;icid2=products%20grid:p518752:product" target="_blank" rel="noopener">Shop Now</a>
+          </div>
+        </div>
+        <div class="product-card" data-category="tools" data-subcategory="Makeup Brushes" data-brand="m.ph by Mary Phillips" data-source-url="https://www.sephora.com/product/the-foundation-brush-P520575?skuId=2944742&amp;icid2=products%20grid:p520575:product">
+          <div class="product-image"><img src="https://www.sephora.com/productimages/sku/s2944742-main-zoom.jpg?imwidth=3000" alt="The Foundation Brush"></div>
+          <div class="product-info">
+            <div class="product-brand-label">m.ph by Mary Phillips</div>
+            <h4>The Foundation Brush</h4>
+            <div class="product-category-label">Tools &amp; Technology</div>
+            <div class="price">48.00</div>
+            <a class="product-shop-now" href="https://www.sephora.com/product/the-foundation-brush-P520575?skuId=2944742&amp;icid2=products%20grid:p520575:product" target="_blank" rel="noopener">Shop Now</a>
+          </div>
+        </div>
+        <div class="product-card" data-category="tools" data-subcategory="Makeup Brushes" data-brand="MAKEUP BY MARIO" data-source-url="https://www.sephora.com/product/P518388" data-hidden="true">
+          <div class="product-image"><img src="https://www.sephora.com/productimages/sku/s2906055-main-zoom.jpg?imwidth=3000" alt="Mario's Essential Cosmetic Brush Set"></div>
+          <div class="product-info">
+            <div class="product-brand-label">MAKEUP BY MARIO</div>
+            <h4>Mario&#39;s Essential Cosmetic Brush Set</h4>
+            <div class="product-category-label">Tools &amp; Technology</div>
+            <div class="price">79.00</div>
+            <a class="product-shop-now" href="https://www.sephora.com/product/P518388" target="_blank" rel="noopener">Shop Now</a>
+          </div>
+        </div>
+        <div class="product-card" data-category="makeup" data-subcategory="Bronzer" data-brand="MAKEUP BY MARIO" data-source-url="https://www.sephora.com/product/P511568">
+          <div class="product-image"><img src="https://www.sephora.com/productimages/sku/s2775583-main-zoom.jpg?imwidth=3000" alt="Softsculpt® Multi-Use Bronzing &amp; Shaping Serum"></div>
+          <div class="product-info">
+            <div class="product-brand-label">MAKEUP BY MARIO</div>
+            <h4>Softsculpt® Multi-Use Bronzing &amp; Shaping Serum</h4>
+            <div class="product-category-label">Makeup</div>
+            <div class="price">36.00</div>
+            <a class="product-shop-now" href="https://www.sephora.com/product/P511568" target="_blank" rel="noopener">Shop Now</a>
+          </div>
+        </div>
+        <div class="product-card" data-category="makeup" data-subcategory="Foundation" data-brand="MAKEUP BY MARIO" data-source-url="https://www.sephora.com/product/P503679" data-hidden="true">
+          <div class="product-image"><img src="https://www.sephora.com/productimages/sku/s2835486-main-zoom.jpg?imwidth=3000" alt="SurrealSkin® Natural Finish Foundation"></div>
+          <div class="product-info">
+            <div class="product-brand-label">MAKEUP BY MARIO</div>
+            <h4>SurrealSkin® Natural Finish Foundation</h4>
+            <div class="product-category-label">Makeup</div>
+            <div class="price">48.00</div>
+            <a class="product-shop-now" href="https://www.sephora.com/product/P503679" target="_blank" rel="noopener">Shop Now</a>
+          </div>
+        </div>
+        <div class="product-card" data-category="tools" data-subcategory="Makeup Brushes" data-brand="MERIT" data-source-url="https://www.sephora.com/product/P468697">
+          <div class="product-image"><img src="https://www.sephora.com/productimages/sku/s2426708-main-zoom.jpg?imwidth=3000" alt="Brush No. 1 Tapered Blending Brush"></div>
+          <div class="product-info">
+            <div class="product-brand-label">MERIT</div>
+            <h4>Brush No. 1 Tapered Blending Brush</h4>
+            <div class="product-category-label">Tools &amp; Technology</div>
+            <div class="price">32.00</div>
+            <a class="product-shop-now" href="https://www.sephora.com/product/P468697" target="_blank" rel="noopener">Shop Now</a>
+          </div>
+        </div>
+        <div class="product-card" data-category="makeup" data-subcategory="Highlighter" data-brand="MERIT" data-source-url="https://www.sephora.com/product/P468696">
+          <div class="product-image"><img src="https://www.sephora.com/productimages/sku/s2426765-main-zoom.jpg?imwidth=3000" alt="Day Glow Dewy Highlighting Balm"></div>
+          <div class="product-info">
+            <div class="product-brand-label">MERIT</div>
+            <h4>Day Glow Dewy Highlighting Balm</h4>
+            <div class="product-category-label">Makeup</div>
+            <div class="price">32.00</div>
+            <a class="product-shop-now" href="https://www.sephora.com/product/P468696" target="_blank" rel="noopener">Shop Now</a>
+          </div>
+        </div>
+        <div class="product-card" data-category="makeup" data-subcategory="Blush" data-brand="MERIT" data-source-url="https://www.sephora.com/product/P468693">
+          <div class="product-image"><img src="https://www.sephora.com/productimages/sku/s2744035-main-zoom.jpg?imwidth=3000" alt="Flush Balm Cream Blush"></div>
+          <div class="product-info">
+            <div class="product-brand-label">MERIT</div>
+            <h4>Flush Balm Cream Blush</h4>
+            <div class="product-category-label">Makeup</div>
+            <div class="price">30.00</div>
+            <a class="product-shop-now" href="https://www.sephora.com/product/P468693" target="_blank" rel="noopener">Shop Now</a>
+          </div>
+        </div>
+        <div class="product-card" data-category="skincare" data-subcategory="Serums" data-brand="MERIT" data-source-url="https://www.sephora.com/product/P502966">
+          <div class="product-image"><img src="https://www.sephora.com/productimages/sku/s2512788-main-zoom.jpg?imwidth=1224" alt="Great Skin Instant Glow Serum"></div>
+          <div class="product-info">
+            <div class="product-brand-label">MERIT</div>
+            <h4>Great Skin Instant Glow Serum</h4>
+            <div class="product-category-label">Skincare</div>
+            <div class="price">42.00</div>
+            <a class="product-shop-now" href="https://www.sephora.com/product/P502966" target="_blank" rel="noopener">Shop Now</a>
+          </div>
+        </div>
+        <div class="product-card" data-category="makeup" data-subcategory="Foundation" data-brand="MERIT" data-source-url="https://www.sephora.com/product/P468694">
+          <div class="product-image"><img src="https://www.sephora.com/productimages/sku/s2791861-main-zoom.jpg?imwidth=3000" alt="The Minimalist Perfecting Complexion Stick"></div>
+          <div class="product-info">
+            <div class="product-brand-label">MERIT</div>
+            <h4>The Minimalist Perfecting Complexion Stick</h4>
+            <div class="product-category-label">Makeup</div>
+            <div class="price">38.00</div>
+            <a class="product-shop-now" href="https://www.sephora.com/product/P468694" target="_blank" rel="noopener">Shop Now</a>
+          </div>
+        </div>
+        <div class="product-card" data-category="makeup" data-subcategory="Sunscreen" data-brand="MERIT" data-source-url="https://www.sephora.com/product/merit-the-uniform-tinted-mineral-spf-45-P516692?skuId=2971281&amp;icid2=products%20grid:p516692:product" data-hidden="true">
+          <div class="product-image"><img src="https://www.sephora.com/productimages/sku/s2858793-main-zoom.jpg?imwidth=3000" alt="The Uniform™ Tinted Mineral Sunscreen SPF 45"></div>
+          <div class="product-info">
+            <div class="product-brand-label">MERIT</div>
+            <h4>The Uniform™ Tinted Mineral Sunscreen SPF 45</h4>
+            <div class="product-category-label">Makeup</div>
+            <div class="price">38.00</div>
+            <a class="product-shop-now" href="https://www.sephora.com/product/merit-the-uniform-tinted-mineral-spf-45-P516692?skuId=2971281&amp;icid2=products%20grid:p516692:product" target="_blank" rel="noopener">Shop Now</a>
+          </div>
+        </div>
+        <div class="product-card" data-category="body" data-subcategory="Body Wash" data-brand="Naturium" data-source-url="https://www.ulta.com/p/perfector-salicylic-acid-body-wash-pimprod2045679?sku=2627590">
+          <div class="product-image"><img src="https://media.ulta.com/i/ulta/2627590?w=500&amp;h=500" alt="The Perfector Salicylic Acid Body Wash - Naturium"></div>
+          <div class="product-info">
+            <div class="product-brand-label">Naturium</div>
+            <h4>The Perfector Salicylic Acid Body Wash - Naturium</h4>
+            <div class="product-category-label">Body</div>
+            <div class="price">16.99</div>
+            <a class="product-shop-now" href="https://www.ulta.com/p/perfector-salicylic-acid-body-wash-pimprod2045679?sku=2627590" target="_blank" rel="noopener">Shop Now</a>
+          </div>
+        </div>
+        <div class="product-card" data-category="skincare" data-subcategory="Cleansers" data-brand="PanOxyl" data-source-url="https://www.ulta.com/p/acne-foaming-wash-with-10-benzoyl-peroxide-pimprod2041851?sku=2615400">
+          <div class="product-image"><img src="https://media.ulta.com/i/ulta/2615399?w=600&amp;h=600&amp;fmt=auto" alt="Acne Foaming Wash"></div>
+          <div class="product-info">
+            <div class="product-brand-label">PanOxyl</div>
+            <h4>Acne Foaming Wash</h4>
+            <div class="product-category-label">Skincare</div>
+            <div class="price">7.49</div>
+            <a class="product-shop-now" href="https://www.ulta.com/p/acne-foaming-wash-with-10-benzoyl-peroxide-pimprod2041851?sku=2615400" target="_blank" rel="noopener">Shop Now</a>
+          </div>
+        </div>
+        <div class="product-card" data-category="skincare" data-subcategory="Treatments" data-brand="Paula's Choice" data-source-url="https://www.google.com/aclk?sa=L&amp;ai=DChsSEwjq4uWdqPGTAxWBsgMAHZmbB1EYACICCAEQGhoCb2E&amp;co=1&amp;gclid=CjwKCAjw7vzOBhBxEiwAc7WNr_UtY5Sjec-jdy9AVZKN2IpSBwSncCu5Z8Ny3s87fHxumf5W6hjHexoCSesQAvD_BwE&amp;cid=CAAS3QHkaABO_cOhwYL0b36x_Q0FAsSKfH5Hsn5DZfdaVNHGQLSjG5wIeBovG7b_4Tia2va76jxuexjuYPpfRa3wHn14Q3aKK46iXWWZZrm_HXWAUDFGbMD0oMQVju4fPYK9PY0BYXz1vygebyQQpetEXz5_xmhpJpob78WuTDUkbaRPcMRsiv-XpJX-PnO2OMNkGr5lzMqhvkMGeJEjhU1o1FBxdGdD4G1yGKiuQS81egM8nC-_p4H81kurDeGK0RL8ExfJtBHaGB699btvQ1E1KKZMmjZaMC_zNyugRHX5qA&amp;cce=1&amp;sig=AOD64_03UyVx7BhWILvV89TAwsZnvV7-8A&amp;ctype=46&amp;q=&amp;ved=2ahUKEwjV-eCdqPGTAxWaw8kDHZ1eBzYQ5bgDKAB6BAgKEAs&amp;adurl=" data-hidden="true">
+          <div class="product-image"><img src="https://www.sephora.com/productimages/sku/s2421329-main-zoom.jpg?imwidth=1224" alt="10% Azelaic Acid Booster"></div>
+          <div class="product-info">
+            <div class="product-brand-label">Paula&#39;s Choice</div>
+            <h4>10% Azelaic Acid Booster</h4>
+            <div class="product-category-label">Skincare</div>
+            <div class="price">39.00</div>
+            <a class="product-shop-now" href="https://www.google.com/aclk?sa=L&amp;ai=DChsSEwjq4uWdqPGTAxWBsgMAHZmbB1EYACICCAEQGhoCb2E&amp;co=1&amp;gclid=CjwKCAjw7vzOBhBxEiwAc7WNr_UtY5Sjec-jdy9AVZKN2IpSBwSncCu5Z8Ny3s87fHxumf5W6hjHexoCSesQAvD_BwE&amp;cid=CAAS3QHkaABO_cOhwYL0b36x_Q0FAsSKfH5Hsn5DZfdaVNHGQLSjG5wIeBovG7b_4Tia2va76jxuexjuYPpfRa3wHn14Q3aKK46iXWWZZrm_HXWAUDFGbMD0oMQVju4fPYK9PY0BYXz1vygebyQQpetEXz5_xmhpJpob78WuTDUkbaRPcMRsiv-XpJX-PnO2OMNkGr5lzMqhvkMGeJEjhU1o1FBxdGdD4G1yGKiuQS81egM8nC-_p4H81kurDeGK0RL8ExfJtBHaGB699btvQ1E1KKZMmjZaMC_zNyugRHX5qA&amp;cce=1&amp;sig=AOD64_03UyVx7BhWILvV89TAwsZnvV7-8A&amp;ctype=46&amp;q=&amp;ved=2ahUKEwjV-eCdqPGTAxWaw8kDHZ1eBzYQ5bgDKAB6BAgKEAs&amp;adurl=" target="_blank" rel="noopener">Shop Now</a>
+          </div>
+        </div>
+        <div class="product-card" data-category="skincare" data-subcategory="Sunscreen" data-brand="Paula's Choice" data-source-url="https://www.paulaschoice.com/calm-barrier-protect-mineral-sunscreen-spf-30/9200.html?srsltid=AfmBOor3Qw-xcCfzMppClGMITrBJ3skQ392uwilZS8kbZyhC8x5IOAkh" data-hidden="true">
+          <div class="product-image"><img src="https://www.paulaschoice.com/dw/image/v2/BBNX_PRD/on/demandware.static/-/Sites-pc-catalog/en_US/dw9f487fad/images/products/calm-barrier-protect-mineral-moisturizer-spf-30-9200-portrait.png?sw=1000&amp;sfrm=png" alt="Barrier Protect Mineral Sunscreen SPF 30"></div>
+          <div class="product-info">
+            <div class="product-brand-label">Paula&#39;s Choice</div>
+            <h4>Barrier Protect Mineral Sunscreen SPF 30</h4>
+            <div class="product-category-label">Skincare</div>
+            <div class="price">39.00</div>
+            <a class="product-shop-now" href="https://www.paulaschoice.com/calm-barrier-protect-mineral-sunscreen-spf-30/9200.html?srsltid=AfmBOor3Qw-xcCfzMppClGMITrBJ3skQ392uwilZS8kbZyhC8x5IOAkh" target="_blank" rel="noopener">Shop Now</a>
+          </div>
+        </div>
+        <div class="product-card" data-category="skincare" data-subcategory="Moisturizer" data-brand="Paula's Choice" data-source-url="https://www.sephora.com/product/paula-s-choice-clear-oil-free-moisturizer-P469517?country_switch=us&amp;lang=en&amp;skuId=2421220&amp;om_mmc=ppc-GG_17791296877___2421220__9209260_c&amp;country_switch=us&amp;lang=en&amp;gclsrc=aw.ds&amp;gad_source=1&amp;gad_campaignid=17798721731&amp;gbraid=0AAAAADnIXb3Gcf1F44rWC0OoeTULJwkoo&amp;gclid=CjwKCAjw7vzOBhBxEiwAc7WNrx9b4O7B7DggeEaDiUViBsYkfGgHdw_JdOYsH6L5Eb866Bz7Oj6DCBoC2_QQAvD_BwE" data-hidden="true">
+          <div class="product-image"><img src="https://www.sephora.com/productimages/sku/s2421220-main-zoom.jpg?imwidth=1224" alt="CLEAR Oil-Free Moisturizer"></div>
+          <div class="product-info">
+            <div class="product-brand-label">Paula&#39;s Choice</div>
+            <h4>CLEAR Oil-Free Moisturizer</h4>
+            <div class="product-category-label">Skincare</div>
+            <div class="price">39.00</div>
+            <a class="product-shop-now" href="https://www.sephora.com/product/paula-s-choice-clear-oil-free-moisturizer-P469517?country_switch=us&amp;lang=en&amp;skuId=2421220&amp;om_mmc=ppc-GG_17791296877___2421220__9209260_c&amp;country_switch=us&amp;lang=en&amp;gclsrc=aw.ds&amp;gad_source=1&amp;gad_campaignid=17798721731&amp;gbraid=0AAAAADnIXb3Gcf1F44rWC0OoeTULJwkoo&amp;gclid=CjwKCAjw7vzOBhBxEiwAc7WNrx9b4O7B7DggeEaDiUViBsYkfGgHdw_JdOYsH6L5Eb866Bz7Oj6DCBoC2_QQAvD_BwE" target="_blank" rel="noopener">Shop Now</a>
+          </div>
+        </div>
+        <div class="product-card" data-category="skincare" data-subcategory="Toner" data-brand="Paula's Choice" data-source-url="https://www.sephora.com/product/paula-s-choice-skin-perfecting-2-bha-liquid-exfoliant-P469502?country_switch=us&amp;lang=en&amp;skuId=2421360&amp;om_mmc=ppc-GG_17791296883___2421360__9209260_c&amp;country_switch=us&amp;lang=en&amp;gclsrc=aw.ds&amp;gad_source=1&amp;gad_campaignid=17798721803&amp;gbraid=0AAAAADnIXb3EDPJTxxBAuWWOY9HRcu4H6&amp;gclid=CjwKCAjw7vzOBhBxEiwAc7WNr86AqpGQ6SmpY-Hju1oSsandv_--RbjHMDgy5hKVz3-vFho3cA6v9RoCyMIQAvD_BwE" data-hidden="true">
+          <div class="product-image"><img src="https://www.sephora.com/productimages/sku/s2421360-main-zoom.jpg?imwidth=1224" alt="Skin Perfecting 2% BHA Exfoliating Toner"></div>
+          <div class="product-info">
+            <div class="product-brand-label">Paula&#39;s Choice</div>
+            <h4>Skin Perfecting 2% BHA Exfoliating Toner</h4>
+            <div class="product-category-label">Skincare</div>
+            <div class="price">37.00</div>
+            <a class="product-shop-now" href="https://www.sephora.com/product/paula-s-choice-skin-perfecting-2-bha-liquid-exfoliant-P469502?country_switch=us&amp;lang=en&amp;skuId=2421360&amp;om_mmc=ppc-GG_17791296883___2421360__9209260_c&amp;country_switch=us&amp;lang=en&amp;gclsrc=aw.ds&amp;gad_source=1&amp;gad_campaignid=17798721803&amp;gbraid=0AAAAADnIXb3EDPJTxxBAuWWOY9HRcu4H6&amp;gclid=CjwKCAjw7vzOBhBxEiwAc7WNr86AqpGQ6SmpY-Hju1oSsandv_--RbjHMDgy5hKVz3-vFho3cA6v9RoCyMIQAvD_BwE" target="_blank" rel="noopener">Shop Now</a>
+          </div>
+        </div>
+        <div class="product-card" data-category="makeup" data-subcategory="Blush" data-brand="Rare Beauty" data-source-url="https://www.sephora.com/product/rare-beauty-by-selena-gomez-soft-pinch-liquid-blush-P97989778?skuId=2911741&amp;icid2=products%20grid:p97989778:product">
+          <div class="product-image"><img src="https://www.sephora.com/productimages/sku/s2362101-main-zoom.jpg?imwidth=3000" alt="Gomez  Soft Pinch Liquid Blush"></div>
+          <div class="product-info">
+            <div class="product-brand-label">Rare Beauty</div>
+            <h4>Gomez  Soft Pinch Liquid Blush</h4>
+            <div class="product-category-label">Makeup</div>
+            <div class="price">25.00</div>
+            <a class="product-shop-now" href="https://www.sephora.com/product/rare-beauty-by-selena-gomez-soft-pinch-liquid-blush-P97989778?skuId=2911741&amp;icid2=products%20grid:p97989778:product" target="_blank" rel="noopener">Shop Now</a>
+          </div>
+        </div>
+        <div class="product-card" data-category="makeup" data-subcategory="Concealers" data-brand="Rare Beauty" data-source-url="https://www.sephora.com/product/P64546856">
+          <div class="product-image"><img src="https://www.sephora.com/productimages/sku/s2362028-main-zoom.jpg?imwidth=1224" alt="Liquid Touch Brightening Concealer"></div>
+          <div class="product-info">
+            <div class="product-brand-label">Rare Beauty</div>
+            <h4>Liquid Touch Brightening Concealer</h4>
+            <div class="product-category-label">Makeup</div>
+            <div class="price">24.00</div>
+            <a class="product-shop-now" href="https://www.sephora.com/product/P64546856" target="_blank" rel="noopener">Shop Now</a>
+          </div>
+        </div>
+        <div class="product-card" data-category="tools" data-subcategory="Makeup Brushes" data-brand="Rare Beauty" data-source-url="https://www.sephora.com/product/P512553">
+          <div class="product-image"><img src="https://www.sephora.com/productimages/sku/s2788297-main-zoom.jpg?imwidth=3000" alt="Soft Touch Setting Powder and Baking Puff Duo"></div>
+          <div class="product-info">
+            <div class="product-brand-label">Rare Beauty</div>
+            <h4>Soft Touch Setting Powder and Baking Puff Duo</h4>
+            <div class="product-category-label">Tools &amp; Technology</div>
+            <div class="price">15.00</div>
+            <a class="product-shop-now" href="https://www.sephora.com/product/P512553" target="_blank" rel="noopener">Shop Now</a>
+          </div>
+        </div>
+        <div class="product-card" data-category="makeup" data-subcategory="Bronzer" data-brand="Rare Beauty" data-source-url="https://www.sephora.com/product/rare-beauty-by-selena-gomez-warm-wishes-effortless-bronzer-sticks-P479343?skuId=2518934&amp;icid2=products%20grid:p479343:product">
+          <div class="product-image"><img src="https://www.sephora.com/productimages/sku/s2518934-main-zoom.jpg?imwidth=3000" alt="Warm Wishes Effortless Cream Bronzer Stick"></div>
+          <div class="product-info">
+            <div class="product-brand-label">Rare Beauty</div>
+            <h4>Warm Wishes Effortless Cream Bronzer Stick</h4>
+            <div class="product-category-label">Makeup</div>
+            <div class="price">30.00</div>
+            <a class="product-shop-now" href="https://www.sephora.com/product/rare-beauty-by-selena-gomez-warm-wishes-effortless-bronzer-sticks-P479343?skuId=2518934&amp;icid2=products%20grid:p479343:product" target="_blank" rel="noopener">Shop Now</a>
+          </div>
+        </div>
+        <div class="product-card" data-category="makeup" data-subcategory="Setting Powder" data-brand="Saie" data-source-url="https://www.sephora.com/product/P480188">
+          <div class="product-image"><img src="https://www.sephora.com/productimages/sku/s2513018-main-zoom.jpg?imwidth=3000" alt="Airset Radiant and Weightless Talc-Free Loose Setting Powder"></div>
+          <div class="product-info">
+            <div class="product-brand-label">Saie</div>
+            <h4>Airset Radiant and Weightless Talc-Free Loose Setting Powder</h4>
+            <div class="product-category-label">Makeup</div>
+            <div class="price">30.00</div>
+            <a class="product-shop-now" href="https://www.sephora.com/product/P480188" target="_blank" rel="noopener">Shop Now</a>
+          </div>
+        </div>
+        <div class="product-card" data-category="makeup" data-subcategory="Foundation" data-brand="Saie" data-source-url="https://www.sephora.com/product/P504907" data-hidden="true">
+          <div class="product-image"><img src="https://www.sephora.com/productimages/sku/s2637387-main-zoom.jpg?imwidth=3000" alt="Glowy Super Skin Tint Foundation"></div>
+          <div class="product-info">
+            <div class="product-brand-label">Saie</div>
+            <h4>Glowy Super Skin Tint Foundation</h4>
+            <div class="product-category-label">Makeup</div>
+            <div class="price">40.00</div>
+            <a class="product-shop-now" href="https://www.sephora.com/product/P504907" target="_blank" rel="noopener">Shop Now</a>
+          </div>
+        </div>
+        <div class="product-card" data-category="makeup" data-subcategory="Foundation" data-brand="Saie" data-source-url="https://www.sephora.com/product/saie-glowy-super-skin-lightweight-hydrobounce-serum-foundation-P504907?skuId=2637387&amp;icid2=products%20grid:p504907:product" data-hidden="true">
+          <div class="product-image"><img src="https://www.sephora.com/productimages/sku/s2637338-main-zoom.jpg?imwidth=3000" alt="Glowy Super Skin Tint Foundation"></div>
+          <div class="product-info">
+            <div class="product-brand-label">Saie</div>
+            <h4>Glowy Super Skin Tint Foundation</h4>
+            <div class="product-category-label">Makeup</div>
+            <div class="price">40.00</div>
+            <a class="product-shop-now" href="https://www.sephora.com/product/saie-glowy-super-skin-lightweight-hydrobounce-serum-foundation-P504907?skuId=2637387&amp;icid2=products%20grid:p504907:product" target="_blank" rel="noopener">Shop Now</a>
+          </div>
+        </div>
+        <div class="product-card" data-category="makeup" data-subcategory="Concealer" data-brand="Saie" data-source-url="https://www.sephora.com/product/P510438">
+          <div class="product-image"><img src="https://www.sephora.com/productimages/sku/s2752152-main-zoom.jpg?imwidth=3000" alt="Slip Tint Radiant All-Over Concealer"></div>
+          <div class="product-info">
+            <div class="product-brand-label">Saie</div>
+            <h4>Slip Tint Radiant All-Over Concealer</h4>
+            <div class="product-category-label">Makeup</div>
+            <div class="price">28.00</div>
+            <a class="product-shop-now" href="https://www.sephora.com/product/P510438" target="_blank" rel="noopener">Shop Now</a>
+          </div>
+        </div>
+        <div class="product-card" data-category="tools" data-subcategory="Makeup Brushes" data-brand="Saie" data-source-url="https://www.sephora.com/product/P473327">
+          <div class="product-image"><img src="https://www.sephora.com/productimages/sku/s2482560-main-zoom.jpg?imwidth=3000" alt="The Big Brush For Buffing"></div>
+          <div class="product-info">
+            <div class="product-brand-label">Saie</div>
+            <h4>The Big Brush For Buffing</h4>
+            <div class="product-category-label">Tools &amp; Technology</div>
+            <div class="price">32.00</div>
+            <a class="product-shop-now" href="https://www.sephora.com/product/P473327" target="_blank" rel="noopener">Shop Now</a>
+          </div>
+        </div>
+        <div class="product-card" data-category="tools" data-subcategory="Makeup Brushes" data-brand="Saie" data-source-url="https://www.sephora.com/product/P480189">
+          <div class="product-image"><img src="https://www.sephora.com/productimages/sku/s2513042-main-zoom.jpg?imwidth=3000" alt="The Fluffy Brush"></div>
+          <div class="product-info">
+            <div class="product-brand-label">Saie</div>
+            <h4>The Fluffy Brush</h4>
+            <div class="product-category-label">Tools &amp; Technology</div>
+            <div class="price">28.00</div>
+            <a class="product-shop-now" href="https://www.sephora.com/product/P480189" target="_blank" rel="noopener">Shop Now</a>
+          </div>
+        </div>
+        <div class="product-card" data-category="makeup" data-subcategory="Blush" data-brand="Sarah Creal" data-source-url="https://www.sephora.com/product/P522043" data-hidden="true">
+          <div class="product-image"><img src="https://www.sephora.com/productimages/sku/s2921377-main-zoom.jpg?imwidth=3000" alt="Coming in Hot Blurring Pressed-Mousse Blush"></div>
+          <div class="product-info">
+            <div class="product-brand-label">Sarah Creal</div>
+            <h4>Coming in Hot Blurring Pressed-Mousse Blush</h4>
+            <div class="product-category-label">Makeup</div>
+            <div class="price">45.00</div>
+            <a class="product-shop-now" href="https://www.sephora.com/product/P522043" target="_blank" rel="noopener">Shop Now</a>
+          </div>
+        </div>
+        <div class="product-card" data-category="makeup" data-subcategory="Concealer" data-brand="Sarah Creal" data-source-url="https://www.sephora.com/product/face-flex-color-corrector-instant-under-eye-brightener-P520691?skuId=2932374&amp;icid2=products%20grid:p520691:product" data-hidden="true">
+          <div class="product-image"><img src="https://www.sephora.com/productimages/sku/s2932374-main-zoom.jpg?imwidth=3000" alt="Face Flex Color Corrector Instant Under Eye Brightener"></div>
+          <div class="product-info">
+            <div class="product-brand-label">Sarah Creal</div>
+            <h4>Face Flex Color Corrector Instant Under Eye Brightener</h4>
+            <div class="product-category-label">Makeup</div>
+            <div class="price">58.00</div>
+            <a class="product-shop-now" href="https://www.sephora.com/product/face-flex-color-corrector-instant-under-eye-brightener-P520691?skuId=2932374&amp;icid2=products%20grid:p520691:product" target="_blank" rel="noopener">Shop Now</a>
+          </div>
+        </div>
+        <div class="product-card" data-category="makeup" data-subcategory="Concealer" data-brand="Sarah Creal" data-source-url="https://www.sephora.com/product/sarah-creal-face-flex-concealer-complexion-enhancer-with-caffeine-P513274?skuId=2888675&amp;icid2=products%20grid:p513274:product">
+          <div class="product-image"><img src="https://www.sephora.com/productimages/sku/s2888675-main-zoom.jpg?imwidth=3000" alt="Face Flex Concealer &amp; Complexion Enhancer"></div>
+          <div class="product-info">
+            <div class="product-brand-label">Sarah Creal</div>
+            <h4>Face Flex Concealer &amp; Complexion Enhancer</h4>
+            <div class="product-category-label">Makeup</div>
+            <div class="price">58.00</div>
+            <a class="product-shop-now" href="https://www.sephora.com/product/sarah-creal-face-flex-concealer-complexion-enhancer-with-caffeine-P513274?skuId=2888675&amp;icid2=products%20grid:p513274:product" target="_blank" rel="noopener">Shop Now</a>
+          </div>
+        </div>
+        <div class="product-card" data-category="makeup" data-subcategory="Bronzer" data-brand="Sarah Creal" data-source-url="https://www.sephora.com/product/just-like-paradise-bronzer-P515821?skuId=2949337" data-hidden="true">
+          <div class="product-image"><img src="https://www.sephora.com/productimages/sku/s2852911-main-zoom.jpg?imwidth=3000" alt="Just Like Paradise 12H Peptide Sculpting Cream Bronzer"></div>
+          <div class="product-info">
+            <div class="product-brand-label">Sarah Creal</div>
+            <h4>Just Like Paradise 12H Peptide Sculpting Cream Bronzer</h4>
+            <div class="product-category-label">Makeup</div>
+            <div class="price">50.00</div>
+            <a class="product-shop-now" href="https://www.sephora.com/product/just-like-paradise-bronzer-P515821?skuId=2949337" target="_blank" rel="noopener">Shop Now</a>
+          </div>
+        </div>
+        <div class="product-card" data-category="makeup" data-subcategory="Highlighters" data-brand="Sarah Creal" data-source-url="https://www.sephora.com/product/todays-highlights-12-hour-peptide-balm-luminizer-P515933?skuId=2852887&amp;icid2=products%20grid:p515933:product" data-hidden="true">
+          <div class="product-image"><img src="https://www.sephora.com/productimages/sku/s2860351-main-zoom.jpg?imwidth=3000" alt="Today's Highlights 12H Peptide Balm Luminizer"></div>
+          <div class="product-info">
+            <div class="product-brand-label">Sarah Creal</div>
+            <h4>Today&#39;s Highlights 12H Peptide Balm Luminizer</h4>
+            <div class="product-category-label">Makeup</div>
+            <div class="price">55.00</div>
+            <a class="product-shop-now" href="https://www.sephora.com/product/todays-highlights-12-hour-peptide-balm-luminizer-P515933?skuId=2852887&amp;icid2=products%20grid:p515933:product" target="_blank" rel="noopener">Shop Now</a>
+          </div>
+        </div>
+        <div class="product-card" data-category="skincare" data-subcategory="Masks" data-brand="SK-II" data-source-url="https://www.sephora.com/product/P375852">
+          <div class="product-image"><img src="https://www.sephora.com/productimages/sku/s1448455-main-zoom.jpg?imwidth=1224" alt="Brightening Serum Facial Treatment Sheet Masks"></div>
+          <div class="product-info">
+            <div class="product-brand-label">SK-II</div>
+            <h4>Brightening Serum Facial Treatment Sheet Masks</h4>
+            <div class="product-category-label">Skincare</div>
+            <div class="price">100.00</div>
+            <a class="product-shop-now" href="https://www.sephora.com/product/P375852" target="_blank" rel="noopener">Shop Now</a>
+          </div>
+        </div>
+        <div class="product-card" data-category="fragrance" data-subcategory="Perfume" data-brand="The 7 Virtues" data-source-url="https://www.sephora.com/product/P521034">
+          <div class="product-image"><img src="https://www.sephora.com/productimages/sku/s2834836-main-zoom.jpg?imwidth=3000" alt="Perfume Layering Discovery Sampler Set"></div>
+          <div class="product-info">
+            <div class="product-brand-label">The 7 Virtues</div>
+            <h4>Perfume Layering Discovery Sampler Set</h4>
+            <div class="product-category-label">Fragrance</div>
+            <div class="price">32.00</div>
+            <a class="product-shop-now" href="https://www.sephora.com/product/P521034" target="_blank" rel="noopener">Shop Now</a>
+          </div>
+        </div>
+        <div class="product-card" data-category="skincare" data-subcategory="Cleanser" data-brand="The INKEY List" data-source-url="https://www.sephora.com/product/the-inkey-list-oat-cleansing-balm-P455364" data-hidden="true">
+          <div class="product-image"><img src="https://www.sephora.com/productimages/sku/s2335636-main-zoom.jpg?imwidth=1224" alt="Oat Cleansing Balm"></div>
+          <div class="product-info">
+            <div class="product-brand-label">The INKEY List</div>
+            <h4>Oat Cleansing Balm</h4>
+            <div class="product-category-label">Skincare</div>
+            <div class="price">$13.00</div>
+            <a class="product-shop-now" href="https://www.sephora.com/product/the-inkey-list-oat-cleansing-balm-P455364" target="_blank" rel="noopener">Shop Now</a>
+          </div>
+        </div>
+        <div class="product-card" data-category="skincare" data-subcategory="Serums" data-brand="The Ordinary" data-source-url="https://www.sephora.com/product/P442753" data-hidden="true">
+          <div class="product-image"><img src="https://www.sephora.com/productimages/sku/s2210714-main-zoom.jpg?imwidth=1224" alt="Argireline Solution 10%"></div>
+          <div class="product-info">
+            <div class="product-brand-label">The Ordinary</div>
+            <h4>Argireline Solution 10%</h4>
+            <div class="product-category-label">Skincare</div>
+            <div class="price">9.70</div>
+            <a class="product-shop-now" href="https://www.sephora.com/product/P442753" target="_blank" rel="noopener">Shop Now</a>
+          </div>
+        </div>
+        <div class="product-card" data-category="skincare" data-subcategory="Serums" data-brand="The Ordinary" data-source-url="https://www.sephora.com/product/P427420">
+          <div class="product-image"><img src="https://www.sephora.com/productimages/sku/s2627206-main-zoom.jpg?imwidth=1224" alt="Multi-Peptide + Hyaluronic Acid Serum"></div>
+          <div class="product-info">
+            <div class="product-brand-label">The Ordinary</div>
+            <h4>Multi-Peptide + Hyaluronic Acid Serum</h4>
+            <div class="product-category-label">Skincare</div>
+            <div class="price">33.80</div>
+            <a class="product-shop-now" href="https://www.sephora.com/product/P427420" target="_blank" rel="noopener">Shop Now</a>
+          </div>
+        </div>
+        <div class="product-card" data-category="skincare" data-subcategory="Cleanser" data-brand="The Ordinary" data-source-url="https://theordinary.com/en-us/squalane-face-cleanser-100446.html">
+          <div class="product-image"><img src="https://www.sephora.com/productimages/sku/s2278091-main-zoom.jpg?imwidth=1224" alt="Squalane Cleanser"></div>
+          <div class="product-info">
+            <div class="product-brand-label">The Ordinary</div>
+            <h4>Squalane Cleanser</h4>
+            <div class="product-category-label">Skincare</div>
+            <div class="price">$21.00</div>
+            <a class="product-shop-now" href="https://theordinary.com/en-us/squalane-face-cleanser-100446.html" target="_blank" rel="noopener">Shop Now</a>
+          </div>
+        </div>
+        <div class="product-card" data-category="makeup" data-subcategory="Foundation" data-brand="Urban Decay" data-source-url="https://www.sephora.com/product/P509419" data-hidden="true">
+          <div class="product-image"><img src="https://www.sephora.com/productimages/sku/s2741858-main-zoom.jpg?imwidth=1224" alt="Face Bond Foundation"></div>
+          <div class="product-info">
+            <div class="product-brand-label">Urban Decay</div>
+            <h4>Face Bond Foundation</h4>
+            <div class="product-category-label">Makeup</div>
+            <div class="price">40.00</div>
+            <a class="product-shop-now" href="https://www.sephora.com/product/P509419" target="_blank" rel="noopener">Shop Now</a>
+          </div>
+        </div>
+        <div class="product-card" data-category="skincare" data-subcategory="Moisturizer" data-brand="Vanicream" data-source-url="https://www.ulta.com/p/daily-facial-moisturizer-with-hyaluronic-acid-ceramides-pimprod2042403?sku=2619671">
+          <div class="product-image"><img src="https://media.ulta.com/i/ulta/2619671?w=1080&amp;h=1080&amp;fmt=auto" alt="Daily Facial Moisturizer"></div>
+          <div class="product-info">
+            <div class="product-brand-label">Vanicream</div>
+            <h4>Daily Facial Moisturizer</h4>
+            <div class="product-category-label">Skincare</div>
+            <div class="price">18.99</div>
+            <a class="product-shop-now" href="https://www.ulta.com/p/daily-facial-moisturizer-with-hyaluronic-acid-ceramides-pimprod2042403?sku=2619671" target="_blank" rel="noopener">Shop Now</a>
+          </div>
+        </div>
+        <div class="product-card" data-category="skincare" data-brand="Vanicream" data-source-url="https://www.ulta.com/p/enhanced-moisturizer-with-hyaluronic-acid-ceramides-pimprod2056647?sku=2651829" data-hidden="true">
+          <div class="product-image"><img src="https://media.ulta.com/i/ulta/2651829?w=1080&amp;h=1080&amp;fmt=auto" alt="Enhanced Moisturizer"></div>
+          <div class="product-info">
+            <div class="product-brand-label">Vanicream</div>
+            <h4>Enhanced Moisturizer</h4>
+            <div class="product-category-label">Skincare</div>
+            <div class="price">17.99</div>
+            <a class="product-shop-now" href="https://www.ulta.com/p/enhanced-moisturizer-with-hyaluronic-acid-ceramides-pimprod2056647?sku=2651829" target="_blank" rel="noopener">Shop Now</a>
+          </div>
+        </div>
+        <div class="product-card" data-category="body" data-subcategory="Body Wash" data-brand="Vanicream" data-source-url="https://www.ulta.com/p/gentle-body-wash-sensitive-skin-pimprod2047536?sku=2631932">
+          <div class="product-image"><img src="https://media.ulta.com/i/ulta/2631932?w=1080&amp;h=1080&amp;fmt=auto" alt="Gentle Body Wash"></div>
+          <div class="product-info">
+            <div class="product-brand-label">Vanicream</div>
+            <h4>Gentle Body Wash</h4>
+            <div class="product-category-label">Body</div>
+            <div class="price">16.99</div>
+            <a class="product-shop-now" href="https://www.ulta.com/p/gentle-body-wash-sensitive-skin-pimprod2047536?sku=2631932" target="_blank" rel="noopener">Shop Now</a>
+          </div>
+        </div>
+        <div class="product-card" data-category="skincare" data-subcategory="Cleanser" data-brand="Vanicream" data-source-url="https://www.ulta.com/p/gentle-facial-cleanser-sensitive-skin-pimprod2042401?sku=2619669">
+          <div class="product-image"><img src="https://media.ulta.com/i/ulta/2619669?w=600&amp;h=600&amp;fmt=auto" alt="Gentle Facial Cleanser"></div>
+          <div class="product-info">
+            <div class="product-brand-label">Vanicream</div>
+            <h4>Gentle Facial Cleanser</h4>
+            <div class="product-category-label">Skincare</div>
+            <div class="price">12.99</div>
+            <a class="product-shop-now" href="https://www.ulta.com/p/gentle-facial-cleanser-sensitive-skin-pimprod2042401?sku=2619669" target="_blank" rel="noopener">Shop Now</a>
+          </div>
+        </div>
+        <div class="product-card" data-category="skincare" data-subcategory="Moisturizer" data-brand="Vanicream" data-source-url="https://www.ulta.com/p/moisturizing-cream-with-pump-sensitive-skin-pimprod2042406?sku=2619667">
+          <div class="product-image"><img src="https://media.ulta.com/i/ulta/2619667?w=1080&amp;h=1080&amp;fmt=auto" alt="Moisturizing Cream"></div>
+          <div class="product-info">
+            <div class="product-brand-label">Vanicream</div>
+            <h4>Moisturizing Cream</h4>
+            <div class="product-category-label">Skincare</div>
+            <div class="price">20.99</div>
+            <a class="product-shop-now" href="https://www.ulta.com/p/moisturizing-cream-with-pump-sensitive-skin-pimprod2042406?sku=2619667" target="_blank" rel="noopener">Shop Now</a>
+          </div>
+        </div>
+        <div class="product-card" data-category="skincare" data-subcategory="Moisturizer" data-brand="Vanicream" data-source-url="https://www.ulta.com/p/moisturizing-lotion-with-pump-sensitive-skin-pimprod2042405?sku=2619668">
+          <div class="product-image"><img src="https://media.ulta.com/i/ulta/2619668?w=1080&amp;h=1080&amp;fmt=auto" alt="Moisturizing Lotion"></div>
+          <div class="product-info">
+            <div class="product-brand-label">Vanicream</div>
+            <h4>Moisturizing Lotion</h4>
+            <div class="product-category-label">Skincare</div>
+            <div class="price">18.99</div>
+            <a class="product-shop-now" href="https://www.ulta.com/p/moisturizing-lotion-with-pump-sensitive-skin-pimprod2042405?sku=2619668" target="_blank" rel="noopener">Shop Now</a>
+          </div>
+        </div>
+        <div class="product-card" data-category="skincare" data-subcategory="Serums" data-brand="Vanicream" data-source-url="https://www.ulta.com/p/vitamin-c-facial-serum-sensitive-skin-pimprod2042399?sku=2619673" data-hidden="true">
+          <div class="product-image"><img src="https://media.ulta.com/i/ulta/2619673?w=1080&amp;h=1080&amp;fmt=auto" alt="Vitamin C Facial Serum"></div>
+          <div class="product-info">
+            <div class="product-brand-label">Vanicream</div>
+            <h4>Vitamin C Facial Serum</h4>
+            <div class="product-category-label">Skincare</div>
+            <div class="price">24.99</div>
+            <a class="product-shop-now" href="https://www.ulta.com/p/vitamin-c-facial-serum-sensitive-skin-pimprod2042399?sku=2619673" target="_blank" rel="noopener">Shop Now</a>
+          </div>
+        </div>
+        <div class="product-card" data-category="makeup" data-subcategory="Bronzer" data-brand="Westman Atelier" data-source-url="https://www.sephora.com/product/P522161">
+          <div class="product-image"><img src="https://www.sephora.com/productimages/sku/s2971166-main-zoom.jpg?imwidth=3000" alt="Sun Tone Bronzing Crème Hydrating Cream Bronzer"></div>
+          <div class="product-info">
+            <div class="product-brand-label">Westman Atelier</div>
+            <h4>Sun Tone Bronzing Crème Hydrating Cream Bronzer</h4>
+            <div class="product-category-label">Makeup</div>
+            <div class="price">75.00</div>
+            <a class="product-shop-now" href="https://www.sephora.com/product/P522161" target="_blank" rel="noopener">Shop Now</a>
+          </div>
+        </div>
+        <div class="product-card" data-category="makeup" data-subcategory="Bronzer" data-brand="Westman Atelier" data-source-url="https://www.sephora.com/product/P500303?skuId=2570398">
+          <div class="product-image"><img src="https://www.sephora.com/productimages/sku/s2570398-main-zoom.jpg?imwidth=3000" alt="Vital Pressed Skincare Blurring Talc-Free Setting Powder"></div>
+          <div class="product-info">
+            <div class="product-brand-label">Westman Atelier</div>
+            <h4>Vital Pressed Skincare Blurring Talc-Free Setting Powder</h4>
+            <div class="product-category-label">Makeup</div>
+            <div class="price">75.00</div>
+            <a class="product-shop-now" href="https://www.sephora.com/product/P500303?skuId=2570398" target="_blank" rel="noopener">Shop Now</a>
+          </div>
+        </div>
+        <div class="product-card" data-category="skincare" data-subcategory="Cleanser" data-brand="Youth To The People" data-source-url="https://www.sephora.com/product/kale-spinach-green-tea-age-prevention-cleanser-P411387?country_switch=us&amp;lang=en&amp;skuId=1863588&amp;om_mmc=ppc-GG_17791296883___1863588__9209260_c&amp;country_switch=us&amp;lang=en&amp;gclsrc=aw.ds&amp;gad_source=1&amp;gad_campaignid=17798721803&amp;gbraid=0AAAAADnIXb3EDPJTxxBAuWWOY9HRcu4H6&amp;gclid=CjwKCAjw7vzOBhBxEiwAc7WNrwmRZNXElXhClvSRrqdKcH8KmuTg2VKrEcqc2xg3lf-OIB5f9zjFsBoCm94QAvD_BwE">
+          <div class="product-image"><img src="https://www.sephora.com/productimages/sku/s1863588-main-zoom.jpg?imwidth=1224" alt="Superfood Cleanser"></div>
+          <div class="product-info">
+            <div class="product-brand-label">Youth To The People</div>
+            <h4>Superfood Cleanser</h4>
+            <div class="product-category-label">Skincare</div>
+            <div class="price">39.00</div>
+            <a class="product-shop-now" href="https://www.sephora.com/product/kale-spinach-green-tea-age-prevention-cleanser-P411387?country_switch=us&amp;lang=en&amp;skuId=1863588&amp;om_mmc=ppc-GG_17791296883___1863588__9209260_c&amp;country_switch=us&amp;lang=en&amp;gclsrc=aw.ds&amp;gad_source=1&amp;gad_campaignid=17798721803&amp;gbraid=0AAAAADnIXb3EDPJTxxBAuWWOY9HRcu4H6&amp;gclid=CjwKCAjw7vzOBhBxEiwAc7WNrwmRZNXElXhClvSRrqdKcH8KmuTg2VKrEcqc2xg3lf-OIB5f9zjFsBoCm94QAvD_BwE" target="_blank" rel="noopener">Shop Now</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="blog-carousel-section">
+      <div class="container">
+        <div class="blog-carousel-header">
+          <h2>Clear Skin Routines</h2>
+        </div>
+        <div class="blog-carousel">
+          <a href="https://isabella-sofia-website.vercel.app/posts/beauty/makeup-routine-for-your-next-night-out.html" target="_blank" rel="noopener" class="carousel-item">
+            <div class="carousel-item-placeholder" style="background-image: url('https://isabella-sofia-website.vercel.app/images/uploads/2026/05/60f008558f11.jpg'); background-size: cover; background-position: center; color: transparent;"></div>
+            <div class="date">May 22, 2026</div>
+            <h4>Makeup Routine For Your Next Night Out</h4>
+          </a>
+          <a href="https://isabella-sofia-website.vercel.app/posts/beauty/5-acne-safe-sunscreens-i-actually-wear-daily.html" target="_blank" rel="noopener" class="carousel-item">
+            <div class="carousel-item-placeholder" style="background-image: url('https://isabella-sofia-website.vercel.app/images/uploads/2026/05/ed5460beebc7.webp'); background-size: cover; background-position: center; color: transparent;"></div>
+            <div class="date">May 18, 2026</div>
+            <h4>5 Acne-Safe Sunscreens I Actually Wear Daily</h4>
+          </a>
+          <a href="https://isabella-sofia-website.vercel.app/posts/beauty/minimal-makeup-routine.html" target="_blank" rel="noopener" class="carousel-item">
+            <div class="carousel-item-placeholder" style="background-image: url('https://isabella-sofia-website.vercel.app/images/uploads/2026/05/4d90d4f00592.png'); background-size: cover; background-position: center; color: transparent;"></div>
+            <div class="date">May 17, 2026</div>
+            <h4>Minimal SPF Makeup Routine</h4>
+          </a>
+          <a href="https://isabella-sofia-website.vercel.app/posts/beauty/everyday-hair-routine.html" target="_blank" rel="noopener" class="carousel-item">
+            <div class="carousel-item-placeholder" style="background-image: url('https://isabella-sofia-website.vercel.app/images/uploads/2026/05/51c1b6912b22.jpg'); background-size: cover; background-position: center; color: transparent;"></div>
+            <div class="date">May 7, 2026</div>
+            <h4>Everyday Hair Routine</h4>
+          </a>
+          <a href="https://isabella-sofia-website.vercel.app/posts/beauty/morning-amp-nightime-skincare-routine.html" target="_blank" rel="noopener" class="carousel-item">
+            <div class="carousel-item-placeholder" style="background-image: url('https://isabella-sofia-website.vercel.app/images/uploads/2026/05/46334925cb04.png'); background-size: cover; background-position: center; color: transparent;"></div>
+            <div class="date">Apr 16, 2026</div>
+            <h4>Morning &amp; Nighttime Skincare Routine</h4>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section class="newsletter-section">
+      <h3>Never miss a post</h3>
+      <form class="newsletter-form" onsubmit="event.preventDefault(); this.querySelector('button').textContent='Thank you!';">
+        <input type="email" placeholder="Email Address" required>
+        <button type="submit">Sign Up</button>
+      </form>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>&copy; 2026 The Dermal Archive. All rights reserved.</p>
+  </footer>
+
+  <script>
+    // Canonical subcategory ordering per category. Mirrors the editor so the
+    // subcategory nav shows items in a consistent order. Legacy values that
+    // don't appear in this list are appended alphabetically at the end.
+    const SUBCATEGORIES = {
+      skincare:  ['Cleansers', 'Moisturizers', 'Treatments', 'Masks', 'Sunscreen', 'Eye Care', 'Lip Care', 'Self Tanners'],
+      body:      ['Body Wash', 'Moisturizers', 'Scrubs', 'Deodorant', 'Self Tanners'],
+      makeup:    ['Foundations', 'Tinted Moisturizers', 'Concealers', 'Primers', 'Setting Sprays', 'Highlighter', 'Bronzers', 'Contours', 'Blushes', 'Brushes & Tools'],
+      hair:      ['Shampoo', 'Conditioner', 'Masks', 'Treatments', 'Oils', 'Styling'],
+      tools:     ['Body', 'Face', 'Hair'],
+      fragrance: ['Oil', 'Balm', 'Sprays']
+    };
+
+    const CATEGORY_DISPLAY = {
+      skincare: 'Skincare',
+      body: 'Body',
+      makeup: 'Makeup',
+      hair: 'Hair',
+      tools: 'Tools & Technology',
+      fragrance: 'Fragrance'
+    };
+
+    let currentCategory = 'all';
+    let currentSubcategory = '';
+
+    // Normalize subcategory values for matching (handles plural/singular
+    // mismatch between canonical list and legacy product data, e.g.
+    // "Cleanser" (legacy) matches "Cleansers" (canonical), and
+    // "Blush" (legacy) matches "Blushes" (canonical, plural ends in "es").
+    function normSub(s) {
+      let x = (s || '').toLowerCase().trim();
+      if (x.endsWith('es')) x = x.slice(0, -2);
+      else if (x.endsWith('s')) x = x.slice(0, -1);
+      return x;
+    }
+
+    function filterProducts(category, clickedEl) {
+      currentCategory = category;
+      currentSubcategory = '';
+      applyFilters();
+
+      // Update main category nav active state
+      document.querySelectorAll('.category-nav a').forEach(a => a.classList.remove('active'));
+      if (clickedEl) clickedEl.classList.add('active');
+
+      // Show/hide the subcategory filter bar + build it
+      const hero = document.getElementById('categoryHero');
+      if (category === 'all') {
+        hero.classList.remove('visible');
+      } else {
+        hero.classList.add('visible');
+        buildSubcategoryNav(category);
+        // Scroll so the subcategory filter is in view
+        hero.scrollIntoView({behavior: 'smooth', block: 'start'});
+      }
+    }
+
+    function buildSubcategoryNav(category) {
+      const nav = document.getElementById('subcategoryNav');
+      nav.innerHTML = '';
+
+      // Collect unique subcategories actually present in this category.
+      // Hidden (draft) products are excluded so empty subcategories don't
+      // show up in the filter nav.
+      const cards = document.querySelectorAll(`.product-card[data-category="${category}"]:not([data-hidden="true"])`);
+      const present = new Set();
+      cards.forEach(c => { if (c.dataset.subcategory) present.add(c.dataset.subcategory); });
+
+      // Build display list: canonical order first, legacy values appended
+      const canonical = SUBCATEGORIES[category] || [];
+      const displayList = [];
+      const usedNormKeys = new Set();
+
+      canonical.forEach(canon => {
+        const cKey = normSub(canon);
+        const hasMatch = [...present].some(p => normSub(p) === cKey);
+        if (hasMatch) {
+          displayList.push(canon);
+          usedNormKeys.add(cKey);
+        }
+      });
+
+      // Legacy values that don't match any canonical entry
+      [...present].sort().forEach(p => {
+        const pKey = normSub(p);
+        if (!usedNormKeys.has(pKey)) {
+          displayList.push(p);
+          usedNormKeys.add(pKey);
+        }
+      });
+
+      // "All" link + subcategory links
+      const allLink = document.createElement('a');
+      allLink.textContent = 'All';
+      allLink.classList.add('active');
+      allLink.onclick = () => filterSubcategory('', allLink);
+      nav.appendChild(allLink);
+
+      displayList.forEach(sub => {
+        const a = document.createElement('a');
+        a.textContent = sub;
+        a.onclick = () => filterSubcategory(sub, a);
+        nav.appendChild(a);
+      });
+    }
+
+    function filterSubcategory(subcategory, clickedEl) {
+      currentSubcategory = subcategory;
+      applyFilters();
+      document.querySelectorAll('.subcategory-nav a').forEach(a => a.classList.remove('active'));
+      if (clickedEl) clickedEl.classList.add('active');
+    }
+
+    function applyFilters() {
+      const filterKey = normSub(currentSubcategory);
+      document.querySelectorAll('.product-card').forEach(card => {
+        // Hidden (draft) products stay hidden regardless of filters.
+        // Leave the inline style cleared so the CSS `display: none !important`
+        // rule governs; don't set it to '' because that would also clear
+        // a legitimate filter-hide below.
+        if (card.dataset.hidden === 'true') {
+          card.style.display = '';
+          return;
+        }
+        const matchesCategory = currentCategory === 'all' || card.dataset.category === currentCategory;
+        const matchesSubcategory = !currentSubcategory || normSub(card.dataset.subcategory) === filterKey;
+        card.style.display = (matchesCategory && matchesSubcategory) ? '' : 'none';
+      });
+    }
+
+    // Auto-prepend $ to numeric prices (so raw numbers like "21.00" display as "$21.00")
+    document.querySelectorAll('.product-card .price').forEach(el => {
+      const text = el.textContent.trim();
+      if (!text) return;                     // empty prices stay empty
+      if (/^[$€£¥]/.test(text)) return;      // already has a currency symbol
+      if (/^[\d.]/.test(text)) el.textContent = '$' + text;
+    });
+
+    // Wrap the product name in a link to its hero page, for products that
+    // have one in this site's /products folder. This list is embedded as a
+    // static manifest so the page is fully self-contained — no runtime fetch
+    // and no dependency on any external repo. When you publish a new product
+    // hero page, add its slug (the file name without ".html") to this set.
+    function slugifyForPage(name) {
+      return String(name || '')
+        .toLowerCase()
+        .replace(/&/g, ' and ')
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-+|-+$/g, '')
+        .slice(0, 90);
+    }
+    const PRODUCT_PAGES = new Set([
+      "acne-foaming-wash",
+      "airset-radiant-and-weightless-talc-free-loose-setting-powder",
+      "atobarrier365-gentle-ph-balancing-foaming-cleanser",
+      "atobarrier365-hydrating-milky-cream-mist",
+      "barrier-baste-exfoliating-aha-lip-treatment",
+      "bio-radiant-gel-powder-illuminating-highlighter",
+      "blush-and-protect-spf-50-liquid-blush",
+      "brightening-serum-facial-treatment-sheet-masks",
+      "brush-no-1-tapered-blending-brush",
+      "cheek-kiss-cream-bronzer",
+      "conceal-and-protect-spf-50-spot-concealer",
+      "daily-facial-moisturizer",
+      "daily-uv-defense-mineral-sunscreen",
+      "day-dew-sunscreen-lightweight-spf-50",
+      "day-glow-dewy-highlighting-balm",
+      "dew-blush-liquid-cream-blush",
+      "dream-coat-supernatural-treatment-spray",
+      "easy-bake-blurring-setting-spray-with-16-hour-wear",
+      "every-sun-day-spf-50",
+      "face-flex-concealer-and-complexion-enhancer",
+      "filter-and-protect-spf-30-blurring-finishing-and-setting-powder",
+      "flush-and-protect-spf-45-powder-blush",
+      "flush-balm-cream-blush",
+      "forever-eye-mask-reusable-100-silicone-patches",
+      "full-volumizing-conditioner",
+      "full-volumizing-shampoo",
+      "gentle-body-wash",
+      "gentle-facial-cleanser",
+      "good-defense-daily-sunscreen-spf-50",
+      "great-skin-instant-glow-serum",
+      "instant-angel-moisturizer",
+      "liquid-touch-brightening-concealer",
+      "luminous-silk-natural-glow-blurring-liquid-foundation",
+      "major-fade-active-seal-dark-spot-vitamin-c-and-peptide-gel-moisturizer",
+      "major-fade-dark-spot-aha-face-mask",
+      "moisturizing-cream",
+      "moisturizing-lotion",
+      "multi-peptide-hyaluronic-acid-serum",
+      "on-til-dawn-mattifying-sunscreen-makeup-setting-spray-spf-28",
+      "on-til-dawn-mattifying-waterproof-setting-spray",
+      "perfume-layering-discovery-sampler-set",
+      "phd-dry-shampoo",
+      "phd-shampoo",
+      "plus-one-tinted-mineral-spf-40",
+      "slip-tint-radiant-all-over-concealer",
+      "soft-pinch-liquid-blush",
+      "soft-touch-setting-powder-and-baking-puff-duo",
+      "soft-wash-jelly-cleanser",
+      "softsculpt-multi-use-bronzing-and-shaping-serum",
+      "soleil-blanc",
+      "squalane-cleanser",
+      "sun-tone-bronzing-cr-me-hydrating-cream-bronzer",
+      "superfood-cleanser",
+      "the-cleansing-scrub",
+      "the-cream-blush-brush",
+      "the-depuffer-redness-reducing-depuffing-roll-on-serum",
+      "the-fluffy-brush",
+      "the-flush-blush-brush",
+      "the-foundation-brush",
+      "the-minimalist-perfecting-complexion-stick",
+      "the-perfector-salicylic-acid-body-wash-naturium",
+      "tint-and-protect-medium-coverage-serum-foundation-with-spf-50",
+      "uv-filters-spf-45-serum-sunscreen-pa",
+      "vanilla-sex",
+      "vital-pressed-skincare-blurring-talc-free-setting-powder",
+      "warm-wishes-effortless-cream-bronzer-stick"
+    ]);
+    document.querySelectorAll('.product-card h4').forEach(h4 => {
+      const slug = slugifyForPage(h4.textContent);
+      if (!PRODUCT_PAGES.has(slug)) return;
+      const a = document.createElement('a');
+      a.href = `products/${slug}.html`;
+      a.className = 'product-name-link';
+      while (h4.firstChild) a.appendChild(h4.firstChild);
+      h4.appendChild(a);
+    });
+  </script>
+
+</body>
+</html>
