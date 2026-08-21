@@ -2653,6 +2653,44 @@ p {
       });
     }
 
+    // ---- deep links -------------------------------------------------
+    // Product pages link back here with "#category" or
+    // "#category/subcategory", so a breadcrumb lands on the filtered view.
+    // Slugs are matched loosely (plural/singular, "&" vs "and") via subKey.
+    function slugifySub(name) {
+      return String(name || '')
+        .toLowerCase()
+        .replace(/&/g, ' and ')
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-+|-+$/g, '');
+    }
+
+    function subKey(s) {
+      return normSub(slugifySub(s).replace(/-/g, ' '));
+    }
+
+    function applyHashRoute() {
+      const raw = decodeURIComponent((location.hash || '').replace(/^#/, '')).trim();
+      if (!raw) return;
+      const slash = raw.indexOf('/');
+      const cat = (slash === -1 ? raw : raw.slice(0, slash)).toLowerCase();
+      const sub = slash === -1 ? '' : raw.slice(slash + 1);
+      if (!CATEGORY_DISPLAY[cat]) return;
+
+      const navLink = [...document.querySelectorAll('.category-nav a')]
+        .find(a => (a.getAttribute('href') || '').toLowerCase() === '#' + cat);
+      filterProducts(cat, navLink || null);
+
+      if (!sub) return;
+      const want = subKey(sub);
+      const subLink = [...document.querySelectorAll('.subcategory-nav a')]
+        .find(a => a.textContent !== 'All' && subKey(a.textContent) === want);
+      if (subLink) filterSubcategory(subLink.textContent, subLink);
+    }
+
+    window.addEventListener('hashchange', applyHashRoute);
+    applyHashRoute();
+
     // Auto-prepend $ to numeric prices (so raw numbers like "21.00" display as "$21.00")
     document.querySelectorAll('.product-card .price').forEach(el => {
       const text = el.textContent.trim();

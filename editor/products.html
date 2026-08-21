@@ -1843,6 +1843,8 @@ ${indentBodyHtml(bodyHtml)}
           .join('');
       };
       const categoryDisplay = CATEGORY_DISPLAY[p.category] || 'Skincare';
+      // Slug for the breadcrumb deep link into the filtered list view.
+      const subSlug = slugifyForPage(p.subcategory || categoryDisplay);
       const retailer = retailerFromUrl(p.sourceUrl || '');
       const priceDisplay = formatPriceDisplay(p.price);
       const vettingExtra = (copy.vetting || '').trim()
@@ -2041,9 +2043,9 @@ ${indentBodyHtml(bodyHtml)}
   <div class="breadcrumb">
     <a href="../index.html">The Archive</a>
     <span class="sep">/</span>
-    <span>${enc(categoryDisplay)}</span>
+    <a href="../index.html#${enc(p.category)}">${enc(categoryDisplay)}</a>
     <span class="sep">/</span>
-    <span>${enc(p.subcategory || categoryDisplay)}</span>
+    <a href="../index.html#${enc(p.category)}/${enc(subSlug)}">${enc(p.subcategory || categoryDisplay)}</a>
   </div>
 
   <article class="product">
