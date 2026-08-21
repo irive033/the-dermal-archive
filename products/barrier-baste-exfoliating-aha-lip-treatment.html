@@ -80,13 +80,38 @@
       margin-bottom: 2rem;
     }
     .safe-badge::before { content: "\2713"; font-size: 0.9rem; font-weight: 500; }
-    .section { margin-bottom: 2rem; }
     .section-label {
       font-family: var(--serif); font-style: italic;
       font-size: 1.05rem; color: var(--accent); margin-bottom: 0.5rem;
     }
+    details.section { margin-bottom: 0; border-bottom: 1px solid var(--rule); }
+    details.section:first-of-type { border-top: 1px solid var(--rule); }
+    summary.section-label {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 1rem; padding: 0.95rem 0; margin-bottom: 0;
+      cursor: pointer; list-style: none; transition: color .2s;
+    }
+    summary.section-label::-webkit-details-marker { display: none; }
+    summary.section-label:hover { color: var(--ink); }
+    summary.section-label:focus-visible {
+      outline: 1px solid var(--accent); outline-offset: 3px;
+    }
+    summary.section-label::after {
+      content: ""; flex: none; width: 0.45rem; height: 0.45rem;
+      margin-right: 0.2rem;
+      border-right: 1px solid currentColor; border-bottom: 1px solid currentColor;
+      transform: translateY(-0.15em) rotate(45deg);
+      transition: transform .25s ease;
+    }
+    details.section[open] > summary.section-label::after {
+      transform: translateY(0.1em) rotate(-135deg);
+    }
+    .section-body { padding-bottom: 1.3rem; }
     .section p { font-size: 0.98rem; }
     .section p + p { margin-top: 0.7em; }
+    @media print {
+      .section-body { display: block !important; }
+    }
     .tradeoff {
       background: rgba(138, 111, 74, 0.06); border-left: 2px solid var(--accent);
       padding: 1rem 1.25rem; font-size: 0.95rem; margin: 2rem 0;
@@ -149,20 +174,20 @@
 
       <div class="safe-badge">Acne-Safe Verified</div>
 
-      <div class="section" data-field="why">
-        <div class="section-label">Why I picked this</div>
-        <p>A chemical exfoliator made specifically for lips. Mandelic acid and gluconolactone in a roll-on serum addresses the actual cause of chapped lips by gently lifting dead skin without abrasion. Within just a few days of consistent use, my lips were noticeably smoother and more hydrated.</p>
-      </div>
+      <details class="section" data-field="why">
+        <summary class="section-label">Why I picked this</summary>
+        <div class="section-body"><p>A chemical exfoliator made specifically for lips. Mandelic acid and gluconolactone in a roll-on serum addresses the actual cause of chapped lips by gently lifting dead skin without abrasion. Within just a few days of consistent use, my lips were noticeably smoother and more hydrated.</p></div>
+      </details>
 
-      <div class="section" data-field="best-for">
-        <div class="section-label">Best for</div>
-        <p>All skin types. Anyone who deals with chronically chapped lips, who's tried every balm and still wakes up with peeling, and people whose lipstick or lip stain settles into texture they can't seem to fix.</p>
-      </div>
+      <details class="section" data-field="best-for">
+        <summary class="section-label">Best for</summary>
+        <div class="section-body"><p>All skin types. Anyone who deals with chronically chapped lips, who's tried every balm and still wakes up with peeling, and people whose lipstick or lip stain settles into texture they can't seem to fix.</p></div>
+      </details>
 
-      <div class="section" data-field="how">
-        <div class="section-label">How I use it</div>
-        <p>At night only. After cleansing, I roll the applicator across dry lips, wait 30 seconds for it to absorb, and follow with a heavy balm or the Lip Baste. Started at three nights a week for the first two weeks, then worked up to nightly. I always wear SPF on my lips the next morning — AHAs make any skin more sun-sensitive, and lip skin is thin to begin with.</p>
-      </div>
+      <details class="section" data-field="how">
+        <summary class="section-label">How I use it</summary>
+        <div class="section-body"><p>At night only. After cleansing, I roll the applicator across dry lips, wait 30 seconds for it to absorb, and follow with a heavy balm or the Lip Baste. Started at three nights a week for the first two weeks, then worked up to nightly. I always wear SPF on my lips the next morning — AHAs make any skin more sun-sensitive, and lip skin is thin to begin with.</p></div>
+      </details>
 
       <div class="tradeoff" data-field="tradeoff">
         <div class="section-label">One honest note</div>

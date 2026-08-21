@@ -80,13 +80,38 @@
       margin-bottom: 2rem;
     }
     .safe-badge::before { content: "\2713"; font-size: 0.9rem; font-weight: 500; }
-    .section { margin-bottom: 2rem; }
     .section-label {
       font-family: var(--serif); font-style: italic;
       font-size: 1.05rem; color: var(--accent); margin-bottom: 0.5rem;
     }
+    details.section { margin-bottom: 0; border-bottom: 1px solid var(--rule); }
+    details.section:first-of-type { border-top: 1px solid var(--rule); }
+    summary.section-label {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 1rem; padding: 0.95rem 0; margin-bottom: 0;
+      cursor: pointer; list-style: none; transition: color .2s;
+    }
+    summary.section-label::-webkit-details-marker { display: none; }
+    summary.section-label:hover { color: var(--ink); }
+    summary.section-label:focus-visible {
+      outline: 1px solid var(--accent); outline-offset: 3px;
+    }
+    summary.section-label::after {
+      content: ""; flex: none; width: 0.45rem; height: 0.45rem;
+      margin-right: 0.2rem;
+      border-right: 1px solid currentColor; border-bottom: 1px solid currentColor;
+      transform: translateY(-0.15em) rotate(45deg);
+      transition: transform .25s ease;
+    }
+    details.section[open] > summary.section-label::after {
+      transform: translateY(0.1em) rotate(-135deg);
+    }
+    .section-body { padding-bottom: 1.3rem; }
     .section p { font-size: 0.98rem; }
     .section p + p { margin-top: 0.7em; }
+    @media print {
+      .section-body { display: block !important; }
+    }
     .tradeoff {
       background: rgba(138, 111, 74, 0.06); border-left: 2px solid var(--accent);
       padding: 1rem 1.25rem; font-size: 0.95rem; margin: 2rem 0;
@@ -149,20 +174,20 @@
 
       <div class="safe-badge">Acne-Safe Verified</div>
 
-      <div class="section" data-field="why">
-        <div class="section-label">Why I picked this</div>
-        <p>A setting powder that adds another layer of SPF protection. The mineral SPF 30+ means I'm reapplying sun protection every time I touch up my makeup, and the finish is airbrushed and natural rather than flat and powdery. It blurs without drying or dulling.</p>
-      </div>
+      <details class="section" data-field="why">
+        <summary class="section-label">Why I picked this</summary>
+        <div class="section-body"><p>A setting powder that adds another layer of SPF protection. The mineral SPF 30+ means I'm reapplying sun protection every time I touch up my makeup, and the finish is airbrushed and natural rather than flat and powdery. It blurs without drying or dulling.</p></div>
+      </details>
 
-      <div class="section" data-field="best-for">
-        <div class="section-label">Best for</div>
-        <p>All skin types, SPF touchups throughout the day</p>
-      </div>
+      <details class="section" data-field="best-for">
+        <summary class="section-label">Best for</summary>
+        <div class="section-body"><p>All skin types, SPF touchups throughout the day</p></div>
+      </details>
 
-      <div class="section" data-field="how">
-        <div class="section-label">How I use it</div>
-        <p>With the Ciele puff thats included, or a fluffy brush, pressed (not swept) all over after the rest of my liquid and cream products. I keep it in my bag for midday reapplication.</p>
-      </div>
+      <details class="section" data-field="how">
+        <summary class="section-label">How I use it</summary>
+        <div class="section-body"><p>With the Ciele puff thats included, or a fluffy brush, pressed (not swept) all over after the rest of my liquid and cream products. I keep it in my bag for midday reapplication.</p></div>
+      </details>
 
       <div class="tradeoff" data-field="tradeoff">
         <div class="section-label">One honest note</div>
