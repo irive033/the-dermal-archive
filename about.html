@@ -1298,14 +1298,17 @@ p {
 }
 
 .about-editorial {
+  padding: 90px 6vw;
+  background: #fff;
+}
+
+.about-editorial-inner {
   display: grid;
   grid-template-columns: 0.92fr 1.08fr;
   gap: 68px;
   align-items: center;
   max-width: 1280px;
   margin: 0 auto;
-  padding: 90px 6vw;
-  background: #fff;
 }
 
 .about-editorial-image {
@@ -1401,7 +1404,7 @@ p {
 }
 
 .vetting-card {
-  background: #fff;
+  background: rgba(255, 255, 255, 0.45);
   padding: 40px 32px;
 }
 
@@ -1479,9 +1482,11 @@ p {
 
 @media (max-width: 900px) {
   .about-editorial {
+    padding: 56px 7vw;
+  }
+  .about-editorial-inner {
     grid-template-columns: 1fr;
     gap: 36px;
-    padding: 56px 7vw;
   }
   .about-editorial-image {
     min-height: 0;
@@ -1684,17 +1689,19 @@ p {
 
   <main>
     <section class="about-editorial">
-      <div class="about-editorial-image">
-        <img src="images/uploads/2026/05/60f008558f11.jpg" alt="A curated selection of clean beauty products in soft daylight">
-      </div>
-      <div class="about-editorial-text">
-        <span class="about-eyebrow">About</span>
-        <h1 class="about-headline">Clear skin, without the guesswork.</h1>
-        <p>The Dermal Archive is a curated catalog of acne-safe, non-comedogenic products &mdash; skincare, makeup, body, hair, and tools chosen to support clear, healthy skin without asking you to give up the things you love using.</p>
+      <div class="about-editorial-inner">
+        <div class="about-editorial-image">
+          <img src="images/uploads/2026/05/60f008558f11.jpg" alt="A curated selection of clean beauty products in soft daylight">
+        </div>
+        <div class="about-editorial-text">
+          <span class="about-eyebrow">About</span>
+          <h1 class="about-headline">Clear skin, without the guesswork.</h1>
+          <p>The Dermal Archive is a curated catalog of acne-safe, non-comedogenic products &mdash; skincare, makeup, body, hair, and tools chosen to support clear, healthy skin without asking you to give up the things you love using.</p>
 
-        <p>Every product here is vetted against known pore-clogging ingredients, so you can shop by what&#39;s actually safe for your skin instead of decoding labels yourself. Nothing is perfect and skin is personal, but my hope is to take the guesswork out of building a routine that keeps your barrier happy and your breakouts at bay.</p>
+          <p>Every product here is vetted against known pore-clogging ingredients, so you can shop by what&#39;s actually safe for your skin instead of decoding labels yourself. Nothing is perfect and skin is personal, but my hope is to take the guesswork out of building a routine that keeps your barrier happy and your breakouts at bay.</p>
 
-        <a href="index.html" class="about-cta">Explore the archive</a>
+          <a href="index.html" class="about-cta">Explore the archive</a>
+        </div>
       </div>
     </section>
 
