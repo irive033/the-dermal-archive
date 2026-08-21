@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About Editor — The Dermal Archive</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,400&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap');
+    * { box-sizing: border-box; }
+    body { font-family: 'EB Garamond', 'Garamond', 'Georgia', serif; margin: 0; background: #f7f6f3; color: #1a1a1a; }
+    h1, h2, h3, h4 { font-family: 'Cormorant Garamond', 'Didot', 'Georgia', serif; }
+
+    /* ===== PASSWORD GATE ===== */
+    .password-overlay {
+      position: fixed; inset: 0; background: #DAE1E4; z-index: 9999;
+      display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 20px;
+    }
+    .password-overlay.hidden { display: none; }
+    .password-overlay h2 { font-size: 2rem; text-transform: none; margin: 0; }
+    .password-overlay input {
+      padding: 14px 20px; font-size: 1.1rem; border: 1px solid #000; background: #fff;
+      font-family: inherit; text-align: center; width: 250px; letter-spacing: 0.3em;
+    }
+    .password-overlay button {
+      padding: 12px 30px; background: #000; color: #fff; border: none;
+      font-family: inherit; font-size: 1rem; cursor: pointer; letter-spacing: 0.1em; text-transform: uppercase;
+    }
+    .password-overlay .error { color: #c00; font-size: 0.9rem; min-height: 1.2em; }
+
+    /* ===== TOOLBAR ===== */
+    .editor-toolbar {
+      position: sticky; top: 0; z-index: 100;
+      background: #1a1a1a; color: #fff; padding: 12px 20px;
+      display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    }
+    .toolbar-title { font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; letter-spacing: 0.05em; }
+    .toolbar-status { font-size: 0.85rem; color: #888; margin-left: 8px; }
+    .toolbar-status.dirty { color: #f5a623; }
+    .toolbar-status.success { color: #5ad17f; }
+    .toolbar-status.error { color: #ff7676; }
+    .toolbar-btn {
+      background: transparent; color: #fff; border: 1px solid transparent;
+      padding: 8px 14px; font-size: 0.9rem; cursor: pointer; border-radius: 6px;
+      font-family: inherit; transition: background 0.2s; white-space: nowrap; text-decoration: none;
+    }
+    .toolbar-btn:hover { background: #333; }
+    .view-btn { border: 1px solid #444; }
+    .reload-btn { background: #555; }
+    .reload-btn:hover { background: #666; }
+    .publish-btn { background: #2ea043; font-weight: 600; margin-left: auto; }
+    .publish-btn:hover { background: #238636; }
+    .publish-btn:disabled { background: #555; cursor: not-allowed; opacity: 0.7; }
+
+    /* ===== LAYOUT ===== */
+    .editor-wrap { max-width: 900px; margin: 0 auto; padding: 32px 4vw 80px; }
+    .intro-note {
+      font-size: 0.95rem; color: #666; margin: 0 0 28px; line-height: 1.6;
+    }
+    .section-block {
+      background: #fff; border: 1px solid #e6e6e6; border-radius: 8px;
+      padding: 28px 28px 32px; margin-bottom: 26px;
+    }
+    .section-block > h2 {
+      font-size: 1.5rem; font-weight: 400; margin: 0 0 4px; text-transform: none; letter-spacing: 0.02em;
+    }
+    .section-block > .section-sub { font-size: 0.85rem; color: #888; margin: 0 0 22px; }
+
+    .field { margin-bottom: 18px; }
+    .field:last-child { margin-bottom: 0; }
+    .field label {
+      display: block; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.12em;
+      color: #666; margin-bottom: 6px;
+    }
+    .field .hint { text-transform: none; letter-spacing: 0; font-size: 0.78rem; color: #999; margin: 6px 0 0; }
+    .field input[type="text"], .field textarea {
+      width: 100%; padding: 12px 14px; border: 1px solid #ccc; border-radius: 4px;
+      font-family: 'EB Garamond', 'Garamond', 'Georgia', serif; font-size: 1rem; outline: none;
+      background: #fff; line-height: 1.5;
+    }
+    .field input.big { font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; letter-spacing: 0.01em; }
+    .field input:focus, .field textarea:focus { border-color: #000; }
+    .field textarea { resize: vertical; min-height: 70px; }
+    .field-row { display: flex; gap: 16px; flex-wrap: wrap; }
+    .field-row .field { flex: 1 1 220px; }
+
+    /* ===== RICH TEXT ===== */
+    .format-bar { display: flex; gap: 4px; margin-bottom: 6px; flex-wrap: wrap; }
+    .format-bar button {
+      min-width: 32px; height: 30px; padding: 0 8px;
+      background: #f4f4f4; border: 1px solid #ddd; border-radius: 4px;
+      font-family: inherit; font-size: 0.85rem; cursor: pointer; color: #333;
+      display: inline-flex; align-items: center; justify-content: center;
+    }
+    .format-bar button:hover { background: #e8e8e8; }
+    .rt-editable {
+      min-height: 90px; padding: 14px 16px; border: 1px solid #ccc; border-radius: 4px;
+      font-family: 'EB Garamond', 'Garamond', 'Georgia', serif; font-size: 1rem; line-height: 1.7;
+      outline: none; background: #fff;
+    }
+    .rt-editable:focus { border-color: #000; }
+    .rt-editable p { margin: 0 0 12px; }
+    .rt-editable p:last-child { margin-bottom: 0; }
+    .rt-editable ul { margin: 0 0 12px; padding-left: 22px; }
+    .rt-editable a { color: #0969da; text-decoration: underline; }
+
+    /* ===== IMAGE ===== */
+    .image-editor { display: flex; gap: 18px; align-items: flex-start; flex-wrap: wrap; }
+    .image-preview {
+      width: 150px; height: 190px; object-fit: cover; border-radius: 6px;
+      background: #eee; border: 1px solid #ddd; display: block;
+    }
+    .image-editor .image-controls { flex: 1 1 240px; }
+
+    /* ===== CARDS ===== */
+    .card-editor {
+      border: 1px solid #e2e0da; border-radius: 6px; padding: 18px; margin-bottom: 16px;
+      background: #fbfaf7;
+    }
+    .card-editor-head { display: flex; gap: 10px; align-items: center; margin-bottom: 10px; }
+    .card-editor-head .card-title { flex: 1; font-family: 'Cormorant Garamond', serif; font-size: 1.25rem; }
+    .card-remove {
+      width: 30px; height: 30px; border: 1px solid #e0c4c4; background: #fbeeee; color: #b33;
+      border-radius: 4px; cursor: pointer; font-size: 1.1rem; line-height: 1;
+    }
+    .card-remove:hover { background: #f7dede; }
+    .add-card-btn {
+      background: #f0efe9; border: 1px dashed #bbb; border-radius: 6px; padding: 12px;
+      width: 100%; cursor: pointer; font-family: inherit; font-size: 0.9rem; color: #555;
+    }
+    .add-card-btn:hover { background: #e9e8e1; }
+
+    .publish-status { font-size: 0.9rem; min-height: 1.3em; margin-top: 6px; }
+    .publish-status a { color: #0969da; }
+  </style>
+</head>
+<body>
+
+  <!-- PASSWORD GATE -->
+  <div class="password-overlay" id="passwordGate">
+    <h2>About Editor</h2>
+    <p>Enter password to continue</p>
+    <input type="password" id="passwordInput" placeholder="****" autofocus
+           onkeydown="if(event.key==='Enter') checkPassword()">
+    <button onclick="checkPassword()">Enter</button>
+    <div class="error" id="passwordError"></div>
+  </div>
+
+  <!-- TOOLBAR -->
+  <div class="editor-toolbar">
+    <span class="toolbar-title">About — Editor</span>
+    <span class="toolbar-status" id="toolbarStatus">Loading&hellip;</span>
+    <a class="toolbar-btn view-btn" href="../about.html" target="_blank">View Live Page</a>
+    <button class="toolbar-btn reload-btn" onclick="reloadAbout()" title="Discard changes and reload from the site">Reload</button>
+    <button class="toolbar-btn publish-btn" id="publishBtn" onclick="publish()" disabled>Publish Changes</button>
+  </div>
+
+  <div class="editor-wrap">
+    <p class="intro-note">Edit the About page below and hit <strong>Publish Changes</strong>. Your edits are committed to GitHub and the live site auto-updates in about a minute. Text preserves the site's styling automatically.</p>
+
+    <!-- HERO -->
+    <div class="section-block">
+      <h2>Hero</h2>
+      <p class="section-sub">The top of the page — image, headline, and intro.</p>
+
+      <div class="field">
+        <label>Eyebrow <span class="hint">(small label above the headline)</span></label>
+        <input type="text" id="heroEyebrow" oninput="markDirty()">
+      </div>
+
+      <div class="field">
+        <label>Headline</label>
+        <input type="text" id="headline" class="big" oninput="markDirty()">
+      </div>
+
+      <div class="field">
+        <label>Intro paragraphs</label>
+        <div class="rt-group">
+          <div class="format-bar">
+            <button type="button" onclick="rtCmd(this,'bold')" title="Bold"><strong>B</strong></button>
+            <button type="button" onclick="rtCmd(this,'italic')" title="Italic"><em>I</em></button>
+            <button type="button" onclick="rtLink(this)" title="Link">&#128279;</button>
+            <button type="button" onclick="rtCmd(this,'removeFormat')" title="Clear formatting">&#8709;</button>
+          </div>
+          <div class="rt-editable" id="heroBody" contenteditable="true" oninput="markDirty()"></div>
+        </div>
+      </div>
+
+      <div class="field-row">
+        <div class="field">
+          <label>Button text</label>
+          <input type="text" id="ctaText" oninput="markDirty()">
+        </div>
+        <div class="field">
+          <label>Button link</label>
+          <input type="text" id="ctaLink" placeholder="index.html" oninput="markDirty()">
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Hero image</label>
+        <div class="image-editor">
+          <img id="imagePreview" class="image-preview" alt="">
+          <div class="image-controls">
+            <input type="file" id="imageFile" accept="image/*" onchange="stageImage(this)">
+            <p class="hint">Choose a new image to replace the current one (uploaded on publish). Leave empty to keep it.</p>
+            <div class="field" style="margin-top:14px;">
+              <label>Image description (alt text)</label>
+              <input type="text" id="imageAlt" oninput="markDirty()">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- VETTING -->
+    <div class="section-block">
+      <h2>How Products Are Vetted</h2>
+      <p class="section-sub">The section heading, intro, and the vetting criteria cards.</p>
+
+      <div class="field">
+        <label>Eyebrow</label>
+        <input type="text" id="vettingEyebrow" oninput="markDirty()">
+      </div>
+      <div class="field">
+        <label>Heading</label>
+        <input type="text" id="vettingHeading" class="big" oninput="markDirty()">
+      </div>
+      <div class="field">
+        <label>Intro line</label>
+        <textarea id="vettingIntro" oninput="markDirty()"></textarea>
+      </div>
+
+      <div class="field">
+        <label>Criteria</label>
+        <div id="cardsContainer"></div>
+        <button type="button" class="add-card-btn" onclick="addCard()">+ Add a criterion</button>
+      </div>
+    </div>
+
+    <div class="publish-status" id="publishStatus"></div>
+  </div>
+
+  <script>
+    // ============================================================
+    // CONFIG
+    // ============================================================
+    const GITHUB_REPO = 'irive033/the-dermal-archive';
+    const GITHUB_BRANCH = 'main';
+    const ABOUT_FILE_PATH = 'about.html';
+    const PASSWORD = '2626';
+
+    let currentImageSrc = '';
+    let stagedImageFile = null;
+    let dirty = false;
+    let loaded = false;
+    let cardSeq = 0;
+
+    // ============================================================
+    // PASSWORD
+    // ============================================================
+    function checkPassword() {
+      const input = document.getElementById('passwordInput');
+      if (input.value === PASSWORD) {
+        document.getElementById('passwordGate').classList.add('hidden');
+        sessionStorage.setItem('dermal_editor_auth', 'true');
+        loadAbout();
+      } else {
+        document.getElementById('passwordError').textContent = 'Incorrect password';
+        input.value = '';
+        input.focus();
+      }
+    }
+    if (sessionStorage.getItem('dermal_editor_auth') === 'true') {
+      document.getElementById('passwordGate').classList.add('hidden');
+      loadAbout();
+    }
+
+    // ============================================================
+    // STATUS + DIRTY
+    // ============================================================
+    function setStatus(msg, cls) {
+      const s = document.getElementById('toolbarStatus');
+      s.innerHTML = msg;
+      s.className = 'toolbar-status' + (cls ? ' ' + cls : '');
+    }
+    function markDirty() {
+      if (!loaded) return;
+      dirty = true;
+      document.getElementById('publishBtn').disabled = false;
+      setStatus('Unsaved changes', 'dirty');
+    }
+    function markClean() {
+      dirty = false;
+      document.getElementById('publishBtn').disabled = true;
+    }
+
+    // ============================================================
+    // LOAD + PARSE about.html
+    // ============================================================
+    async function loadAbout() {
+      setStatus('Loading&hellip;');
+      try {
+        const resp = await fetch('../about.html?_=' + Date.now());
+        if (!resp.ok) throw new Error('HTTP ' + resp.status);
+        const html = await resp.text();
+        const doc = new DOMParser().parseFromString(html, 'text/html');
+        // Turn contenteditable Enter into <p> (cleaner than <div>)
+        try { document.execCommand('defaultParagraphSeparator', false, 'p'); } catch (e) {}
+
+        const t = el => el ? el.textContent.trim() : '';
+
+        // --- Hero ---
+        const heroText = doc.querySelector('.about-editorial-text');
+        document.getElementById('heroEyebrow').value = t(heroText && heroText.querySelector('.about-eyebrow'));
+        document.getElementById('headline').value = t(doc.querySelector('.about-headline'));
+        const heroPs = heroText ? Array.from(heroText.querySelectorAll(':scope > p')) : [];
+        document.getElementById('heroBody').innerHTML = heroPs.map(p => p.outerHTML).join('\n');
+        const cta = heroText ? heroText.querySelector('.about-cta') : null;
+        document.getElementById('ctaText').value = t(cta);
+        document.getElementById('ctaLink').value = cta ? (cta.getAttribute('href') || '') : '';
+        const img = doc.querySelector('.about-editorial-image img');
+        currentImageSrc = img ? (img.getAttribute('src') || '') : '';
+        document.getElementById('imageAlt').value = img ? (img.getAttribute('alt') || '') : '';
+        setImagePreview(currentImageSrc);
+        stagedImageFile = null;
+        document.getElementById('imageFile').value = '';
+
+        // --- Vetting ---
+        const vhead = doc.querySelector('.vetting-head');
+        document.getElementById('vettingEyebrow').value = t(vhead && vhead.querySelector('.about-eyebrow'));
+        document.getElementById('vettingHeading').value = t(vhead && vhead.querySelector('h2'));
+        document.getElementById('vettingIntro').value = t(doc.querySelector('.vetting-intro'));
+
+        // --- Cards ---
+        const container = document.getElementById('cardsContainer');
+        container.innerHTML = '';
+        Array.from(doc.querySelectorAll('.vetting-card')).forEach(card => {
+          const h3 = card.querySelector('h3');
+          const body = Array.from(card.children)
+            .filter(el => el !== h3)
+            .map(el => el.outerHTML).join('\n');
+          renderCardEditor(h3 ? h3.textContent.trim() : '', body);
+        });
+
+        loaded = true;
+        markClean();
+        setStatus('Loaded');
+      } catch (e) {
+        setStatus('Failed to load: ' + e.message, 'error');
+      }
+    }
+
+    function reloadAbout() {
+      if (dirty && !confirm('Discard your unsaved changes and reload from the site?')) return;
+      loaded = false;
+      loadAbout();
+    }
+
+    function setImagePreview(src) {
+      const el = document.getElementById('imagePreview');
+      if (!src) { el.removeAttribute('src'); return; }
+      el.src = /^(https?:)?\/\//.test(src) || src.startsWith('/') ? src : '../' + src;
+    }
+
+    function stageImage(input) {
+      const f = input.files && input.files[0];
+      if (!f) return;
+      stagedImageFile = f;
+      document.getElementById('imagePreview').src = URL.createObjectURL(f);
+      markDirty();
+    }
+
+    // ============================================================
+    // RICH TEXT (operates on the editable within the clicked toolbar's group)
+    // ============================================================
+    function editableFor(btn) { return btn.closest('.rt-group').querySelector('.rt-editable'); }
+    function rtCmd(btn, command) {
+      const el = editableFor(btn);
+      el.focus();
+      document.execCommand(command, false, null);
+      markDirty();
+    }
+    function rtLink(btn) {
+      const url = prompt('Enter URL (include https://):', 'https://');
+      if (!url || url === 'https://') return;
+      const el = editableFor(btn);
+      el.focus();
+      document.execCommand('createLink', false, url);
+      el.querySelectorAll('a').forEach(a => {
+        if (!a.getAttribute('target')) { a.setAttribute('target', '_blank'); a.setAttribute('rel', 'noopener'); }
+      });
+      markDirty();
+    }
+
+    // ============================================================
+    // CARDS
+    // ============================================================
+    function renderCardEditor(title, bodyHtml) {
+      const div = document.createElement('div');
+      div.className = 'card-editor';
+      div.innerHTML =
+        '<div class="card-editor-head">' +
+          '<input type="text" class="card-title" placeholder="Criterion title" oninput="markDirty()">' +
+          '<button type="button" class="card-remove" title="Remove criterion" onclick="removeCard(this)">&times;</button>' +
+        '</div>' +
+        '<div class="rt-group">' +
+          '<div class="format-bar">' +
+            '<button type="button" onclick="rtCmd(this,\'bold\')" title="Bold"><strong>B</strong></button>' +
+            '<button type="button" onclick="rtCmd(this,\'italic\')" title="Italic"><em>I</em></button>' +
+            '<button type="button" onclick="rtLink(this)" title="Link">&#128279;</button>' +
+            '<button type="button" onclick="rtCmd(this,\'insertUnorderedList\')" title="Bullet list">&#8226; List</button>' +
+            '<button type="button" onclick="rtCmd(this,\'removeFormat\')" title="Clear formatting">&#8709;</button>' +
+          '</div>' +
+          '<div class="rt-editable" contenteditable="true" oninput="markDirty()"></div>' +
+        '</div>';
+      div.querySelector('.card-title').value = title || '';
+      div.querySelector('.rt-editable').innerHTML = bodyHtml || '';
+      document.getElementById('cardsContainer').appendChild(div);
+    }
+    function removeCard(btn) { btn.closest('.card-editor').remove(); markDirty(); }
+    function addCard() { renderCardEditor('', '<p></p>'); markDirty(); }
+
+    // ============================================================
+    // BUILD HTML BLOCKS (match about.html structure + indentation)
+    // ============================================================
+    function indent(html, n) {
+      const pad = ' '.repeat(n);
+      return html.split('\n').map(l => l.trim()).filter(l => l).map(l => pad + l).join('\n');
+    }
+
+    function buildHeroSection(imageSrc) {
+      const eyebrow = document.getElementById('heroEyebrow').value.trim();
+      const headline = document.getElementById('headline').value.trim();
+      const body = indent(document.getElementById('heroBody').innerHTML.trim(), 10);
+      const ctaText = document.getElementById('ctaText').value.trim();
+      const ctaLink = document.getElementById('ctaLink').value.trim() || 'index.html';
+      const alt = document.getElementById('imageAlt').value.trim();
+      return '' +
+'    <section class="about-editorial">\n' +
+'      <div class="about-editorial-inner">\n' +
+'        <div class="about-editorial-image">\n' +
+'          <img src="' + escapeAttr(imageSrc) + '" alt="' + escapeAttr(alt) + '">\n' +
+'        </div>\n' +
+'        <div class="about-editorial-text">\n' +
+'          <span class="about-eyebrow">' + escapeHtml(eyebrow) + '</span>\n' +
+'          <h1 class="about-headline">' + escapeHtml(headline) + '</h1>\n' +
+(body ? body + '\n' : '') +
+'          <a href="' + escapeAttr(ctaLink) + '" class="about-cta">' + escapeHtml(ctaText) + '</a>\n' +
+'        </div>\n' +
+'      </div>\n' +
+'    </section>';
+    }
+
+    function buildVettingSection() {
+      const eyebrow = document.getElementById('vettingEyebrow').value.trim();
+      const heading = document.getElementById('vettingHeading').value.trim();
+      const intro = document.getElementById('vettingIntro').value.trim();
+      const cards = Array.from(document.querySelectorAll('#cardsContainer .card-editor')).map(ed => {
+        const title = ed.querySelector('.card-title').value.trim();
+        const body = indent(ed.querySelector('.rt-editable').innerHTML.trim(), 10);
+        return '' +
+'        <article class="vetting-card">\n' +
+'          <h3>' + escapeHtml(title) + '</h3>\n' +
+(body ? body + '\n' : '') +
+'        </article>';
+      }).join('\n\n');
+      return '' +
+'    <section class="vetting-section" id="criteria">\n' +
+'      <div class="vetting-head">\n' +
+'        <span class="about-eyebrow">' + escapeHtml(eyebrow) + '</span>\n' +
+'        <h2>' + escapeHtml(heading) + '</h2>\n' +
+'        <p class="vetting-intro">' + escapeHtml(intro) + '</p>\n' +
+'      </div>\n' +
+'\n' +
+'      <div class="vetting-cards">\n' +
+cards + '\n' +
+'      </div>\n' +
+'    </section>';
+    }
+
+    // Splice a <section …>…</section> block by its opening marker, preserving
+    // everything else (never touches the <head>/inlined CSS).
+    function updateSection(html, openMarker, newBlock) {
+      const openIdx = html.indexOf(openMarker);
+      if (openIdx === -1) throw new Error('Could not find "' + openMarker + '" in about.html');
+      const endTag = '</section>';
+      const endIdx = html.indexOf(endTag, openIdx);
+      if (endIdx === -1) throw new Error('Could not find the closing tag for "' + openMarker + '"');
+      const sliceEnd = endIdx + endTag.length;
+      let lineStart = openIdx;
+      while (lineStart > 0 && html[lineStart - 1] !== '\n') lineStart--;
+      return html.slice(0, lineStart) + newBlock + html.slice(sliceEnd);
+    }
+
+    // ============================================================
+    // IMAGE UPLOAD
+    // ============================================================
+    function fileToBase64(file) {
+      return new Promise((resolve, reject) => {
+        const r = new FileReader();
+        r.onload = () => resolve(String(r.result).split(',')[1]);
+        r.onerror = reject;
+        r.readAsDataURL(file);
+      });
+    }
+    async function uploadImage(file, token) {
+      const b64 = await fileToBase64(file);
+      const now = new Date();
+      let ext = (file.name.split('.').pop() || 'jpg').toLowerCase().replace(/[^a-z0-9]/g, '');
+      if (!ext) ext = 'jpg';
+      const rand = Math.random().toString(16).slice(2, 14);
+      const path = 'images/uploads/' + now.getFullYear() + '/' +
+        String(now.getMonth() + 1).padStart(2, '0') + '/' + rand + '.' + ext;
+      const resp = await fetch('https://api.github.com/repos/' + GITHUB_REPO + '/contents/' + path, {
+        method: 'PUT',
+        headers: { 'Authorization': 'token ' + token, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: 'Upload About hero image', content: b64, branch: GITHUB_BRANCH })
+      });
+      if (!resp.ok) {
+        const err = await resp.json().catch(() => ({}));
+        throw new Error('Image upload failed: ' + (err.message || resp.status));
+      }
+      return path; // root-relative src for about.html
+    }
+
+    // ============================================================
+    // PUBLISH
+    // ============================================================
+    function setPublishStatus(msg, cls) {
+      const s = document.getElementById('publishStatus');
+      s.innerHTML = msg;
+      s.style.color = cls === 'error' ? '#c00' : (cls === 'success' ? '#2ea043' : '#0969da');
+    }
+
+    async function publish() {
+      let token = localStorage.getItem('github_token');
+      if (!token) {
+        token = prompt('Paste your GitHub token to publish:');
+        if (!token) return;
+        localStorage.setItem('github_token', token);
+      }
+      const btn = document.getElementById('publishBtn');
+      btn.disabled = true;
+      try {
+        // 1) Upload a new image first (if one was chosen)
+        let imageSrc = currentImageSrc;
+        if (stagedImageFile) {
+          setPublishStatus('Uploading image&hellip;', 'loading');
+          imageSrc = await uploadImage(stagedImageFile, token);
+        }
+
+        // 2) Fetch the latest about.html + its SHA
+        setPublishStatus('Fetching latest about.html&hellip;', 'loading');
+        const getResp = await fetch(
+          'https://api.github.com/repos/' + GITHUB_REPO + '/contents/' + ABOUT_FILE_PATH + '?ref=' + GITHUB_BRANCH,
+          { headers: { 'Authorization': 'token ' + token }, cache: 'no-store' }
+        );
+        if (!getResp.ok) {
+          const err = await getResp.json().catch(() => ({}));
+          throw new Error(err.message || ('HTTP ' + getResp.status));
+        }
+        const getJson = await getResp.json();
+        const sha = getJson.sha;
+        const currentHtml = decodeBase64(getJson.content);
+
+        // 3) Rebuild the two editable sections and splice them in
+        setPublishStatus('Updating page&hellip;', 'loading');
+        let newHtml = updateSection(currentHtml, '<section class="about-editorial">', buildHeroSection(imageSrc));
+        newHtml = updateSection(newHtml, '<section class="vetting-section"', buildVettingSection());
+
+        // 4) Commit
+        setPublishStatus('Committing to GitHub&hellip;', 'loading');
+        const putResp = await fetch(
+          'https://api.github.com/repos/' + GITHUB_REPO + '/contents/' + ABOUT_FILE_PATH,
+          {
+            method: 'PUT',
+            headers: { 'Authorization': 'token ' + token, 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              message: 'Update About page (via about editor)',
+              content: encodeBase64(newHtml),
+              branch: GITHUB_BRANCH,
+              sha
+            })
+          }
+        );
+        if (!putResp.ok) {
+          const err = await putResp.json().catch(() => ({}));
+          throw new Error(err.message || 'Failed to commit');
+        }
+        const result = await putResp.json();
+        setPublishStatus('Published! <a href="' + result.content.html_url + '" target="_blank">View commit</a> — the live page updates in ~1 min.', 'success');
+        setStatus('Published', 'success');
+        currentImageSrc = imageSrc;
+        stagedImageFile = null;
+        document.getElementById('imageFile').value = '';
+        markClean();
+      } catch (e) {
+        setPublishStatus('Failed: ' + e.message, 'error');
+        setStatus('Publish failed', 'error');
+        btn.disabled = false;
+      }
+    }
+
+    // ============================================================
+    // UTILITIES
+    // ============================================================
+    function escapeHtml(str) {
+      if (str == null) return '';
+      return String(str)
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+    }
+    function escapeAttr(str) {
+      if (str == null) return '';
+      return String(str).replace(/&/g, '&amp;').replace(/"/g, '&quot;');
+    }
+    function encodeBase64(str) { return btoa(unescape(encodeURIComponent(str))); }
+    function decodeBase64(str) { return decodeURIComponent(escape(atob(str.replace(/\s/g, '')))); }
+  </script>
+</body>
+</html>
