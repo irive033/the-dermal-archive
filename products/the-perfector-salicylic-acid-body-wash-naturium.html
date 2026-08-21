@@ -12,15 +12,18 @@
 
   <style>
     :root {
-      --bg: #faf7f2;
-      --ink: #2a2621;
+      --bg: #ffffff;
+      --ink: #1c1a17;
       --ink-soft: #6b6458;
       --rule: #e8e1d4;
+      --section-rule: #e7e5e1;
+      --label: #8c8781;
       --accent: #8a6f4a;
       --safe: #5c7a5c;
-      --card: #ffffff;
+      --card: #fbfaf8;
       --serif: "Cormorant Garamond", Georgia, serif;
       --sans: "Inter", -apple-system, sans-serif;
+      --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
@@ -81,11 +84,12 @@
     }
     .safe-badge::before { content: "\2713"; font-size: 0.9rem; font-weight: 500; }
     .section-label {
-      font-family: var(--serif); font-style: italic;
-      font-size: 1.05rem; color: var(--accent); margin-bottom: 0.5rem;
+      font-family: var(--mono); font-style: normal;
+      font-size: 0.72rem; letter-spacing: 0.15em; text-transform: uppercase;
+      color: var(--label); margin-bottom: 0.6rem;
     }
-    details.section { margin-bottom: 0; border-bottom: 1px solid var(--rule); }
-    details.section:first-of-type { border-top: 1px solid var(--rule); }
+    details.section { margin-bottom: 0; border-bottom: 1px solid var(--section-rule); }
+    details.section:first-of-type { border-top: 1px solid var(--section-rule); }
     summary.section-label {
       display: flex; align-items: center; justify-content: space-between;
       gap: 1rem; padding: 0.95rem 0; margin-bottom: 0;
@@ -106,17 +110,18 @@
     details.section[open] > summary.section-label::after {
       transform: translateY(0.1em) rotate(-135deg);
     }
-    .section-body { padding-bottom: 1.3rem; }
-    .section p { font-size: 0.98rem; }
-    .section p + p { margin-top: 0.7em; }
+    .section-body { padding-bottom: 1.4rem; }
+    .section p { font-size: 1.02rem; line-height: 1.62; color: var(--ink); }
+    .section p + p { margin-top: 0.85em; }
     @media print {
       .section-body { display: block !important; }
     }
     .tradeoff {
-      background: rgba(138, 111, 74, 0.06); border-left: 2px solid var(--accent);
-      padding: 1rem 1.25rem; font-size: 0.95rem; margin: 2rem 0;
+      background: rgba(138, 111, 74, 0.07); border-left: 2px solid var(--accent);
+      padding: 1.15rem 1.35rem; font-size: 0.95rem; margin: 2rem 0;
     }
-    .tradeoff .section-label { margin-bottom: 0.25rem; }
+    .tradeoff .section-label { margin-bottom: 0.45rem; color: var(--accent); }
+    .tradeoff p { font-size: 1.02rem; line-height: 1.62; color: var(--ink); }
     .cta-row { display: flex; gap: 1rem; margin-top: 2rem; flex-wrap: wrap; }
     .btn {
       display: inline-block; padding: 0.9rem 2rem;
@@ -175,7 +180,7 @@
       <div class="safe-badge">Acne-Safe Verified</div>
 
       <details class="section" data-field="why">
-        <summary class="section-label">Why I picked this</summary>
+        <summary class="section-label">Why I picked it</summary>
         <div class="section-body"><p>A body wash that treats breakouts and smooths skin. Encapsulated, time-released salicylic acid exfoliates and decongests pores gradually, so it clears body acne and smooths rough texture without leaving skin tight or stripped. It's effective without being harsh.</p></div>
       </details>
 
