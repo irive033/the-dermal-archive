@@ -46,6 +46,16 @@
     }
     .toolbar-btn:hover { background: #333; }
     .toolbar-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; color: #888; margin-right: 4px; }
+
+    /* editor switcher */
+    .editor-switch { display: flex; gap: 2px; align-items: center; margin-right: 6px; padding-right: 8px; border-right: 1px solid #444; }
+    .editor-switch a {
+      color: #9a9a9a; text-decoration: none; font-size: 0.8rem; padding: 5px 11px;
+      border-radius: 5px; letter-spacing: 0.02em; white-space: nowrap; font-family: inherit;
+      transition: background 0.15s, color 0.15s;
+    }
+    .editor-switch a:hover { background: #333; color: #fff; }
+    .editor-switch a.active { color: #fff; background: #3a3a3a; font-weight: 600; }
     .publish-btn { background: #2ea043 !important; font-weight: 600; padding: 8px 18px !important; border-radius: 6px !important; margin-left: auto; }
     .publish-btn:hover { background: #238636 !important; }
     .preview-btn { background: #0969da !important; padding: 8px 14px !important; border-radius: 6px !important; }
@@ -412,6 +422,11 @@
 
   <!-- TOOLBAR -->
   <div class="editor-toolbar" id="editorToolbar">
+    <nav class="editor-switch" aria-label="Editors">
+      <a href="products.html">Products</a>
+      <a href="blog.html" class="active">Blog</a>
+      <a href="about.html">About</a>
+    </nav>
     <div class="toolbar-group">
       <span class="toolbar-label">Add</span>
       <button class="toolbar-btn" onclick="addBlock('p')">+ Text</button>

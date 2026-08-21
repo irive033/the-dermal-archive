@@ -52,6 +52,16 @@
     .publish-btn:hover { background: #238636; }
     .publish-btn:disabled { background: #555; cursor: not-allowed; opacity: 0.7; }
 
+    /* editor switcher */
+    .editor-switch { display: flex; gap: 2px; align-items: center; margin-right: 6px; }
+    .editor-switch a {
+      color: #9a9a9a; text-decoration: none; font-size: 0.8rem; padding: 5px 11px;
+      border-radius: 5px; letter-spacing: 0.02em; white-space: nowrap; font-family: inherit;
+      transition: background 0.15s, color 0.15s;
+    }
+    .editor-switch a:hover { background: #333; color: #fff; }
+    .editor-switch a.active { color: #fff; background: #3a3a3a; font-weight: 600; }
+
     /* ===== LAYOUT ===== */
     .editor-wrap { max-width: 900px; margin: 0 auto; padding: 32px 4vw 80px; }
     .intro-note {
@@ -148,6 +158,11 @@
 
   <!-- TOOLBAR -->
   <div class="editor-toolbar">
+    <nav class="editor-switch" aria-label="Editors">
+      <a href="products.html">Products</a>
+      <a href="blog.html">Blog</a>
+      <a href="about.html" class="active">About</a>
+    </nav>
     <span class="toolbar-title">About — Editor</span>
     <span class="toolbar-status" id="toolbarStatus">Loading&hellip;</span>
     <a class="toolbar-btn view-btn" href="../about.html" target="_blank">View Live Page</a>
