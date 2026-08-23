@@ -1503,16 +1503,21 @@ ${contentHTML}
       if (!listR.ok) return;
       const files = (await listR.json()).filter(f => f.type === 'file' && f.name.endsWith('.html'));
       const posts = [];
+      let parsedOk = 0;
       await Promise.all(files.map(async (f) => {
         try {
           const raw = await fetch(`https://raw.githubusercontent.com/${GITHUB_REPO}/${GITHUB_BRANCH}/posts/beauty/${f.name}?_=${Date.now()}`, { cache: 'no-store' });
           if (!raw.ok) return;
           const meta = parsePostHtml(await raw.text());
+          parsedOk++;
           if (meta.hidden) return;   // stays published at its URL, just unlisted
           posts.push({ slug: f.name.replace(/\.html$/, ''), title: meta.title || f.name.replace(/\.html$/, ''), iso: meta.isoDate || '', img: (meta.headerImage || '').replace(/^(?:\.\.\/)+/, '') });
         } catch (e) {}
       }));
-      if (!posts.length) return;
+      // Bail only when nothing could be read at all - that means the fetches
+      // failed, and rewriting the lists would wipe them. Every post being
+      // hidden is a legitimate empty result, so let it through.
+      if (!parsedOk) return;
       posts.sort((a, b) => (b.iso || '').localeCompare(a.iso || ''));
       const grid = posts.map(p => `        <article class="blog-grid-item">
           <a href="posts/beauty/${p.slug}.html" class="thumb-link" style="display:block;">
