@@ -734,10 +734,10 @@
     // edit modal. Existing products with values not in this list are kept as
     // "(custom)" orphan options so no data is lost on edit.
     const SUBCATEGORIES = {
-      skincare:  ['Cleansers', 'Moisturizers', 'Treatments', 'Masks', 'Sunscreen', 'Eye Care', 'Lip Care', 'Self Tanners'],
-      body:      ['Body Wash', 'Moisturizers', 'Scrubs', 'Deodorant', 'Self Tanners'],
-      makeup:    ['Foundations', 'Tinted Moisturizers', 'Concealers', 'Primers', 'Setting Sprays', 'Highlighter', 'Bronzers', 'Contours', 'Blushes', 'Brushes & Tools'],
-      hair:      ['Shampoo', 'Conditioner', 'Masks', 'Treatments', 'Oils', 'Styling'],
+      skincare:  ['Cleansers', 'Moisturizers', 'Treatments', 'Masks', 'Sunscreens', 'Eye Care', 'Lip Care', 'Self Tanners'],
+      body:      ['Body Washes', 'Moisturizers', 'Scrubs', 'Deodorant', 'Self Tanners'],
+      makeup:    ['Foundations', 'Tinted Moisturizers', 'Concealers', 'Primers', 'Setting Sprays', 'Highlighters', 'Bronzers', 'Contours', 'Blushes', 'Brushes & Tools'],
+      hair:      ['Shampoos', 'Conditioners', 'Masks', 'Treatments', 'Oils', 'Styling'],
       tools:     ['Body', 'Face', 'Hair'],
       fragrance: ['Oil', 'Balm', 'Sprays']
     };
@@ -1335,13 +1335,13 @@
         // auto-selects from the dropdown instead of creating an orphan.
         ['cleanser', 'Cleansers'], ['face wash', 'Cleansers'], ['cleansing balm', 'Cleansers'],
         ['moisturizer', 'Moisturizers'], ['moisturiser', 'Moisturizers'], ['face cream', 'Moisturizers'], ['hydrating cream', 'Moisturizers'],
-        ['sunscreen', 'Sunscreen'], ['spf', 'Sunscreen'],
+        ['sunscreen', 'Sunscreens'], ['spf', 'Sunscreens'],
         ['serum', 'Treatments'], ['essence', 'Treatments'], ['toner', 'Treatments'], ['retinol', 'Treatments'], ['exfoliant', 'Treatments'],
         ['mask', 'Masks'],
         ['eye cream', 'Eye Care'], ['eye serum', 'Eye Care'],
         ['lip balm', 'Lip Care'], ['lip mask', 'Lip Care'], ['lip treatment', 'Lip Care'],
         ['self tanner', 'Self Tanners'], ['self-tanner', 'Self Tanners'],
-        ['body wash', 'Body Wash'], ['shower gel', 'Body Wash'],
+        ['body wash', 'Body Washes'], ['shower gel', 'Body Washes'],
         ['scrub', 'Scrubs'],
         ['deodorant', 'Deodorant'],
         ['foundation', 'Foundations'],
@@ -1349,12 +1349,12 @@
         ['concealer', 'Concealers'],
         ['primer', 'Primers'],
         ['setting spray', 'Setting Sprays'],
-        ['highlighter', 'Highlighter'],
+        ['highlighter', 'Highlighters'],
         ['bronzer', 'Bronzers'],
         ['contour', 'Contours'],
         ['blush', 'Blushes'],
         ['brush', 'Brushes & Tools'],
-        ['shampoo', 'Shampoo'], ['conditioner', 'Conditioner'],
+        ['shampoo', 'Shampoos'], ['conditioner', 'Conditioners'],
         ['hair oil', 'Oils'], ['hair serum', 'Oils'],
       ];
       for (const [k, v] of map) if (t.includes(k)) return v;
