@@ -1043,7 +1043,7 @@
       const price = document.getElementById('editPrice').value.trim();
       const category = document.getElementById('editCategory').value;
       const image = document.getElementById('editImage').value.trim();
-      const subcategory = document.getElementById('editSubcategory').value.trim();
+      let subcategory = document.getElementById('editSubcategory').value.trim();
       // Prefer the dedicated Product URL field; fall back to the Fetch URL field
       // if Product URL is empty (so legacy behavior still works).
       const sourceUrl = document.getElementById('editProductUrl').value.trim()
@@ -1053,6 +1053,26 @@
       if (!title) {
         document.getElementById('fetchStatus').textContent = 'Product name is required.';
         document.getElementById('fetchStatus').className = 'fetch-status error';
+        return;
+      }
+
+      // Subcategory decides which shelf the product appears under, and which
+      // breadcrumb its hero page gets, so it cannot be left blank. Auto-fetch
+      // only guesses on a successful fetch, which is why products added by
+      // hand used to slip through with none. Try the guess here too, then
+      // insist.
+      if (!subcategory) {
+        const guess = guessSubcategory(title);
+        if (guess) {
+          populateSubcategoryOptions(category, guess);
+          subcategory = document.getElementById('editSubcategory').value.trim();
+        }
+      }
+      if (!subcategory) {
+        document.getElementById('fetchStatus').textContent =
+          'Pick a subcategory - it sets which shelf this product appears under.';
+        document.getElementById('fetchStatus').className = 'fetch-status error';
+        document.getElementById('editSubcategory').focus();
         return;
       }
 
@@ -1336,8 +1356,13 @@
         ['cleanser', 'Cleansers'], ['face wash', 'Cleansers'], ['cleansing balm', 'Cleansers'],
         ['moisturizer', 'Moisturizers'], ['moisturiser', 'Moisturizers'], ['face cream', 'Moisturizers'], ['hydrating cream', 'Moisturizers'],
         ['sunscreen', 'Sunscreens'], ['spf', 'Sunscreens'],
-        ['serum', 'Treatments'], ['essence', 'Treatments'], ['toner', 'Treatments'], ['retinol', 'Treatments'], ['exfoliant', 'Treatments'],
+        // more specific keys must precede the general ones they contain
+        ['hair serum', 'Oils'], ['hair oil', 'Oils'],
+        ['serum', 'Serums'], ['toner', 'Toners'],
+        ['essence', 'Treatments'], ['retinol', 'Treatments'], ['exfoliant', 'Treatments'],
         ['mask', 'Masks'],
+        ['mist', 'Mists & Sprays'],
+        ['perfume', 'Perfumes'], ['eau de parfum', 'Perfumes'], ['eau de toilette', 'Perfumes'],
         ['eye cream', 'Eye Care'], ['eye serum', 'Eye Care'],
         ['lip balm', 'Lip Care'], ['lip mask', 'Lip Care'], ['lip treatment', 'Lip Care'],
         ['self tanner', 'Self Tanners'], ['self-tanner', 'Self Tanners'],
@@ -1349,13 +1374,16 @@
         ['concealer', 'Concealers'],
         ['primer', 'Primers'],
         ['setting spray', 'Setting Sprays'],
+        ['setting powder', 'Setting Powders'],
         ['highlighter', 'Highlighters'],
         ['bronzer', 'Bronzers'],
         ['contour', 'Contours'],
         ['blush', 'Blushes'],
-        ['brush', 'Brushes & Tools'],
+        ['brush', 'Makeup Brushes'],
         ['shampoo', 'Shampoos'], ['conditioner', 'Conditioners'],
-        ['hair oil', 'Oils'], ['hair serum', 'Oils'],
+        // last resort: anything still unmatched containing "powder" is a
+        // setting powder, since blush/foundation/brush are caught above
+        ['powder', 'Setting Powders'],
       ];
       for (const [k, v] of map) if (t.includes(k)) return v;
       return '';
