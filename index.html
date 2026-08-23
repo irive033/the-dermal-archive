@@ -376,6 +376,11 @@ p {
 }
 
 /* --- Blog Summary Carousel --- */
+/* While every post is hidden the generated list is empty, so collapse the
+   whole section rather than leave a heading over a gap. Self-healing: it
+   reappears as soon as a post is listed again. */
+.blog-carousel-section:not(:has(.blog-carousel > *)) { display: none; }
+
 .blog-carousel-section {
   padding: 80px 4vw;
   background: #DAE1E4;
@@ -1453,7 +1458,6 @@ p {
     <div class="header-inner">
       <a href="index.html" class="site-brand">The Dermal Archive</a>
       <nav class="main-nav">
-        <a href="routines.html">Routines</a>
         <a href="about.html">About</a>
         <a href="contact.html">Contact</a>
       </nav>

@@ -1445,6 +1445,11 @@ p {
     body { font-family: 'EB Garamond', 'Garamond', 'Georgia', serif; }
     h1, h2, h3, h4 { font-family: 'Cormorant Garamond', 'Didot', 'Georgia', serif; }
   </style>
+<style>
+/* Collapse the list while every post is hidden; returns on its own when a
+   post is listed again. */
+.routines-list:not(:has(.blog-grid > *)) { display: none; }
+</style>
 </head>
 <body>
 
@@ -1452,7 +1457,6 @@ p {
     <div class="header-inner">
       <a href="index.html" class="site-brand">The Dermal Archive</a>
       <nav class="main-nav">
-        <a href="routines.html" class="active">Routines</a>
         <a href="about.html">About</a>
         <a href="contact.html">Contact</a>
       </nav>
@@ -1464,7 +1468,7 @@ p {
       <h1>Routines</h1>
     </section>
 
-    <section style="background:#fff; padding: 0 0 60px;">
+    <section class="routines-list" style="background:#fff; padding: 0 0 60px;">
       <div class="blog-grid">
 
       </div>
