@@ -354,6 +354,16 @@
       background: #e6e6e6; padding: 2px 8px; border-radius: 10px;
       text-transform: uppercase; flex-shrink: 0;
     }
+    .load-post-badge.is-hidden {
+      background: #f0e2e2; color: #a33;
+    }
+    .meta-hidden {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-family: 'EB Garamond', 'Garamond', 'Georgia', serif;
+      font-size: 0.9rem; color: #555; letter-spacing: 0.05em;
+      cursor: pointer; white-space: nowrap;
+    }
+    .meta-hidden input { margin: 0; cursor: pointer; }
     .load-post-delete {
       background: transparent; border: 1px solid transparent; color: #c00;
       width: 28px; height: 28px; font-size: 1.2rem; line-height: 1;
@@ -465,6 +475,9 @@
       <select id="postCategory">
         <option value="beauty">Routines</option>
       </select>
+      <label class="meta-hidden" title="Keep this post off the Routines page and the home carousel. The post page itself stays reachable by direct link.">
+        <input type="checkbox" id="postHidden"> Hidden
+      </label>
     </div>
     <input type="file" id="headerImageInput" accept="image/*" style="display:none" onchange="handleHeaderImageUpload(event)">
   </section>
@@ -1042,6 +1055,7 @@
       const now = dateObj; // legacy variable used below for footer year
       const dateStr = dateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
       const isoDate = dateObj.toISOString();
+      const isHidden = document.getElementById('postHidden').checked;
 
       const blocks = [...document.querySelectorAll('#editorCanvas .content-block')];
       let contentHTML = '';
@@ -1136,7 +1150,7 @@
   <link rel="stylesheet" href="../../css/style.css">
   <meta name="date" content="${isoDate}">
   <meta name="author" content="${author}">
-  <meta name="category" content="${category}">
+  <meta name="category" content="${category}">${isHidden ? '\n  <meta name="hidden" content="true">' : ''}
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,400&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap');
     body { font-family: 'EB Garamond', 'Garamond', 'Georgia', serif; }
@@ -1494,6 +1508,7 @@ ${contentHTML}
           const raw = await fetch(`https://raw.githubusercontent.com/${GITHUB_REPO}/${GITHUB_BRANCH}/posts/beauty/${f.name}?_=${Date.now()}`, { cache: 'no-store' });
           if (!raw.ok) return;
           const meta = parsePostHtml(await raw.text());
+          if (meta.hidden) return;   // stays published at its URL, just unlisted
           posts.push({ slug: f.name.replace(/\.html$/, ''), title: meta.title || f.name.replace(/\.html$/, ''), iso: meta.isoDate || '', img: (meta.headerImage || '').replace(/^(?:\.\.\/)+/, '') });
         } catch (e) {}
       }));
@@ -1615,6 +1630,7 @@ ${contentHTML}
             const html = await raw.text();
             const m = html.match(/<meta\s+name=["']category["']\s+content=["']([^"']+)["']/i);
             if (m && m[1]) p.metaCategory = normalizeCategorySlug(m[1]);
+            p.isHidden = /<meta\s+name=["']hidden["']\s+content=["']true["']/i.test(html);
           } catch (e) { /* keep folder-based default */ }
         }));
       } catch (e) {
@@ -1652,6 +1668,7 @@ ${contentHTML}
             <div class="load-post-item-body" onclick="loadPostForEditing('${p.path}', '${p.sha}')">
               <span class="load-post-item-name">${escapeHtmlText(prettyName)}</span>
               <span class="load-post-badge">${escapeHtmlText(label)}</span>
+              ${p.isHidden ? '<span class="load-post-badge is-hidden">Hidden</span>' : ''}
             </div>
             <button class="load-post-delete" onclick="event.stopPropagation(); deletePost('${p.path}', ${prettyArg})" title="Delete post" aria-label="Delete post">&times;</button>
           </div>`;
@@ -1868,6 +1885,7 @@ ${contentHTML}
       document.getElementById('editorCanvas').innerHTML = '';
       document.getElementById('postTitle').value = '';
       document.getElementById('postCategory').value = 'beauty';
+      document.getElementById('postHidden').checked = false;
       headerImageUrl = '';
       applyHeaderImage();
     }
@@ -1887,6 +1905,8 @@ ${contentHTML}
       // Normalizer handles the legacy 'wellness' → 'lifestyle' rename.
       const metaCategory = doc.querySelector('meta[name="category"]')?.getAttribute('content') || '';
       const category = normalizeCategorySlug(metaCategory);
+      // Hidden posts keep their page but are dropped from the generated lists.
+      const hidden = (doc.querySelector('meta[name="hidden"]')?.getAttribute('content') || '') === 'true';
 
       // Header background image
       const bgImage = postHeader?.style?.backgroundImage || '';
@@ -1901,7 +1921,7 @@ ${contentHTML}
         }
       }
 
-      return { title, author, isoDate, category, headerImage, blocks };
+      return { title, author, isoDate, category, headerImage, hidden, blocks };
     }
 
     function parseBlockFromElement(el) {
@@ -1991,6 +2011,7 @@ ${contentHTML}
       // Meta fields
       document.getElementById('postTitle').value = parsed.title || '';
       document.getElementById('postAuthor').value = parsed.author || 'Isabella Rivera';
+      document.getElementById('postHidden').checked = !!parsed.hidden;
       // Only set category if it matches one of the dropdown options
       const catSelect = document.getElementById('postCategory');
       const validCats = Array.from(catSelect.options).map(o => o.value);
