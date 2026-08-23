@@ -1148,6 +1148,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>${title} — The Dermal Archive</title>
   <link rel="stylesheet" href="../../css/style.css">
+  <link rel="stylesheet" href="../../css/nav-state.css">
   <meta name="date" content="${isoDate}">
   <meta name="author" content="${author}">
   <meta name="category" content="${category}">${isHidden ? '\n  <meta name="hidden" content="true">' : ''}
@@ -1162,6 +1163,7 @@
     <div class="header-inner">
       <a href="../../index.html" class="site-brand">The Dermal Archive</a>
       <nav class="main-nav">
+        <a class="nav-routines" href="../../routines.html">Routines</a>
         <a href="../../about.html">About</a>
         <a href="../../contact.html">Contact</a>
       </nav>
@@ -1535,6 +1537,44 @@ ${contentHTML}
           </a>`).join('\n');
       await _commitSplice('routines.html', '      <div class="blog-grid">', '\n      </div>', '      <div class="blog-grid">\n' + grid + '\n      </div>', token, 'Sync Routines grid with posts');
       await _commitSplice('index.html', '        <div class="blog-carousel">', '\n        </div>', '        <div class="blog-carousel">\n' + carousel + '\n        </div>', token, 'Sync Routines carousel with posts');
+      await syncNavState(posts.length > 0, token);
+    }
+
+    // css/nav-state.css is linked by every page, so this one small file
+    // controls the Routines nav link site-wide. Rewriting it is how the link
+    // comes back on its own once a post is visible again - no per-page edits.
+    async function syncNavState(anyVisiblePosts, token) {
+      const header = '/* Written by the blog editor on publish. When every post is hidden the\n'
+                   + '   Routines link is collapsed site-wide; when at least one post is listed\n'
+                   + '   this file is emptied and the link returns. Do not edit by hand. */\n';
+      const body = anyVisiblePosts ? '' : '.nav-routines { display: none; }\n';
+      const wanted = header + body;
+
+      const path = 'css/nav-state.css';
+      const authH = { 'Authorization': `token ${token}` };
+      let sha = null;
+      try {
+        const get = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/${path}?ref=${GITHUB_BRANCH}`, { headers: authH, cache: 'no-store' });
+        if (get.ok) {
+          const j = await get.json();
+          sha = j.sha;
+          // Skip the commit when the file already says the right thing.
+          const current = decodeURIComponent(escape(atob((j.content || '').replace(/\n/g, ''))));
+          if (current === wanted) return;
+        }
+      } catch (e) { /* fall through and write it */ }
+
+      const payload = {
+        message: anyVisiblePosts ? 'Show Routines nav link' : 'Hide Routines nav link',
+        content: btoa(unescape(encodeURIComponent(wanted))),
+        branch: GITHUB_BRANCH,
+      };
+      if (sha) payload.sha = sha;
+      await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/${path}`, {
+        method: 'PUT',
+        headers: { ...authH, 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
     }
 
     // ============================================================

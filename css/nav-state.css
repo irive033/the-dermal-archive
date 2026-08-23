@@ -1,0 +1,4 @@
+/* Written by the blog editor on publish. When every post is hidden the
+   Routines link is collapsed site-wide; when at least one post is listed
+   this file is emptied and the link returns. Do not edit by hand. */
+.nav-routines { display: none; }
