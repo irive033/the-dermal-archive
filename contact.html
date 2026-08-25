@@ -1286,70 +1286,248 @@ p {
   margin-bottom: 5px;
 }
 
-/* --- Contact Page --- */
-.contact-section {
+/* ===== Contact page — editorial redesign (2026-08-25) ===== */
+/* --- Hero --- */
+.contact-hero {
   background: #fff;
-  padding: 80px 4vw;
+  padding: 84px 6vw;
+  text-align: center;
+}
+
+.contact-hero-inner {
+  max-width: 680px;
+  margin: 0 auto;
+}
+
+/* h1 intentionally unstyled here — it keeps the site's default heading
+   treatment (uppercase Cormorant Garamond, 400, 0.04em, 3rem), which is
+   what the Contact banner has always used. */
+.contact-hero h1 {
+  margin: 0;
+}
+
+/* --- Body: aside + form card --- */
+.contact-section {
+  background: #f4f2ec;
+  padding: 84px 6vw 92px;
 }
 
 .contact-grid {
-  max-width: 1000px;
-  margin: 0 auto;
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 60px;
+  grid-template-columns: 0.85fr 1.15fr;
+  gap: 64px;
+  max-width: 1180px;
+  margin: 0 auto;
   align-items: start;
 }
 
-.contact-info h2 {
-  margin-bottom: 20px;
+.contact-intro {
+  font-style: italic;
+  font-size: 1.1rem;
+  line-height: 1.75;
+  color: #6b6458;
+  margin: 0;
+  text-wrap: pretty;
 }
 
-.contact-info p {
-  font-size: 1.1rem;
-  color: #555;
+/* --- The form card --- */
+.contact-card {
+  position: relative;
+  background: #fff;
+  padding: 30px 48px 44px;
 }
 
 .contact-form {
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 26px;
 }
 
-.contact-form label {
-  font-family: 'adobe-garamond-pro', 'Garamond', 'Georgia', serif;
-  font-size: 0.85rem;
+.contact-form-label {
+  font-family: 'EB Garamond', 'Garamond', 'Georgia', serif;
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  line-height: 1.3;
   text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: #333;
+  color: #6b7752;
+  margin: 0 0 6px;
 }
 
-.contact-form input,
-.contact-form textarea {
-  width: 100%;
-  padding: 12px 14px;
-  border: 1px solid #ccc;
-  font-family: 'adobe-garamond-pro', 'Garamond', 'Georgia', serif;
-  font-size: 1rem;
-  background: transparent;
-  outline: none;
-  transition: border-color 0.3s;
-}
-
-.contact-form input:focus,
-.contact-form textarea:focus {
-  border-color: #000;
-}
-
-.contact-form textarea {
-  min-height: 150px;
-  resize: vertical;
+.field-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 26px;
 }
 
 .contact-form .form-group {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 9px;
+  min-width: 0;
+}
+
+.contact-form label {
+  font-family: 'EB Garamond', 'Garamond', 'Georgia', serif;
+  font-size: 0.72rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: #6b6458;
+}
+
+.contact-form label .opt {
+  text-transform: none;
+  letter-spacing: 0.04em;
+  font-style: italic;
+  color: #9c968a;
+}
+
+.contact-form input,
+.contact-form textarea {
+  width: 100%;
+  padding: 0 0 11px;
+  border: 0;
+  border-bottom: 1px solid #ddd8cb;
+  border-radius: 0;
+  font-family: 'EB Garamond', 'Garamond', 'Georgia', serif;
+  font-size: 1.05rem;
+  color: #2a2621;
+  background: transparent;
+  outline: none;
+  transition: border-color 0.25s ease;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.contact-form input::placeholder,
+.contact-form textarea::placeholder {
+  color: #b8b2a5;
+  font-style: italic;
+}
+
+.contact-form input:hover,
+.contact-form textarea:hover {
+  border-bottom-color: #c3bcab;
+}
+
+.contact-form input:focus,
+.contact-form textarea:focus {
+  border-bottom-color: #6b7752;
+}
+
+.contact-form textarea {
+  min-height: 128px;
+  line-height: 1.7;
+  resize: vertical;
+}
+
+.contact-submit {
+  align-self: flex-start;
+  margin-top: 8px;
+  padding: 15px 44px;
+  border: 1px solid #2a2621;
+  background: #2a2621;
+  color: #f4f2ec;
+  font-family: 'EB Garamond', 'Garamond', 'Georgia', serif;
+  font-size: 0.78rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease;
+}
+
+.contact-submit:hover {
+  background: #6b7752;
+  border-color: #6b7752;
+  color: #fff;
+}
+
+.contact-form :focus-visible {
+  outline: 2px solid #6b7752;
+  outline-offset: 3px;
+}
+
+/* --- Sent state --- */
+.contact-sent {
+  display: none;
+  max-width: 360px;
+  padding: 0;
+  text-align: center;
+}
+
+.contact-card.is-sent {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 486px;
+}
+
+.contact-card.is-sent .contact-form {
+  display: none;
+}
+
+.contact-card.is-sent .contact-sent {
+  display: block;
+  animation: contactFade 0.5s ease both;
+}
+
+.contact-sent h3 {
+  font-family: 'Cormorant Garamond', 'Didot', 'Georgia', serif;
+  font-size: 1.9rem;
+  font-weight: 300;
+  text-transform: none;
+  letter-spacing: 0.02em;
+  color: #000;
+  margin: 0 0 12px;
+}
+
+.contact-sent p {
+  font-style: italic;
+  font-size: 1.02rem;
+  color: #6b6458;
+  margin: 0;
+}
+
+@keyframes contactFade {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .contact-card.is-sent .contact-sent { animation: none; }
+}
+
+/* --- Contact responsive --- */
+@media (max-width: 900px) {
+  .contact-hero {
+    padding: 56px 7vw;
+  }
+  .contact-section {
+    padding: 56px 7vw 64px;
+  }
+  .contact-grid {
+    grid-template-columns: 1fr;
+    gap: 44px;
+    max-width: 620px;
+  }
+  .contact-card {
+    padding: 24px 28px 32px;
+  }
+  .contact-card.is-sent {
+    min-height: 300px;
+  }
+}
+
+@media (max-width: 560px) {
+  .field-row {
+    grid-template-columns: 1fr;
+    gap: 26px;
+  }
+  .contact-submit {
+    align-self: stretch;
+    text-align: center;
+  }
 }
 
 /* --- Utility --- */
@@ -1462,40 +1640,52 @@ p {
   </header>
 
   <main>
-    <section class="page-hero">
-      <h1>Contact</h1>
+    <section class="contact-hero">
+      <div class="contact-hero-inner">
+        <h1>Contact</h1>
+      </div>
     </section>
 
     <section class="contact-section">
       <div class="contact-grid">
-        <div class="contact-info">
-          <h2>Get in Touch</h2>
-          <p>For inquiries, collaborations, or to suggest a product for the archive, send a note below and I&#39;ll get back to you.</p>
-        </div>
+        <aside class="contact-aside">
+          <p class="contact-intro">For inquiries, collaborations, or to suggest a product for the archive, send a note below and I&#39;ll get back to you.</p>
 
-        <form class="contact-form" onsubmit="event.preventDefault(); this.querySelector('button').textContent='Thank you — message sent!';">
-          <div class="form-group">
-            <label for="name">Name *</label>
-            <input type="text" id="name" name="name" required>
+        </aside>
+
+        <div class="contact-card" id="contact-card">
+          <form class="contact-form" onsubmit="event.preventDefault(); document.getElementById('contact-card').classList.add('is-sent');">
+            <h2 class="contact-form-label">Get in touch</h2>
+            <div class="field-row">
+              <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" id="name" name="name" autocomplete="name" required>
+              </div>
+              <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" autocomplete="email" required>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="subject">Subject</label>
+              <input type="text" id="subject" name="subject" required>
+            </div>
+            <div class="form-group">
+              <label for="message">Message</label>
+              <textarea id="message" name="message" required></textarea>
+            </div>
+            <div class="form-group">
+              <label for="product-link">Product Link <span class="opt">(optional)</span></label>
+              <input type="url" id="product-link" name="product-link" placeholder="https://">
+            </div>
+            <button type="submit" class="contact-submit">Send Note</button>
+          </form>
+
+          <div class="contact-sent" role="status">
+            <h3>Thank you — your note is on its way.</h3>
+            <p>I read everything that comes through and will reply as soon as I can.</p>
           </div>
-          <div class="form-group">
-            <label for="email">Email *</label>
-            <input type="email" id="email" name="email" required>
-          </div>
-          <div class="form-group">
-            <label for="subject">Subject *</label>
-            <input type="text" id="subject" name="subject" required>
-          </div>
-          <div class="form-group">
-            <label for="message">Message *</label>
-            <textarea id="message" name="message" required></textarea>
-          </div>
-          <div class="form-group">
-            <label for="product-link">Product Link</label>
-            <input type="url" id="product-link" name="product-link" placeholder="https://">
-          </div>
-          <button type="submit" class="btn">Submit</button>
-        </form>
+        </div>
       </div>
     </section>
 
