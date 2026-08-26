@@ -1317,6 +1317,19 @@ p {
   font-size: 0.85rem;
   color: #666;
 }
+.footer-mark {
+  display: block;
+  width: 210px;
+  max-width: 60%;
+  height: auto;
+  margin: 0 auto 16px;
+}
+.site-footer p {
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+}
+
+
 
 /* =========================================
    PAGE-SPECIFIC STYLES
