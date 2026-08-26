@@ -1746,8 +1746,8 @@ p {
 
     <section class="newsletter-section">
       <h3>Never miss a post</h3>
-      <form class="newsletter-form" onsubmit="event.preventDefault(); this.querySelector('button').textContent='Thank you!';">
-        <input type="email" placeholder="Email Address" required>
+      <form class="newsletter-form" data-newsletter>
+        <input type="email" name="email" placeholder="Email Address" autocomplete="email" required>
         <button type="submit">Sign Up</button>
       </form>
     </section>
@@ -1800,5 +1800,6 @@ p {
     })();
   </script>
 
+  <script src="/js/newsletter.js" defer></script>
 </body>
 </html>
